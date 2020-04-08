@@ -3,9 +3,10 @@
 #
 #    Profiling the interaction of 1-phenylbenzimidazoles to cyclooxygenases
 #
-#ref: Gómez-Castro CZ, López-Martínez M, Hernández-Pineda J, 
-#     Trujillo-Ferrara JG, and Padilla-Martínez II.
-#     J. Mol. Recognit., 32, e2801 (2019). https://doi.org/10.1002/jmr.2801
+# reference: Gómez-Castro CZ, López-Martínez M, Hernández-Pineda J,
+#            Trujillo-Ferrara JG, Padilla-Martínez II. Profiling the
+#            interaction of 1-phenylbenzimidazoles to cyclooxygenases.
+#            J Mol Recognit. 2019;32:e2801. https://doi.org/10.1002/jmr.2801
 #
 # 
 # lrcd.tcl v-1.0.5:
