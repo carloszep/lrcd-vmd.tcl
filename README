@@ -1,7 +1,7 @@
 # lrcd-vmd.tcl (Apr 8, 2020)
 Tcl scripts and utilities for calculating the LRCD parameter
 
-Repository started from personal libraries (lrcd.tcl, version 1.0.3) and
+Repository started from personal libraries (lrcd.tcl, version 1.0.5) and
 refering to the published work in Journal of Molecular Recognition (2019).
 
 Below the original readme.
