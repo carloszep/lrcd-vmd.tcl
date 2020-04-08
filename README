@@ -1,15 +1,15 @@
 # lrcd-vmd.tcl (Apr 8, 2020)
 Tcl scripts and utilities for calculating the LRCD parameter
 
-Repository started from personal libraries (lrcd.tcl, version 1.0.3) and refering
-to the published work in Journal of Molecular Recognition (2019).
+Repository started from personal libraries (lrcd.tcl, version 1.0.3) and
+refering to the published work in Journal of Molecular Recognition (2019).
 
 Below the original readme.
 
-#   reference: Gómez-Castro CZ, López-Martínez M, Hernández-Pineda J,
-#              Trujillo-Ferrara JG, Padilla-Martínez II. Profiling the
-#              interaction of 1-phenylbenzimidazoles to cyclooxygenases.
-#              J Mol Recognit. 2019;32:e2801. 
+# reference: Gómez-Castro CZ, López-Martínez M, Hernández-Pineda J,
+#            Trujillo-Ferrara JG, Padilla-Martínez II. Profiling the
+#            interaction of 1-phenylbenzimidazoles to cyclooxygenases.
+#            J Mol Recognit. 2019;32:e2801. https://doi.org/10.1002/jmr.2801
 #
 # 
 # continues from lrcd.tcl v-1.0.3:
