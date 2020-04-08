@@ -7,7 +7,7 @@
 #          José G. Trujillo-Ferrara, and Itzia I. Padilla-Martínez
 #
 # 
-# lrcd.tcl v-1.0.3:
+# lrcd.tcl v-1.0.4:
 #
 # Tcl script for VMD to calculate the Ligand-Receptor Contact Distance (LRCD)
 # parameter that compares the interaction profile of two complexes involving
@@ -115,20 +115,22 @@
 
 
 
-#|-lrcd103.tcl :| {condText}
+#|-lrcd104.tcl :| {condText}
 #|  -Tcl-language script library for VMD to calculate the LRCD parameter
 #|   _ and its variants .
 #|  -authors :-Carlos Z. Gómez-Castro ;
 #|  -reference :-... ;
-#|  -date :-2019-04-30.tue ;
-#|  -version :-1.0.3 ;
+#|  -date :-2019-06-11.tue ;
+#|  -version :-1.0.4 ;
 #|  -version information :
 #|    -changes done in this version :
-#|      -implemented and tested procedure lrcd_test4 ... .
-#|      -implemented and tested procedure lrcdVec_writeDB and lrcdVec_readDB .
-#|      -implemented and tested procedure lrcd_dbTab .
-#|      -procedure changeDir renamed to changeVecDir ;
+#|      -few bugs in the output of lrcd_dbTab corrected .
+#|      -in progress improving the naming of log files ;;
 #|  -notes from previous versions :
+#|    -implemented and tested procedure lrcd_test4 ... .
+#|    -implemented and tested procedure lrcdVec_writeDB and lrcdVec_readDB .
+#|    -implemented and tested procedure lrcd_dbTab .
+#|    -procedure changeDir renamed to changeVecDir .
 #|    -procedures lrcdi and lrcmdi implemented .
 #|    -procedures lrcd_test1, lrcd_pwMat, and lrcd_dlgTab updated .
 #|    -procedure lrcmd implemented and tested :
@@ -179,7 +181,7 @@
 
 # public version (started from library anMol-v.0.1.4)
 global lrcd_version selInfo   ;# global variables
-set lrcd_version 1.0.3
+set lrcd_version 1.0.4
 
 # printing info when sourcing the library
 
@@ -1498,7 +1500,7 @@ proc lrcdVec_len {lrVec {loSt stdout}} {
   return $norm
   }   ;# lrcdVec_len
 
-#|-proc lrcdVec_norm :
+#|-proc lrcdVec_norm {lrcdVec {loSt stdout}} :
 #|  -returns a lrcd vector normalized .
 #|  -arguments :
 #|    -lrcdVec :
@@ -1528,4 +1530,5 @@ proc lrcdVec_norm {lrcdVec {loSt stdout}} {
   if {$out} {puts $loSt "\nlrcdVec_norm: Done."}
   return [array get lrcdv]
   }   ;# lrcdVec_norm
+
 
