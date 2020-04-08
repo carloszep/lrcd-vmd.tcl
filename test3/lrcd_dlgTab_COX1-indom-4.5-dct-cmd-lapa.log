@@ -1,0 +1,2054 @@
+
++++ LRCD Table for a set of Autodock .dlg docking results +++
+lrcd.tcl v-1.0, lrcd_dlgTab, Fri Apr 19 10:39:44 CDT 2019
+
+Calculating LRCD matrix and vector for ref complex: COX1-indom
+
++++ ligand-receptor contact distance matrix +++
++++ distances by contact type (types: pp pn np nn) +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+ 10 polar - polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.O.22	cox13.pdbqt.TYR355.OH.3181	2.6789934635162354
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ARG120.NH2.887	2.7983920574188232
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG120.NE.881	2.81119441986084
+cox13-indom.dlg.22.O.11	cox13.pdbqt.SER530.OG.4902	3.0024373531341553
+cox13-indom.dlg.22.O.24	cox13.pdbqt.LEU352.O.3151	3.216585397720337
+cox13-indom.dlg.22.O.24	cox13.pdbqt.SER353.N.3156	3.415994167327881
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG120.NH2.887	3.5592124462127686
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ARG120.NE.881	3.5819907188415527
+cox13-indom.dlg.22.O.24	cox13.pdbqt.SER353.O.3160	3.593292474746704
+cox13-indom.dlg.22.O.24	cox13.pdbqt.TYR355.OH.3181	4.432983875274658
+
+ 29 polar - non-polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.O.24	cox13.pdbqt.ILE523.CD1.4846	2.6781868934631348
+cox13-indom.dlg.22.O.24	cox13.pdbqt.SER353.CA.3158	2.8260557651519775
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL349.CG2.3122	2.976531505584717
+cox13-indom.dlg.22.N.2	cox13.pdbqt.VAL349.CG1.3121	3.2164466381073
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL349.CG1.3121	3.2586870193481445
+cox13-indom.dlg.22.O.22	cox13.pdbqt.TYR355.CE1.3178	3.2672712802886963
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ALA527.CB.4876	3.3842172622680664
+cox13-indom.dlg.22.O.24	cox13.pdbqt.ILE523.CG1.4844	3.4054927825927734
+cox13-indom.dlg.22.O.22	cox13.pdbqt.TYR355.CZ.3180	3.417800188064575
+cox13-indom.dlg.22.O.24	cox13.pdbqt.LEU352.C.3150	3.547877073287964
+cox13-indom.dlg.22.O.11	cox13.pdbqt.SER530.CB.4901	3.548099994659424
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG120.CG.879	3.568047046661377
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ARG120.CZ.883	3.623391628265381
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG120.CZ.883	3.625694513320923
+cox13-indom.dlg.22.O.24	cox13.pdbqt.SER353.C.3159	3.639777183532715
+cox13-indom.dlg.22.O.24	cox13.pdbqt.SER353.CB.3161	3.685831069946289
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL349.CB.3120	3.70961856842041
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG120.CD.880	3.720628023147583
+cox13-indom.dlg.22.O.21	cox13.pdbqt.VAL116.CG1.845	3.810002088546753
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU531.CD2.4912	3.9835469722747803
+cox13-indom.dlg.22.O.21	cox13.pdbqt.LEU531.CD1.4911	4.061704158782959
+cox13-indom.dlg.22.O.24	cox13.pdbqt.PHE518.CE2.4804	4.120336055755615
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ILE523.CG2.4845	4.131452560424805
+cox13-indom.dlg.22.N.2	cox13.pdbqt.ALA527.CB.4876	4.264418601989746
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU531.CG.4910	4.299840927124023
+cox13-indom.dlg.22.N.2	cox13.pdbqt.ALA527.CA.4873	4.323338508605957
+cox13-indom.dlg.22.N.2	cox13.pdbqt.VAL349.CB.3120	4.326735496520996
+cox13-indom.dlg.22.N.2	cox13.pdbqt.VAL349.CG2.3122	4.345263957977295
+cox13-indom.dlg.22.O.24	cox13.pdbqt.TYR355.CE2.3179	4.437754154205322
+
+ 35 non-polar - polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.C.25	cox13.pdbqt.LEU352.O.3151	2.6235506534576416
+cox13-indom.dlg.22.C.16	cox13.pdbqt.TYR385.OH.3502	3.1760847568511963
+cox13-indom.dlg.22.C.18	cox13.pdbqt.SER530.OG.4902	3.2398595809936523
+cox13-indom.dlg.22.C.7	cox13.pdbqt.SER353.N.3156	3.3868467807769775
+cox13-indom.dlg.22.C.13	cox13.pdbqt.ALA527.N.4871	3.3925349712371826
+cox13-indom.dlg.22.C.14	cox13.pdbqt.GLY526.O.4870	3.48759388923645
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ARG120.NH2.887	3.5365066528320313
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ARG120.NE.881	3.5648531913757324
+cox13-indom.dlg.22.C.8	cox13.pdbqt.TYR355.OH.3181	3.566056251525879
+cox13-indom.dlg.22.C.13	cox13.pdbqt.GLY526.O.4870	3.5863680839538574
+cox13-indom.dlg.22.C.12	cox13.pdbqt.SER530.OG.4902	3.6023104190826416
+cox13-indom.dlg.22.C.20	cox13.pdbqt.TYR355.OH.3181	3.609738349914551
+cox13-indom.dlg.22.C.6	cox13.pdbqt.SER353.N.3156	3.636218786239624
+cox13-indom.dlg.22.C.19	cox13.pdbqt.TYR355.OH.3181	3.6642861366271973
+cox13-indom.dlg.22.C.10	cox13.pdbqt.SER530.OG.4902	3.6889026165008545
+cox13-indom.dlg.22.C.14	cox13.pdbqt.ALA527.N.4871	3.7193443775177
+cox13-indom.dlg.22.C.25	cox13.pdbqt.SER353.N.3156	3.7328402996063232
+cox13-indom.dlg.22.C.7	cox13.pdbqt.LEU352.O.3151	3.7977452278137207
+cox13-indom.dlg.22.C.16	cox13.pdbqt.SER530.OG.4902	3.9027600288391113
+cox13-indom.dlg.22.C.6	cox13.pdbqt.LEU352.O.3151	3.9191484451293945
+cox13-indom.dlg.22.C.8	cox13.pdbqt.SER353.N.3156	3.9244630336761475
+cox13-indom.dlg.22.C.18	cox13.pdbqt.TYR385.OH.3502	4.025022029876709
+cox13-indom.dlg.22.C.25	cox13.pdbqt.SER353.O.3160	4.029901027679443
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TYR385.OH.3502	4.105490684509277
+cox13-indom.dlg.22.C.14	cox13.pdbqt.MET522.O.4833	4.1208696365356445
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR385.OH.3502	4.140883445739746
+cox13-indom.dlg.22.C.15	cox13.pdbqt.GLY526.O.4870	4.205186367034912
+cox13-indom.dlg.22.C.4	cox13.pdbqt.TYR355.OH.3181	4.312356948852539
+cox13-indom.dlg.22.C.12	cox13.pdbqt.GLY526.O.4870	4.356592655181885
+cox13-indom.dlg.22.C.5	cox13.pdbqt.SER353.N.3156	4.364185333251953
+cox13-indom.dlg.22.C.25	cox13.pdbqt.GLN192.OE1.1606	4.42227840423584
+cox13-indom.dlg.22.C.0	cox13.pdbqt.TYR355.OH.3181	4.428324222564697
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TRP387.NE1.3524	4.437571048736572
+cox13-indom.dlg.22.C.12	cox13.pdbqt.ALA527.N.4871	4.456822872161865
+cox13-indom.dlg.22.C.13	cox13.pdbqt.SER530.OG.4902	4.4692487716674805
+
+ 112 non-polar - non-polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ILE523.CD1.4846	2.9199745655059814
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TRP387.CZ2.3527	2.9892518520355225
+cox13-indom.dlg.22.C.7	cox13.pdbqt.SER353.CA.3158	3.08315372467041
+cox13-indom.dlg.22.C.25	cox13.pdbqt.PHE518.CE2.4804	3.0906150341033936
+cox13-indom.dlg.22.C.19	cox13.pdbqt.TYR355.CE1.3178	3.123685836791992
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.LEU384.CD2.3489	3.1255850791931152
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU531.CD1.4911	3.139641046524048
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU531.CG.4910	3.1875314712524414
+cox13-indom.dlg.22.C.8	cox13.pdbqt.SER353.CB.3161	3.1912972927093506
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ILE523.CD1.4846	3.244107961654663
+cox13-indom.dlg.22.C.1	cox13.pdbqt.VAL349.CG1.3121	3.2443087100982666
+cox13-indom.dlg.22.C.14	cox13.pdbqt.GLY526.C.4869	3.2873778343200684
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU531.CD2.4912	3.29801344871521
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR385.CE1.3499	3.3182168006896973
+cox13-indom.dlg.22.C.25	cox13.pdbqt.LEU352.C.3150	3.325756788253784
+cox13-indom.dlg.22.C.8	cox13.pdbqt.SER353.CA.3158	3.33884334564209
+cox13-indom.dlg.22.C.13	cox13.pdbqt.GLY526.C.4869	3.4033737182617188
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ILE523.CG1.4844	3.410987138748169
+cox13-indom.dlg.22.C.14	cox13.pdbqt.GLY526.CA.4868	3.4416940212249756
+cox13-indom.dlg.22.C.10	cox13.pdbqt.VAL349.CG1.3121	3.4753406047821045
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TRP387.CH2.3529	3.484668016433716
+cox13-indom.dlg.22.C.6	cox13.pdbqt.LEU352.CB.3152	3.4856505393981934
+cox13-indom.dlg.22.C.18	cox13.pdbqt.SER530.CB.4901	3.4925479888916016
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR385.CD1.3497	3.5138485431671143
+cox13-indom.dlg.22.C.25	cox13.pdbqt.SER353.CA.3158	3.5263633728027344
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR385.CZ.3501	3.561288356781006
+cox13-indom.dlg.22.C.7	cox13.pdbqt.SER353.CB.3161	3.5619399547576904
+cox13-indom.dlg.22.C.12	cox13.pdbqt.SER530.CB.4901	3.564774990081787
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ILE523.CG1.4844	3.5795738697052
+cox13-indom.dlg.22.C.16	cox13.pdbqt.TYR385.CZ.3501	3.6043224334716797
+cox13-indom.dlg.22.C.13	cox13.pdbqt.ALA527.CA.4873	3.614978790283203
+cox13-indom.dlg.22.C.20	cox13.pdbqt.TYR355.CE1.3178	3.661085367202759
+cox13-indom.dlg.22.C.6	cox13.pdbqt.LEU352.C.3150	3.678541898727417
+cox13-indom.dlg.22.C.10	cox13.pdbqt.VAL349.CG2.3122	3.6805624961853027
+cox13-indom.dlg.22.C.9	cox13.pdbqt.VAL349.CG1.3121	3.683089256286621
+cox13-indom.dlg.22.C.6	cox13.pdbqt.PHE518.CZ.4805	3.6850626468658447
+cox13-indom.dlg.22.C.6	cox13.pdbqt.ILE523.CG1.4844	3.69763445854187
+cox13-indom.dlg.22.C.7	cox13.pdbqt.LEU352.C.3150	3.715043783187866
+cox13-indom.dlg.22.C.3	cox13.pdbqt.VAL349.CG1.3121	3.7151782512664795
+cox13-indom.dlg.22.C.25	cox13.pdbqt.PHE518.CZ.4805	3.7502248287200928
+cox13-indom.dlg.22.C.16	cox13.pdbqt.TYR385.CE1.3499	3.7630178928375244
+cox13-indom.dlg.22.C.19	cox13.pdbqt.TYR355.CZ.3180	3.765998601913452
+cox13-indom.dlg.22.C.8	cox13.pdbqt.TYR355.CZ.3180	3.7676117420196533
+cox13-indom.dlg.22.C.0	cox13.pdbqt.VAL349.CG1.3121	3.7769935131073
+cox13-indom.dlg.22.C.5	cox13.pdbqt.LEU352.CB.3152	3.7778618335723877
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TRP387.CZ2.3527	3.7870967388153076
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ILE523.CD1.4846	3.802971839904785
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TRP387.CH2.3529	3.8054215908050537
+cox13-indom.dlg.22.C.16	cox13.pdbqt.TRP387.CH2.3529	3.816859006881714
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ILE523.CG2.4845	3.8210158348083496
+cox13-indom.dlg.22.C.4	cox13.pdbqt.SER353.CB.3161	3.8393423557281494
+cox13-indom.dlg.22.C.6	cox13.pdbqt.PHE518.CE2.4804	3.8591294288635254
+cox13-indom.dlg.22.C.6	cox13.pdbqt.SER353.CA.3158	3.8826332092285156
+cox13-indom.dlg.22.C.16	cox13.pdbqt.SER530.CB.4901	3.8985390663146973
+cox13-indom.dlg.22.C.10	cox13.pdbqt.SER530.CB.4901	3.9097416400909424
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TRP387.CE2.3525	3.9245288372039795
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR385.CG.3496	3.9290294647216797
+cox13-indom.dlg.22.C.9	cox13.pdbqt.ALA527.CB.4876	3.95304274559021
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR385.CE2.3500	3.960092067718506
+cox13-indom.dlg.22.C.1	cox13.pdbqt.ALA527.CB.4876	3.9617161750793457
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ILE523.CG1.4844	3.96394944190979
+cox13-indom.dlg.22.C.13	cox13.pdbqt.SER530.CB.4901	3.987574577331543
+cox13-indom.dlg.22.C.6	cox13.pdbqt.ILE523.CD1.4846	3.990462064743042
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TYR385.CE1.3499	4.002353668212891
+cox13-indom.dlg.22.C.19	cox13.pdbqt.TYR355.CD1.3176	4.014077186584473
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ARG120.CZ.883	4.025603771209717
+cox13-indom.dlg.22.C.4	cox13.pdbqt.VAL349.CG1.3121	4.025926113128662
+cox13-indom.dlg.22.C.25	cox13.pdbqt.PHE518.CD2.4802	4.032925605773926
+cox13-indom.dlg.22.C.13	cox13.pdbqt.GLY526.CA.4868	4.038583755493164
+cox13-indom.dlg.22.C.8	cox13.pdbqt.TYR355.CE1.3178	4.085595607757568
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ALA527.CB.4876	4.089789390563965
+cox13-indom.dlg.22.C.25	cox13.pdbqt.SER353.C.3159	4.09431791305542
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TYR385.CZ.3501	4.099005222320557
+cox13-indom.dlg.22.C.4	cox13.pdbqt.ILE523.CG2.4845	4.10182523727417
+cox13-indom.dlg.22.C.20	cox13.pdbqt.TYR355.CZ.3180	4.116868019104004
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR385.CD2.3498	4.119055271148682
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.PHE381.CE1.3455	4.133617401123047
+cox13-indom.dlg.22.C.10	cox13.pdbqt.VAL349.CB.3120	4.155640125274658
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ILE523.CG2.4845	4.170967102050781
+cox13-indom.dlg.22.C.5	cox13.pdbqt.LEU352.CD1.3154	4.202574729919434
+cox13-indom.dlg.22.C.0	cox13.pdbqt.TYR355.CE1.3178	4.220155715942383
+cox13-indom.dlg.22.C.6	cox13.pdbqt.LEU352.CA.3149	4.239864826202393
+cox13-indom.dlg.22.C.18	cox13.pdbqt.VAL349.CG2.3122	4.249804496765137
+cox13-indom.dlg.22.C.16	cox13.pdbqt.TRP387.CZ2.3527	4.26002311706543
+cox13-indom.dlg.22.C.10	cox13.pdbqt.ALA527.CA.4873	4.268540859222412
+cox13-indom.dlg.22.C.18	cox13.pdbqt.LEU352.CD1.3154	4.275320053100586
+cox13-indom.dlg.22.C.15	cox13.pdbqt.SER530.CB.4901	4.275882720947266
+cox13-indom.dlg.22.C.4	cox13.pdbqt.SER353.CA.3158	4.284276485443115
+cox13-indom.dlg.22.C.12	cox13.pdbqt.ALA527.CA.4873	4.2845778465271
+cox13-indom.dlg.22.C.9	cox13.pdbqt.ALA527.CA.4873	4.29140567779541
+cox13-indom.dlg.22.C.7	cox13.pdbqt.SER353.C.3159	4.308262825012207
+cox13-indom.dlg.22.C.15	cox13.pdbqt.GLY526.C.4869	4.312966823577881
+cox13-indom.dlg.22.C.14	cox13.pdbqt.SER530.CB.4901	4.3177170753479
+cox13-indom.dlg.22.C.8	cox13.pdbqt.TYR355.CE2.3179	4.322890281677246
+cox13-indom.dlg.22.C.0	cox13.pdbqt.ALA527.CB.4876	4.323869705200195
+cox13-indom.dlg.22.C.7	cox13.pdbqt.PHE518.CE2.4804	4.356813430786133
+cox13-indom.dlg.22.C.7	cox13.pdbqt.LEU352.CB.3152	4.358693599700928
+cox13-indom.dlg.22.C.14	cox13.pdbqt.ALA527.CA.4873	4.365509510040283
+cox13-indom.dlg.22.C.20	cox13.pdbqt.VAL116.CG1.845	4.373132705688477
+cox13-indom.dlg.22.C.15	cox13.pdbqt.GLY526.CA.4868	4.376264572143555
+cox13-indom.dlg.22.C.5	cox13.pdbqt.PHE518.CZ.4805	4.387622833251953
+cox13-indom.dlg.22.C.16	cox13.pdbqt.LEU352.CD1.3154	4.3894147872924805
+cox13-indom.dlg.22.C.13	cox13.pdbqt.ALA527.CB.4876	4.389449119567871
+cox13-indom.dlg.22.C.1	cox13.pdbqt.ALA527.CA.4873	4.39764404296875
+cox13-indom.dlg.22.C.0	cox13.pdbqt.SER353.CB.3161	4.4042816162109375
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ILE523.CB.4843	4.412808418273926
+cox13-indom.dlg.22.C.5	cox13.pdbqt.VAL349.CG1.3121	4.428883075714111
+cox13-indom.dlg.22.C.25	cox13.pdbqt.LEU352.CA.3149	4.43190336227417
+cox13-indom.dlg.22.C.5	cox13.pdbqt.ILE523.CG1.4844	4.434884071350098
+cox13-indom.dlg.22.C.6	cox13.pdbqt.SER353.CB.3161	4.439497470855713
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ILE523.CG2.4845	4.4726762771606445
+cox13-indom.dlg.22.C.12	cox13.pdbqt.GLY526.C.4869	4.4812798500061035
+
+lrcdMat_dct: Done.
+
++++ ligand-receptor contact distance matrix +++
++++ distance between center of mass (COM) of lig and rec +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+COM-lig: (26.088529586791992 34.48643493652344 208.18238830566406)
+COM-rec: (28.247900009155273 39.271514892578125 200.7145538330078)
+distance between COMs (A): 9.128440311346006; scaled: 41.07798140105703
+
+lrcdMat_cmd: Done.
+
++++ ligand-receptor contact distance matrix +++
++++ length of the arc between principal axes of lig and rec +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+Angle between principal axis 1 L-R: 106.03255193145365 deg; length of arc: 8.327775422185983 A
+Angle between principal axis 2 L-R: 144.42617896493536 deg; length of arc: 11.34320321067023 A
+Angle between principal axis 3 L-R: 74.26228514435829 deg; length of arc: 5.832545022780871 A
+
+lrcdMat_lapa: Done.
+
++++ ligand-receptor contact distance vector +++
++++ sum of values for each component +++
+
+user info: ref: Complex COX-1 - Indomethacin (Imn), docking poses.
+categories in the lrcd matrix: cmd pp nn pn np arc
+
+ type 	 N 	 dist sum (Angstroms)
+cmd	1	41.07798140105703
+pp	10	33.091076374053955
+nn	112	434.48480916023254
+pn	29	107.2040479183197
+np	35	134.63274598121643
+arc	3	25.503523655637082
+
+lrcdVec_sum: Done.
+
+Calculating LRCD for each structure in complex COX1-indom
+
+Calculating COX1-indom frame: 0
+
++++ ligand-receptor contact distance matrix +++
++++ distances by contact type (types: pp pn np nn) +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+ 10 polar - polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.O.22	cox13.pdbqt.TYR355.OH.3181	2.6789934635162354
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ARG120.NH2.887	2.7983920574188232
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG120.NE.881	2.81119441986084
+cox13-indom.dlg.22.O.11	cox13.pdbqt.SER530.OG.4902	3.0024373531341553
+cox13-indom.dlg.22.O.24	cox13.pdbqt.LEU352.O.3151	3.216585397720337
+cox13-indom.dlg.22.O.24	cox13.pdbqt.SER353.N.3156	3.415994167327881
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG120.NH2.887	3.5592124462127686
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ARG120.NE.881	3.5819907188415527
+cox13-indom.dlg.22.O.24	cox13.pdbqt.SER353.O.3160	3.593292474746704
+cox13-indom.dlg.22.O.24	cox13.pdbqt.TYR355.OH.3181	4.432983875274658
+
+ 29 polar - non-polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.O.24	cox13.pdbqt.ILE523.CD1.4846	2.6781868934631348
+cox13-indom.dlg.22.O.24	cox13.pdbqt.SER353.CA.3158	2.8260557651519775
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL349.CG2.3122	2.976531505584717
+cox13-indom.dlg.22.N.2	cox13.pdbqt.VAL349.CG1.3121	3.2164466381073
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL349.CG1.3121	3.2586870193481445
+cox13-indom.dlg.22.O.22	cox13.pdbqt.TYR355.CE1.3178	3.2672712802886963
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ALA527.CB.4876	3.3842172622680664
+cox13-indom.dlg.22.O.24	cox13.pdbqt.ILE523.CG1.4844	3.4054927825927734
+cox13-indom.dlg.22.O.22	cox13.pdbqt.TYR355.CZ.3180	3.417800188064575
+cox13-indom.dlg.22.O.24	cox13.pdbqt.LEU352.C.3150	3.547877073287964
+cox13-indom.dlg.22.O.11	cox13.pdbqt.SER530.CB.4901	3.548099994659424
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG120.CG.879	3.568047046661377
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ARG120.CZ.883	3.623391628265381
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG120.CZ.883	3.625694513320923
+cox13-indom.dlg.22.O.24	cox13.pdbqt.SER353.C.3159	3.639777183532715
+cox13-indom.dlg.22.O.24	cox13.pdbqt.SER353.CB.3161	3.685831069946289
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL349.CB.3120	3.70961856842041
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG120.CD.880	3.720628023147583
+cox13-indom.dlg.22.O.21	cox13.pdbqt.VAL116.CG1.845	3.810002088546753
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU531.CD2.4912	3.9835469722747803
+cox13-indom.dlg.22.O.21	cox13.pdbqt.LEU531.CD1.4911	4.061704158782959
+cox13-indom.dlg.22.O.24	cox13.pdbqt.PHE518.CE2.4804	4.120336055755615
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ILE523.CG2.4845	4.131452560424805
+cox13-indom.dlg.22.N.2	cox13.pdbqt.ALA527.CB.4876	4.264418601989746
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU531.CG.4910	4.299840927124023
+cox13-indom.dlg.22.N.2	cox13.pdbqt.ALA527.CA.4873	4.323338508605957
+cox13-indom.dlg.22.N.2	cox13.pdbqt.VAL349.CB.3120	4.326735496520996
+cox13-indom.dlg.22.N.2	cox13.pdbqt.VAL349.CG2.3122	4.345263957977295
+cox13-indom.dlg.22.O.24	cox13.pdbqt.TYR355.CE2.3179	4.437754154205322
+
+ 35 non-polar - polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.C.25	cox13.pdbqt.LEU352.O.3151	2.6235506534576416
+cox13-indom.dlg.22.C.16	cox13.pdbqt.TYR385.OH.3502	3.1760847568511963
+cox13-indom.dlg.22.C.18	cox13.pdbqt.SER530.OG.4902	3.2398595809936523
+cox13-indom.dlg.22.C.7	cox13.pdbqt.SER353.N.3156	3.3868467807769775
+cox13-indom.dlg.22.C.13	cox13.pdbqt.ALA527.N.4871	3.3925349712371826
+cox13-indom.dlg.22.C.14	cox13.pdbqt.GLY526.O.4870	3.48759388923645
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ARG120.NH2.887	3.5365066528320313
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ARG120.NE.881	3.5648531913757324
+cox13-indom.dlg.22.C.8	cox13.pdbqt.TYR355.OH.3181	3.566056251525879
+cox13-indom.dlg.22.C.13	cox13.pdbqt.GLY526.O.4870	3.5863680839538574
+cox13-indom.dlg.22.C.12	cox13.pdbqt.SER530.OG.4902	3.6023104190826416
+cox13-indom.dlg.22.C.20	cox13.pdbqt.TYR355.OH.3181	3.609738349914551
+cox13-indom.dlg.22.C.6	cox13.pdbqt.SER353.N.3156	3.636218786239624
+cox13-indom.dlg.22.C.19	cox13.pdbqt.TYR355.OH.3181	3.6642861366271973
+cox13-indom.dlg.22.C.10	cox13.pdbqt.SER530.OG.4902	3.6889026165008545
+cox13-indom.dlg.22.C.14	cox13.pdbqt.ALA527.N.4871	3.7193443775177
+cox13-indom.dlg.22.C.25	cox13.pdbqt.SER353.N.3156	3.7328402996063232
+cox13-indom.dlg.22.C.7	cox13.pdbqt.LEU352.O.3151	3.7977452278137207
+cox13-indom.dlg.22.C.16	cox13.pdbqt.SER530.OG.4902	3.9027600288391113
+cox13-indom.dlg.22.C.6	cox13.pdbqt.LEU352.O.3151	3.9191484451293945
+cox13-indom.dlg.22.C.8	cox13.pdbqt.SER353.N.3156	3.9244630336761475
+cox13-indom.dlg.22.C.18	cox13.pdbqt.TYR385.OH.3502	4.025022029876709
+cox13-indom.dlg.22.C.25	cox13.pdbqt.SER353.O.3160	4.029901027679443
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TYR385.OH.3502	4.105490684509277
+cox13-indom.dlg.22.C.14	cox13.pdbqt.MET522.O.4833	4.1208696365356445
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR385.OH.3502	4.140883445739746
+cox13-indom.dlg.22.C.15	cox13.pdbqt.GLY526.O.4870	4.205186367034912
+cox13-indom.dlg.22.C.4	cox13.pdbqt.TYR355.OH.3181	4.312356948852539
+cox13-indom.dlg.22.C.12	cox13.pdbqt.GLY526.O.4870	4.356592655181885
+cox13-indom.dlg.22.C.5	cox13.pdbqt.SER353.N.3156	4.364185333251953
+cox13-indom.dlg.22.C.25	cox13.pdbqt.GLN192.OE1.1606	4.42227840423584
+cox13-indom.dlg.22.C.0	cox13.pdbqt.TYR355.OH.3181	4.428324222564697
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TRP387.NE1.3524	4.437571048736572
+cox13-indom.dlg.22.C.12	cox13.pdbqt.ALA527.N.4871	4.456822872161865
+cox13-indom.dlg.22.C.13	cox13.pdbqt.SER530.OG.4902	4.4692487716674805
+
+ 112 non-polar - non-polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ILE523.CD1.4846	2.9199745655059814
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TRP387.CZ2.3527	2.9892518520355225
+cox13-indom.dlg.22.C.7	cox13.pdbqt.SER353.CA.3158	3.08315372467041
+cox13-indom.dlg.22.C.25	cox13.pdbqt.PHE518.CE2.4804	3.0906150341033936
+cox13-indom.dlg.22.C.19	cox13.pdbqt.TYR355.CE1.3178	3.123685836791992
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.LEU384.CD2.3489	3.1255850791931152
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU531.CD1.4911	3.139641046524048
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU531.CG.4910	3.1875314712524414
+cox13-indom.dlg.22.C.8	cox13.pdbqt.SER353.CB.3161	3.1912972927093506
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ILE523.CD1.4846	3.244107961654663
+cox13-indom.dlg.22.C.1	cox13.pdbqt.VAL349.CG1.3121	3.2443087100982666
+cox13-indom.dlg.22.C.14	cox13.pdbqt.GLY526.C.4869	3.2873778343200684
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU531.CD2.4912	3.29801344871521
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR385.CE1.3499	3.3182168006896973
+cox13-indom.dlg.22.C.25	cox13.pdbqt.LEU352.C.3150	3.325756788253784
+cox13-indom.dlg.22.C.8	cox13.pdbqt.SER353.CA.3158	3.33884334564209
+cox13-indom.dlg.22.C.13	cox13.pdbqt.GLY526.C.4869	3.4033737182617188
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ILE523.CG1.4844	3.410987138748169
+cox13-indom.dlg.22.C.14	cox13.pdbqt.GLY526.CA.4868	3.4416940212249756
+cox13-indom.dlg.22.C.10	cox13.pdbqt.VAL349.CG1.3121	3.4753406047821045
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TRP387.CH2.3529	3.484668016433716
+cox13-indom.dlg.22.C.6	cox13.pdbqt.LEU352.CB.3152	3.4856505393981934
+cox13-indom.dlg.22.C.18	cox13.pdbqt.SER530.CB.4901	3.4925479888916016
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR385.CD1.3497	3.5138485431671143
+cox13-indom.dlg.22.C.25	cox13.pdbqt.SER353.CA.3158	3.5263633728027344
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR385.CZ.3501	3.561288356781006
+cox13-indom.dlg.22.C.7	cox13.pdbqt.SER353.CB.3161	3.5619399547576904
+cox13-indom.dlg.22.C.12	cox13.pdbqt.SER530.CB.4901	3.564774990081787
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ILE523.CG1.4844	3.5795738697052
+cox13-indom.dlg.22.C.16	cox13.pdbqt.TYR385.CZ.3501	3.6043224334716797
+cox13-indom.dlg.22.C.13	cox13.pdbqt.ALA527.CA.4873	3.614978790283203
+cox13-indom.dlg.22.C.20	cox13.pdbqt.TYR355.CE1.3178	3.661085367202759
+cox13-indom.dlg.22.C.6	cox13.pdbqt.LEU352.C.3150	3.678541898727417
+cox13-indom.dlg.22.C.10	cox13.pdbqt.VAL349.CG2.3122	3.6805624961853027
+cox13-indom.dlg.22.C.9	cox13.pdbqt.VAL349.CG1.3121	3.683089256286621
+cox13-indom.dlg.22.C.6	cox13.pdbqt.PHE518.CZ.4805	3.6850626468658447
+cox13-indom.dlg.22.C.6	cox13.pdbqt.ILE523.CG1.4844	3.69763445854187
+cox13-indom.dlg.22.C.7	cox13.pdbqt.LEU352.C.3150	3.715043783187866
+cox13-indom.dlg.22.C.3	cox13.pdbqt.VAL349.CG1.3121	3.7151782512664795
+cox13-indom.dlg.22.C.25	cox13.pdbqt.PHE518.CZ.4805	3.7502248287200928
+cox13-indom.dlg.22.C.16	cox13.pdbqt.TYR385.CE1.3499	3.7630178928375244
+cox13-indom.dlg.22.C.19	cox13.pdbqt.TYR355.CZ.3180	3.765998601913452
+cox13-indom.dlg.22.C.8	cox13.pdbqt.TYR355.CZ.3180	3.7676117420196533
+cox13-indom.dlg.22.C.0	cox13.pdbqt.VAL349.CG1.3121	3.7769935131073
+cox13-indom.dlg.22.C.5	cox13.pdbqt.LEU352.CB.3152	3.7778618335723877
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TRP387.CZ2.3527	3.7870967388153076
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ILE523.CD1.4846	3.802971839904785
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TRP387.CH2.3529	3.8054215908050537
+cox13-indom.dlg.22.C.16	cox13.pdbqt.TRP387.CH2.3529	3.816859006881714
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ILE523.CG2.4845	3.8210158348083496
+cox13-indom.dlg.22.C.4	cox13.pdbqt.SER353.CB.3161	3.8393423557281494
+cox13-indom.dlg.22.C.6	cox13.pdbqt.PHE518.CE2.4804	3.8591294288635254
+cox13-indom.dlg.22.C.6	cox13.pdbqt.SER353.CA.3158	3.8826332092285156
+cox13-indom.dlg.22.C.16	cox13.pdbqt.SER530.CB.4901	3.8985390663146973
+cox13-indom.dlg.22.C.10	cox13.pdbqt.SER530.CB.4901	3.9097416400909424
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TRP387.CE2.3525	3.9245288372039795
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR385.CG.3496	3.9290294647216797
+cox13-indom.dlg.22.C.9	cox13.pdbqt.ALA527.CB.4876	3.95304274559021
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR385.CE2.3500	3.960092067718506
+cox13-indom.dlg.22.C.1	cox13.pdbqt.ALA527.CB.4876	3.9617161750793457
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ILE523.CG1.4844	3.96394944190979
+cox13-indom.dlg.22.C.13	cox13.pdbqt.SER530.CB.4901	3.987574577331543
+cox13-indom.dlg.22.C.6	cox13.pdbqt.ILE523.CD1.4846	3.990462064743042
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TYR385.CE1.3499	4.002353668212891
+cox13-indom.dlg.22.C.19	cox13.pdbqt.TYR355.CD1.3176	4.014077186584473
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ARG120.CZ.883	4.025603771209717
+cox13-indom.dlg.22.C.4	cox13.pdbqt.VAL349.CG1.3121	4.025926113128662
+cox13-indom.dlg.22.C.25	cox13.pdbqt.PHE518.CD2.4802	4.032925605773926
+cox13-indom.dlg.22.C.13	cox13.pdbqt.GLY526.CA.4868	4.038583755493164
+cox13-indom.dlg.22.C.8	cox13.pdbqt.TYR355.CE1.3178	4.085595607757568
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ALA527.CB.4876	4.089789390563965
+cox13-indom.dlg.22.C.25	cox13.pdbqt.SER353.C.3159	4.09431791305542
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TYR385.CZ.3501	4.099005222320557
+cox13-indom.dlg.22.C.4	cox13.pdbqt.ILE523.CG2.4845	4.10182523727417
+cox13-indom.dlg.22.C.20	cox13.pdbqt.TYR355.CZ.3180	4.116868019104004
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR385.CD2.3498	4.119055271148682
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.PHE381.CE1.3455	4.133617401123047
+cox13-indom.dlg.22.C.10	cox13.pdbqt.VAL349.CB.3120	4.155640125274658
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ILE523.CG2.4845	4.170967102050781
+cox13-indom.dlg.22.C.5	cox13.pdbqt.LEU352.CD1.3154	4.202574729919434
+cox13-indom.dlg.22.C.0	cox13.pdbqt.TYR355.CE1.3178	4.220155715942383
+cox13-indom.dlg.22.C.6	cox13.pdbqt.LEU352.CA.3149	4.239864826202393
+cox13-indom.dlg.22.C.18	cox13.pdbqt.VAL349.CG2.3122	4.249804496765137
+cox13-indom.dlg.22.C.16	cox13.pdbqt.TRP387.CZ2.3527	4.26002311706543
+cox13-indom.dlg.22.C.10	cox13.pdbqt.ALA527.CA.4873	4.268540859222412
+cox13-indom.dlg.22.C.18	cox13.pdbqt.LEU352.CD1.3154	4.275320053100586
+cox13-indom.dlg.22.C.15	cox13.pdbqt.SER530.CB.4901	4.275882720947266
+cox13-indom.dlg.22.C.4	cox13.pdbqt.SER353.CA.3158	4.284276485443115
+cox13-indom.dlg.22.C.12	cox13.pdbqt.ALA527.CA.4873	4.2845778465271
+cox13-indom.dlg.22.C.9	cox13.pdbqt.ALA527.CA.4873	4.29140567779541
+cox13-indom.dlg.22.C.7	cox13.pdbqt.SER353.C.3159	4.308262825012207
+cox13-indom.dlg.22.C.15	cox13.pdbqt.GLY526.C.4869	4.312966823577881
+cox13-indom.dlg.22.C.14	cox13.pdbqt.SER530.CB.4901	4.3177170753479
+cox13-indom.dlg.22.C.8	cox13.pdbqt.TYR355.CE2.3179	4.322890281677246
+cox13-indom.dlg.22.C.0	cox13.pdbqt.ALA527.CB.4876	4.323869705200195
+cox13-indom.dlg.22.C.7	cox13.pdbqt.PHE518.CE2.4804	4.356813430786133
+cox13-indom.dlg.22.C.7	cox13.pdbqt.LEU352.CB.3152	4.358693599700928
+cox13-indom.dlg.22.C.14	cox13.pdbqt.ALA527.CA.4873	4.365509510040283
+cox13-indom.dlg.22.C.20	cox13.pdbqt.VAL116.CG1.845	4.373132705688477
+cox13-indom.dlg.22.C.15	cox13.pdbqt.GLY526.CA.4868	4.376264572143555
+cox13-indom.dlg.22.C.5	cox13.pdbqt.PHE518.CZ.4805	4.387622833251953
+cox13-indom.dlg.22.C.16	cox13.pdbqt.LEU352.CD1.3154	4.3894147872924805
+cox13-indom.dlg.22.C.13	cox13.pdbqt.ALA527.CB.4876	4.389449119567871
+cox13-indom.dlg.22.C.1	cox13.pdbqt.ALA527.CA.4873	4.39764404296875
+cox13-indom.dlg.22.C.0	cox13.pdbqt.SER353.CB.3161	4.4042816162109375
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ILE523.CB.4843	4.412808418273926
+cox13-indom.dlg.22.C.5	cox13.pdbqt.VAL349.CG1.3121	4.428883075714111
+cox13-indom.dlg.22.C.25	cox13.pdbqt.LEU352.CA.3149	4.43190336227417
+cox13-indom.dlg.22.C.5	cox13.pdbqt.ILE523.CG1.4844	4.434884071350098
+cox13-indom.dlg.22.C.6	cox13.pdbqt.SER353.CB.3161	4.439497470855713
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ILE523.CG2.4845	4.4726762771606445
+cox13-indom.dlg.22.C.12	cox13.pdbqt.GLY526.C.4869	4.4812798500061035
+
+lrcdMat_dct: Done.
+
++++ ligand-receptor contact distance matrix +++
++++ distance between center of mass (COM) of lig and rec +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+COM-lig: (26.088529586791992 34.48643493652344 208.18238830566406)
+COM-rec: (28.247900009155273 39.271514892578125 200.7145538330078)
+distance between COMs (A): 9.128440311346006; scaled: 41.07798140105703
+
+lrcdMat_cmd: Done.
+
++++ ligand-receptor contact distance matrix +++
++++ length of the arc between principal axes of lig and rec +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+Angle between principal axis 1 L-R: 106.03255193145365 deg; length of arc: 8.327775422185983 A
+Angle between principal axis 2 L-R: 144.42617896493536 deg; length of arc: 11.34320321067023 A
+Angle between principal axis 3 L-R: 74.26228514435829 deg; length of arc: 5.832545022780871 A
+
+lrcdMat_lapa: Done.
+
++++ ligand-receptor contact distance vector +++
++++ sum of values for each component +++
+
+user info: Complex COX-1 - Indomethacin (Imn), docking poses.
+categories in the lrcd matrix: cmd pp nn pn np arc
+
+ type 	 N 	 dist sum (Angstroms)
+cmd	1	41.07798140105703
+pp	10	33.091076374053955
+nn	112	434.48480916023254
+pn	29	107.2040479183197
+np	35	134.63274598121643
+arc	3	25.503523655637082
+
+lrcdVec_sum: Done.
+
++++ligand-receptor contact distance between two complexes +++
+
+user info: Complex COX-1 - Indomethacin (Imn), docking poses. (frm 0) vs Complex COX-1 - Indomethacin (Imn), docking poses.
+types considered in the L-R complex 1: cmd pp nn pn np arc
+types considered in the L-R complex 2: cmd pp nn pn np arc
+
+ component 	 complex 1 	 complex 2 	 cmplx 2 - cmplx 1
+cmd	41.07798140105703	41.07798140105703	0.0
+pp	33.091076374053955	33.091076374053955	0.0
+nn	434.48480916023254	434.48480916023254	0.0
+pn	107.2040479183197	107.2040479183197	0.0
+np	134.63274598121643	134.63274598121643	0.0
+arc	25.503523655637082	25.503523655637082	0.0
+
+lig-rec contacts distance: 0.0
+
+lrcd: Done.
+
+Calculating COX1-indom frame: 1
+
++++ ligand-receptor contact distance matrix +++
++++ distances by contact type (types: pp pn np nn) +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+ 14 polar - polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.O.21	cox13.pdbqt.TYR355.OH.3181	2.7836318016052246
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG120.NH2.887	2.7958383560180664
+cox13-indom.dlg.22.O.11	cox13.pdbqt.ARG83.NH2.508	3.18965220451355
+cox13-indom.dlg.22.O.24	cox13.pdbqt.HIS90.ND1.569	3.335216760635376
+cox13-indom.dlg.22.O.24	cox13.pdbqt.PRO86.O.529	3.346092700958252
+cox13-indom.dlg.22.O.24	cox13.pdbqt.TYR355.OH.3181	3.448071002960205
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG120.NE.881	3.515559196472168
+cox13-indom.dlg.22.O.24	cox13.pdbqt.HIS90.N.562	3.622652769088745
+cox13-indom.dlg.22.N.2	cox13.pdbqt.ARG120.NH2.887	3.9011905193328857
+cox13-indom.dlg.22.O.24	cox13.pdbqt.GLU524.OE2.4856	4.025740146636963
+cox13-indom.dlg.22.N.2	cox13.pdbqt.ARG120.NH1.884	4.17382287979126
+cox13-indom.dlg.22.O.22	cox13.pdbqt.TYR355.OH.3181	4.354202747344971
+cox13-indom.dlg.22.O.11	cox13.pdbqt.ARG83.NH1.505	4.377893447875977
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ARG120.NE.881	4.442173957824707
+
+ 20 polar - non-polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.O.24	cox13.pdbqt.HIS90.CB.567	3.031062126159668
+cox13-indom.dlg.22.O.22	cox13.pdbqt.VAL116.CG1.845	3.0660133361816406
+cox13-indom.dlg.22.O.11	cox13.pdbqt.ILE89.CD1.561	3.147193431854248
+cox13-indom.dlg.22.O.21	cox13.pdbqt.TYR355.CE1.3178	3.3200807571411133
+cox13-indom.dlg.22.O.24	cox13.pdbqt.HIS90.CA.564	3.3443450927734375
+cox13-indom.dlg.22.O.22	cox13.pdbqt.TYR355.CE1.3178	3.484128713607788
+cox13-indom.dlg.22.O.21	cox13.pdbqt.TYR355.CZ.3180	3.5034894943237305
+cox13-indom.dlg.22.O.22	cox13.pdbqt.VAL116.CG2.846	3.5143163204193115
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG120.CZ.883	3.5869436264038086
+cox13-indom.dlg.22.O.24	cox13.pdbqt.HIS90.CG.568	3.5998799800872803
+cox13-indom.dlg.22.N.2	cox13.pdbqt.ILE89.CD1.561	3.794382095336914
+cox13-indom.dlg.22.O.22	cox13.pdbqt.VAL116.CB.844	3.90969181060791
+cox13-indom.dlg.22.N.2	cox13.pdbqt.ARG120.CZ.883	4.016637802124023
+cox13-indom.dlg.22.N.2	cox13.pdbqt.ILE89.CG2.560	4.055150032043457
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ILE523.CG2.4845	4.2105937004089355
+cox13-indom.dlg.22.O.11	cox13.pdbqt.ARG83.CZ.504	4.224397659301758
+cox13-indom.dlg.22.O.22	cox13.pdbqt.TYR355.CD1.3176	4.2775654792785645
+cox13-indom.dlg.22.O.24	cox13.pdbqt.TYR355.CZ.3180	4.361598491668701
+cox13-indom.dlg.22.O.24	cox13.pdbqt.PRO86.C.528	4.394411563873291
+cox13-indom.dlg.22.O.22	cox13.pdbqt.TYR355.CZ.3180	4.410553455352783
+
+ 67 non-polar - polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.PHE470.O.4350	2.778911590576172
+cox13-indom.dlg.22.C.6	cox13.pdbqt.PRO86.O.529	2.8539791107177734
+cox13-indom.dlg.22.C.8	cox13.pdbqt.TYR355.OH.3181	2.9494709968566895
+cox13-indom.dlg.22.C.13	cox13.pdbqt.ARG83.NH2.508	3.0880167484283447
+cox13-indom.dlg.22.C.14	cox13.pdbqt.GLU524.OE1.4855	3.120267152786255
+cox13-indom.dlg.22.C.6	cox13.pdbqt.GLU524.OE2.4856	3.123786449432373
+cox13-indom.dlg.22.C.4	cox13.pdbqt.ARG120.NH2.887	3.1566786766052246
+cox13-indom.dlg.22.C.18	cox13.pdbqt.ARG120.NH1.884	3.2428979873657227
+cox13-indom.dlg.22.C.16	cox13.pdbqt.ARG120.NH1.884	3.270965576171875
+cox13-indom.dlg.22.C.12	cox13.pdbqt.ARG83.NH2.508	3.3041915893554688
+cox13-indom.dlg.22.C.13	cox13.pdbqt.GLU524.OE1.4855	3.307527542114258
+cox13-indom.dlg.22.C.25	cox13.pdbqt.HIS90.ND1.569	3.3343887329101563
+cox13-indom.dlg.22.C.0	cox13.pdbqt.ARG120.NH2.887	3.427804708480835
+cox13-indom.dlg.22.C.7	cox13.pdbqt.PRO86.O.529	3.430687665939331
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ARG120.NH2.887	3.4350063800811768
+cox13-indom.dlg.22.C.20	cox13.pdbqt.TYR355.OH.3181	3.4417974948883057
+cox13-indom.dlg.22.C.5	cox13.pdbqt.GLU524.OE2.4856	3.449640989303589
+cox13-indom.dlg.22.C.3	cox13.pdbqt.ARG120.NH2.887	3.4967260360717773
+cox13-indom.dlg.22.C.7	cox13.pdbqt.GLU524.OE2.4856	3.5004992485046387
+cox13-indom.dlg.22.C.25	cox13.pdbqt.TYR355.OH.3181	3.52995228767395
+cox13-indom.dlg.22.C.14	cox13.pdbqt.ARG83.NH2.508	3.559619426727295
+cox13-indom.dlg.22.C.25	cox13.pdbqt.GLU524.OE2.4856	3.560349702835083
+cox13-indom.dlg.22.C.12	cox13.pdbqt.ARG120.NH1.884	3.586616039276123
+cox13-indom.dlg.22.C.15	cox13.pdbqt.GLU524.OE1.4855	3.6119165420532227
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ARG120.NH2.887	3.618102550506592
+cox13-indom.dlg.22.C.10	cox13.pdbqt.ARG83.NH2.508	3.662027359008789
+cox13-indom.dlg.22.C.15	cox13.pdbqt.ARG120.NH1.884	3.6746630668640137
+cox13-indom.dlg.22.C.7	cox13.pdbqt.TYR355.OH.3181	3.6770005226135254
+cox13-indom.dlg.22.C.13	cox13.pdbqt.ARG83.NH1.505	3.7645647525787354
+cox13-indom.dlg.22.C.1	cox13.pdbqt.ARG120.NH2.887	3.834437370300293
+cox13-indom.dlg.22.C.5	cox13.pdbqt.GLU524.OE1.4855	3.851684331893921
+cox13-indom.dlg.22.C.7	cox13.pdbqt.HIS90.N.562	3.853994607925415
+cox13-indom.dlg.22.C.5	cox13.pdbqt.PRO86.O.529	3.8846206665039063
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ARG120.NE.881	3.904297113418579
+cox13-indom.dlg.22.C.18	cox13.pdbqt.ARG83.NH2.508	3.923243761062622
+cox13-indom.dlg.22.C.19	cox13.pdbqt.TYR355.OH.3181	3.94313645362854
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ARG120.NH2.887	3.9482076168060303
+cox13-indom.dlg.22.C.4	cox13.pdbqt.TYR355.OH.3181	3.9526782035827637
+cox13-indom.dlg.22.C.12	cox13.pdbqt.GLU524.OE1.4855	3.956190347671509
+cox13-indom.dlg.22.C.13	cox13.pdbqt.ARG120.NH1.884	3.962625503540039
+cox13-indom.dlg.22.C.5	cox13.pdbqt.ARG120.NH2.887	3.986837148666382
+cox13-indom.dlg.22.C.14	cox13.pdbqt.ARG120.NH1.884	4.01676607131958
+cox13-indom.dlg.22.C.25	cox13.pdbqt.PRO86.O.529	4.057057857513428
+cox13-indom.dlg.22.C.3	cox13.pdbqt.GLU524.OE2.4856	4.063267230987549
+cox13-indom.dlg.22.C.19	cox13.pdbqt.ARG120.NH2.887	4.066195011138916
+cox13-indom.dlg.22.C.8	cox13.pdbqt.GLU524.OE2.4856	4.096540451049805
+cox13-indom.dlg.22.C.6	cox13.pdbqt.HIS90.N.562	4.112945556640625
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.GLY471.N.4358	4.114802837371826
+cox13-indom.dlg.22.C.1	cox13.pdbqt.ARG120.NE.881	4.123566627502441
+cox13-indom.dlg.22.C.15	cox13.pdbqt.ARG83.NH2.508	4.158217430114746
+cox13-indom.dlg.22.C.6	cox13.pdbqt.ARG120.NH2.887	4.187748908996582
+cox13-indom.dlg.22.C.0	cox13.pdbqt.ARG120.NE.881	4.1887359619140625
+cox13-indom.dlg.22.C.15	cox13.pdbqt.PHE470.O.4350	4.202789783477783
+cox13-indom.dlg.22.C.6	cox13.pdbqt.GLU524.OE1.4855	4.209367275238037
+cox13-indom.dlg.22.C.16	cox13.pdbqt.GLU524.OE1.4855	4.217615604400635
+cox13-indom.dlg.22.C.14	cox13.pdbqt.ARG83.NH1.505	4.2396392822265625
+cox13-indom.dlg.22.C.18	cox13.pdbqt.ARG120.NE.881	4.24240255355835
+cox13-indom.dlg.22.C.3	cox13.pdbqt.ARG120.NH1.884	4.2540812492370605
+cox13-indom.dlg.22.C.4	cox13.pdbqt.GLU524.OE2.4856	4.329318523406982
+cox13-indom.dlg.22.C.16	cox13.pdbqt.ARG83.NH2.508	4.335112571716309
+cox13-indom.dlg.22.C.0	cox13.pdbqt.TYR355.OH.3181	4.375150203704834
+cox13-indom.dlg.22.C.18	cox13.pdbqt.GLU524.OE1.4855	4.379877090454102
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.GLU524.OE1.4855	4.384743690490723
+cox13-indom.dlg.22.C.10	cox13.pdbqt.ARG120.NH1.884	4.405857086181641
+cox13-indom.dlg.22.C.9	cox13.pdbqt.ARG120.NE.881	4.439253330230713
+cox13-indom.dlg.22.C.3	cox13.pdbqt.GLU524.OE1.4855	4.466932773590088
+cox13-indom.dlg.22.C.1	cox13.pdbqt.ARG120.NH1.884	4.473918437957764
+
+ 81 non-polar - non-polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.C.20	cox13.pdbqt.TYR355.CE1.3178	3.227151393890381
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.LEU123.CD2.917	3.227938175201416
+cox13-indom.dlg.22.C.6	cox13.pdbqt.PRO86.CA.527	3.236307144165039
+cox13-indom.dlg.22.C.18	cox13.pdbqt.VAL119.CG1.871	3.3384008407592773
+cox13-indom.dlg.22.C.6	cox13.pdbqt.PRO86.C.528	3.4340429306030273
+cox13-indom.dlg.22.C.5	cox13.pdbqt.ILE89.CD1.561	3.5502843856811523
+cox13-indom.dlg.22.C.3	cox13.pdbqt.ILE89.CG2.560	3.556469440460205
+cox13-indom.dlg.22.C.10	cox13.pdbqt.ILE89.CD1.561	3.575716018676758
+cox13-indom.dlg.22.C.5	cox13.pdbqt.PRO86.CA.527	3.579357147216797
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.PHE470.C.4349	3.597496509552002
+cox13-indom.dlg.22.C.16	cox13.pdbqt.VAL119.CG1.871	3.6062681674957275
+cox13-indom.dlg.22.C.5	cox13.pdbqt.ILE89.CB.558	3.6333723068237305
+cox13-indom.dlg.22.C.4	cox13.pdbqt.ILE89.CG2.560	3.671572685241699
+cox13-indom.dlg.22.C.25	cox13.pdbqt.HIS513.CE1.4757	3.696793794631958
+cox13-indom.dlg.22.C.13	cox13.pdbqt.ARG83.CZ.504	3.7066752910614014
+cox13-indom.dlg.22.C.25	cox13.pdbqt.HIS90.CB.567	3.711782455444336
+cox13-indom.dlg.22.C.19	cox13.pdbqt.TYR355.CE1.3178	3.726907253265381
+cox13-indom.dlg.22.C.6	cox13.pdbqt.PRO86.CB.530	3.734853506088257
+cox13-indom.dlg.22.C.19	cox13.pdbqt.VAL116.CG2.846	3.744030714035034
+cox13-indom.dlg.22.C.3	cox13.pdbqt.ILE89.CD1.561	3.745087146759033
+cox13-indom.dlg.22.C.6	cox13.pdbqt.ILE89.CB.558	3.7632076740264893
+cox13-indom.dlg.22.C.20	cox13.pdbqt.TYR355.CZ.3180	3.7902188301086426
+cox13-indom.dlg.22.C.8	cox13.pdbqt.LEU93.CD1.601	3.8099782466888428
+cox13-indom.dlg.22.C.19	cox13.pdbqt.LEU93.CD1.601	3.8116073608398438
+cox13-indom.dlg.22.C.5	cox13.pdbqt.ILE89.CG2.560	3.831313371658325
+cox13-indom.dlg.22.C.8	cox13.pdbqt.TYR355.CZ.3180	3.839963912963867
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ILE523.CD1.4846	3.842668294906616
+cox13-indom.dlg.22.C.25	cox13.pdbqt.HIS90.CG.568	3.870913505554199
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ILE523.CG2.4845	3.892458200454712
+cox13-indom.dlg.22.C.18	cox13.pdbqt.ARG120.CZ.883	3.8970279693603516
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.GLY471.CA.4360	3.906426429748535
+cox13-indom.dlg.22.C.3	cox13.pdbqt.ILE89.CB.558	3.913571834564209
+cox13-indom.dlg.22.C.6	cox13.pdbqt.GLU524.CD.4854	3.9288992881774902
+cox13-indom.dlg.22.C.1	cox13.pdbqt.ARG120.CZ.883	3.938539743423462
+cox13-indom.dlg.22.C.0	cox13.pdbqt.ARG120.CZ.883	3.9495723247528076
+cox13-indom.dlg.22.C.9	cox13.pdbqt.VAL116.CG2.846	3.950927257537842
+cox13-indom.dlg.22.C.4	cox13.pdbqt.ARG120.CZ.883	3.984179973602295
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ILE89.CG2.560	3.9874632358551025
+cox13-indom.dlg.22.C.5	cox13.pdbqt.GLU524.CD.4854	3.994649887084961
+cox13-indom.dlg.22.C.14	cox13.pdbqt.ARG83.CZ.504	4.002254486083984
+cox13-indom.dlg.22.C.7	cox13.pdbqt.HIS90.CA.564	4.02911901473999
+cox13-indom.dlg.22.C.3	cox13.pdbqt.ARG120.CZ.883	4.034897804260254
+cox13-indom.dlg.22.C.7	cox13.pdbqt.HIS90.CB.567	4.058012962341309
+cox13-indom.dlg.22.C.5	cox13.pdbqt.ILE89.CG1.559	4.096346378326416
+cox13-indom.dlg.22.C.20	cox13.pdbqt.VAL116.CG1.845	4.0976433753967285
+cox13-indom.dlg.22.C.18	cox13.pdbqt.ARG120.CD.880	4.100441932678223
+cox13-indom.dlg.22.C.6	cox13.pdbqt.ILE89.CG2.560	4.123584747314453
+cox13-indom.dlg.22.C.5	cox13.pdbqt.PRO86.CB.530	4.126747131347656
+cox13-indom.dlg.22.C.20	cox13.pdbqt.VAL116.CG2.846	4.129955291748047
+cox13-indom.dlg.22.C.9	cox13.pdbqt.VAL116.CA.841	4.165794849395752
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ILE89.CB.558	4.179809093475342
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ILE89.CG2.560	4.190238952636719
+cox13-indom.dlg.22.C.16	cox13.pdbqt.ARG120.CD.880	4.192936420440674
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ARG120.CZ.883	4.19318962097168
+cox13-indom.dlg.22.C.4	cox13.pdbqt.LEU93.CD1.601	4.194278717041016
+cox13-indom.dlg.22.C.12	cox13.pdbqt.ARG120.CZ.883	4.195956707000732
+cox13-indom.dlg.22.C.19	cox13.pdbqt.TYR355.CZ.3180	4.198068618774414
+cox13-indom.dlg.22.C.5	cox13.pdbqt.PRO86.C.528	4.213621616363525
+cox13-indom.dlg.22.C.0	cox13.pdbqt.ILE89.CG2.560	4.224945545196533
+cox13-indom.dlg.22.C.16	cox13.pdbqt.ARG120.CZ.883	4.247825622558594
+cox13-indom.dlg.22.C.0	cox13.pdbqt.LEU93.CD1.601	4.271732807159424
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ILE523.CB.4843	4.272427558898926
+cox13-indom.dlg.22.C.12	cox13.pdbqt.ARG83.CZ.504	4.304450035095215
+cox13-indom.dlg.22.C.20	cox13.pdbqt.TYR355.CD1.3176	4.318882942199707
+cox13-indom.dlg.22.C.7	cox13.pdbqt.PRO86.C.528	4.329495906829834
+cox13-indom.dlg.22.C.16	cox13.pdbqt.LEU123.CD2.917	4.351081848144531
+cox13-indom.dlg.22.C.4	cox13.pdbqt.ILE89.CB.558	4.351395130157471
+cox13-indom.dlg.22.C.14	cox13.pdbqt.GLU524.CD.4854	4.355554103851318
+cox13-indom.dlg.22.C.15	cox13.pdbqt.LEU123.CD2.917	4.362588882446289
+cox13-indom.dlg.22.C.25	cox13.pdbqt.HIS90.CE1.571	4.387126922607422
+cox13-indom.dlg.22.C.12	cox13.pdbqt.VAL119.CG1.871	4.39406156539917
+cox13-indom.dlg.22.C.13	cox13.pdbqt.GLU524.CD.4854	4.405492782592773
+cox13-indom.dlg.22.C.3	cox13.pdbqt.ILE89.CG1.559	4.4294562339782715
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ILE89.C.556	4.4298529624938965
+cox13-indom.dlg.22.C.25	cox13.pdbqt.HIS90.CA.564	4.435227870941162
+cox13-indom.dlg.22.C.1	cox13.pdbqt.ILE89.CG2.560	4.447393417358398
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.LEU123.CG.915	4.451047897338867
+cox13-indom.dlg.22.C.6	cox13.pdbqt.ILE89.CD1.561	4.457799434661865
+cox13-indom.dlg.22.C.8	cox13.pdbqt.TYR355.CE1.3178	4.464795112609863
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ILE89.CB.558	4.470205307006836
+cox13-indom.dlg.22.C.7	cox13.pdbqt.PRO86.CA.527	4.4787139892578125
+
+lrcdMat_dct: Done.
+
++++ ligand-receptor contact distance matrix +++
++++ distance between center of mass (COM) of lig and rec +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+COM-lig: (26.30858612060547 25.719301223754883 211.04080200195313)
+COM-rec: (28.247900009155273 39.271514892578125 200.7145538330078)
+distance between COMs (A): 17.14802714397222; scaled: 77.166122147875
+
+lrcdMat_cmd: Done.
+
++++ ligand-receptor contact distance matrix +++
++++ length of the arc between principal axes of lig and rec +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+Angle between principal axis 1 L-R: 137.12770677130288 deg; length of arc: 10.769982664276775 A
+Angle between principal axis 2 L-R: 36.23247473421965 deg; length of arc: 2.845691319130665 A
+Angle between principal axis 3 L-R: 139.0099537160609 deg; length of arc: 10.917813962868681 A
+
+lrcdMat_lapa: Done.
+
++++ ligand-receptor contact distance vector +++
++++ sum of values for each component +++
+
+user info: Complex COX-1 - Indomethacin (Imn), docking poses.
+categories in the lrcd matrix: cmd pp nn pn np arc
+
+ type 	 N 	 dist sum (Angstroms)
+cmd	1	77.166122147875
+pp	14	51.31173849105835
+nn	81	324.3685462474823
+pn	20	75.25243496894836
+np	67	255.10191345214844
+arc	3	24.53348794627612
+
+lrcdVec_sum: Done.
+
++++ligand-receptor contact distance between two complexes +++
+
+user info: Complex COX-1 - Indomethacin (Imn), docking poses. (frm 1) vs Complex COX-1 - Indomethacin (Imn), docking poses.
+types considered in the L-R complex 1: cmd pp nn pn np arc
+types considered in the L-R complex 2: cmd pp nn pn np arc
+
+ component 	 complex 1 	 complex 2 	 cmplx 2 - cmplx 1
+cmd	77.166122147875	41.07798140105703	-36.08814074681797
+pp	51.31173849105835	33.091076374053955	-18.220662117004395
+nn	324.3685462474823	434.48480916023254	110.11626291275024
+pn	75.25243496894836	107.2040479183197	31.951612949371338
+np	255.10191345214844	134.63274598121643	-120.469167470932
+arc	24.53348794627612	25.503523655637082	0.9700357093609604
+
+lig-rec contacts distance: 171.15666694259224
+
+lrcd: Done.
+
+Calculating COX1-indom frame: 2
+
++++ ligand-receptor contact distance matrix +++
++++ distances by contact type (types: pp pn np nn) +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+ 9 polar - polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.O.22	cox13.pdbqt.LEU352.O.3151	2.709904193878174
+cox13-indom.dlg.22.O.24	cox13.pdbqt.ARG120.NH2.887	3.033398151397705
+cox13-indom.dlg.22.O.24	cox13.pdbqt.TYR355.OH.3181	3.182964324951172
+cox13-indom.dlg.22.O.11	cox13.pdbqt.SER530.OG.4902	3.1829993724823
+cox13-indom.dlg.22.O.24	cox13.pdbqt.ARG120.NE.881	3.4104015827178955
+cox13-indom.dlg.22.O.22	cox13.pdbqt.SER353.N.3156	3.5049428939819336
+cox13-indom.dlg.22.O.22	cox13.pdbqt.SER353.O.3160	4.104227066040039
+cox13-indom.dlg.22.O.21	cox13.pdbqt.LEU352.O.3151	4.117305278778076
+cox13-indom.dlg.22.O.21	cox13.pdbqt.SER353.N.3156	4.284874439239502
+
+ 34 polar - non-polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.O.21	cox13.pdbqt.PHE518.CZ.4805	2.840050220489502
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ILE523.CD1.4846	2.8932294845581055
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL349.CG2.3122	2.918405532836914
+cox13-indom.dlg.22.O.21	cox13.pdbqt.PHE518.CE2.4804	3.010481595993042
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL349.CG1.3121	3.0831754207611084
+cox13-indom.dlg.22.N.2	cox13.pdbqt.VAL349.CG1.3121	3.159275531768799
+cox13-indom.dlg.22.O.22	cox13.pdbqt.PHE518.CE2.4804	3.1914467811584473
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ILE523.CG1.4844	3.21940541267395
+cox13-indom.dlg.22.O.22	cox13.pdbqt.LEU352.C.3150	3.219939708709717
+cox13-indom.dlg.22.O.22	cox13.pdbqt.SER353.CA.3158	3.3200433254241943
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ILE523.CG1.4844	3.4245598316192627
+cox13-indom.dlg.22.O.24	cox13.pdbqt.TYR355.CE1.3178	3.4364712238311768
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL349.CB.3120	3.58455228805542
+cox13-indom.dlg.22.O.24	cox13.pdbqt.ARG120.CZ.883	3.6656765937805176
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ILE523.CD1.4846	3.6927528381347656
+cox13-indom.dlg.22.O.22	cox13.pdbqt.PHE518.CZ.4805	3.7254116535186768
+cox13-indom.dlg.22.O.11	cox13.pdbqt.SER530.CB.4901	3.7468817234039307
+cox13-indom.dlg.22.O.21	cox13.pdbqt.LEU352.CB.3152	3.7703309059143066
+cox13-indom.dlg.22.O.24	cox13.pdbqt.TYR355.CZ.3180	3.7856085300445557
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU531.CD2.4912	3.788546323776245
+cox13-indom.dlg.22.O.22	cox13.pdbqt.SER353.C.3159	4.0718889236450195
+cox13-indom.dlg.22.O.21	cox13.pdbqt.LEU352.C.3150	4.0852885246276855
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU531.CG.4910	4.1512627601623535
+cox13-indom.dlg.22.O.21	cox13.pdbqt.PHE518.CE1.4803	4.159378528594971
+cox13-indom.dlg.22.N.2	cox13.pdbqt.VAL349.CB.3120	4.25195837020874
+cox13-indom.dlg.22.O.22	cox13.pdbqt.PHE518.CD2.4802	4.262691497802734
+cox13-indom.dlg.22.N.2	cox13.pdbqt.VAL349.CG2.3122	4.279097557067871
+cox13-indom.dlg.22.O.22	cox13.pdbqt.LEU352.CB.3152	4.284721374511719
+cox13-indom.dlg.22.O.22	cox13.pdbqt.LEU352.CA.3149	4.3079962730407715
+cox13-indom.dlg.22.N.2	cox13.pdbqt.ALA527.CB.4876	4.389781951904297
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ILE523.CB.4843	4.39080286026001
+cox13-indom.dlg.22.O.21	cox13.pdbqt.PHE518.CD2.4802	4.401557445526123
+cox13-indom.dlg.22.O.22	cox13.pdbqt.SER353.CB.3161	4.424893379211426
+cox13-indom.dlg.22.N.2	cox13.pdbqt.ALA527.CA.4873	4.433152198791504
+
+ 39 non-polar - polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.C.8	cox13.pdbqt.TYR355.OH.3181	3.0280723571777344
+cox13-indom.dlg.22.C.13	cox13.pdbqt.SER530.OG.4902	3.041001319885254
+cox13-indom.dlg.22.C.14	cox13.pdbqt.TYR385.OH.3502	3.1023688316345215
+cox13-indom.dlg.22.C.19	cox13.pdbqt.SER353.N.3156	3.241615056991577
+cox13-indom.dlg.22.C.16	cox13.pdbqt.GLY526.O.4870	3.2485342025756836
+cox13-indom.dlg.22.C.12	cox13.pdbqt.SER530.OG.4902	3.2918946743011475
+cox13-indom.dlg.22.C.18	cox13.pdbqt.ALA527.N.4871	3.3722891807556152
+cox13-indom.dlg.22.C.20	cox13.pdbqt.LEU352.O.3151	3.428864002227783
+cox13-indom.dlg.22.C.18	cox13.pdbqt.GLY526.O.4870	3.434455156326294
+cox13-indom.dlg.22.C.20	cox13.pdbqt.SER353.N.3156	3.4896395206451416
+cox13-indom.dlg.22.C.7	cox13.pdbqt.TYR355.OH.3181	3.6147966384887695
+cox13-indom.dlg.22.C.16	cox13.pdbqt.ALA527.N.4871	3.6163578033447266
+cox13-indom.dlg.22.C.6	cox13.pdbqt.ARG120.NE.881	3.62209153175354
+cox13-indom.dlg.22.C.10	cox13.pdbqt.SER530.OG.4902	3.6605846881866455
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ARG120.NH2.887	3.67311954498291
+cox13-indom.dlg.22.C.14	cox13.pdbqt.SER530.OG.4902	3.6963350772857666
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ARG120.NE.881	3.747828483581543
+cox13-indom.dlg.22.C.13	cox13.pdbqt.TYR385.OH.3502	3.9857637882232666
+cox13-indom.dlg.22.C.25	cox13.pdbqt.TYR355.OH.3181	3.992455244064331
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TYR385.OH.3502	4.003460884094238
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR385.OH.3502	4.00864839553833
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ARG120.NE.881	4.013481140136719
+cox13-indom.dlg.22.C.9	cox13.pdbqt.VAL349.O.3119	4.038561820983887
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ARG120.NH2.887	4.048945426940918
+cox13-indom.dlg.22.C.19	cox13.pdbqt.LEU352.O.3151	4.050259113311768
+cox13-indom.dlg.22.C.15	cox13.pdbqt.GLY526.O.4870	4.072248458862305
+cox13-indom.dlg.22.C.18	cox13.pdbqt.SER530.OG.4902	4.117947101593018
+cox13-indom.dlg.22.C.0	cox13.pdbqt.SER353.N.3156	4.1639509201049805
+cox13-indom.dlg.22.C.4	cox13.pdbqt.TYR355.OH.3181	4.1767377853393555
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ARG120.NH2.887	4.297314167022705
+cox13-indom.dlg.22.C.1	cox13.pdbqt.VAL349.O.3119	4.314226150512695
+cox13-indom.dlg.22.C.19	cox13.pdbqt.TYR355.OH.3181	4.3168721199035645
+cox13-indom.dlg.22.C.9	cox13.pdbqt.SER353.N.3156	4.318874835968018
+cox13-indom.dlg.22.C.6	cox13.pdbqt.ARG120.NH2.887	4.324469566345215
+cox13-indom.dlg.22.C.12	cox13.pdbqt.GLY526.O.4870	4.335315227508545
+cox13-indom.dlg.22.C.16	cox13.pdbqt.MET522.O.4833	4.3893938064575195
+cox13-indom.dlg.22.C.15	cox13.pdbqt.SER530.OG.4902	4.414524555206299
+cox13-indom.dlg.22.C.19	cox13.pdbqt.SER353.OG.3162	4.497090816497803
+cox13-indom.dlg.22.C.0	cox13.pdbqt.VAL349.O.3119	4.498447418212891
+
+ 120 non-polar - non-polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.C.19	cox13.pdbqt.SER353.CA.3158	2.891244411468506
+cox13-indom.dlg.22.C.5	cox13.pdbqt.ALA527.CB.4876	2.9738171100616455
+cox13-indom.dlg.22.C.6	cox13.pdbqt.ALA527.CB.4876	3.0931236743927
+cox13-indom.dlg.22.C.19	cox13.pdbqt.SER353.CB.3161	3.1090848445892334
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR385.CE1.3499	3.137913227081299
+cox13-indom.dlg.22.C.16	cox13.pdbqt.GLY526.C.4869	3.154615879058838
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU352.CB.3152	3.1889123916625977
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ILE523.CD1.4846	3.200901985168457
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ILE523.CG1.4844	3.231794834136963
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TRP387.CZ2.3527	3.2481157779693604
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.LEU384.CD2.3489	3.2552316188812256
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU352.CD1.3154	3.2779011726379395
+cox13-indom.dlg.22.C.12	cox13.pdbqt.SER530.CB.4901	3.3110411167144775
+cox13-indom.dlg.22.C.8	cox13.pdbqt.TYR355.CE1.3178	3.358138084411621
+cox13-indom.dlg.22.C.10	cox13.pdbqt.VAL349.CG1.3121	3.35920786857605
+cox13-indom.dlg.22.C.18	cox13.pdbqt.GLY526.C.4869	3.3638172149658203
+cox13-indom.dlg.22.C.13	cox13.pdbqt.SER530.CB.4901	3.372692823410034
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR385.CD1.3497	3.3901872634887695
+cox13-indom.dlg.22.C.16	cox13.pdbqt.GLY526.CA.4868	3.4416208267211914
+cox13-indom.dlg.22.C.1	cox13.pdbqt.VAL349.CG1.3121	3.4517831802368164
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR385.CZ.3501	3.453660249710083
+cox13-indom.dlg.22.C.20	cox13.pdbqt.SER353.CA.3158	3.469404935836792
+cox13-indom.dlg.22.C.20	cox13.pdbqt.LEU352.C.3150	3.470520496368408
+cox13-indom.dlg.22.C.18	cox13.pdbqt.ALA527.CA.4873	3.4824423789978027
+cox13-indom.dlg.22.C.25	cox13.pdbqt.TYR355.CE1.3178	3.486476182937622
+cox13-indom.dlg.22.C.8	cox13.pdbqt.TYR355.CZ.3180	3.4939663410186768
+cox13-indom.dlg.22.C.20	cox13.pdbqt.PHE518.CE2.4804	3.4960014820098877
+cox13-indom.dlg.22.C.25	cox13.pdbqt.VAL116.CG1.845	3.4970386028289795
+cox13-indom.dlg.22.C.10	cox13.pdbqt.VAL349.CG2.3122	3.562805414199829
+cox13-indom.dlg.22.C.14	cox13.pdbqt.TYR385.CZ.3501	3.5879733562469482
+cox13-indom.dlg.22.C.25	cox13.pdbqt.VAL116.CG2.846	3.5936222076416016
+cox13-indom.dlg.22.C.5	cox13.pdbqt.LEU531.CD1.4911	3.618831157684326
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ILE523.CG2.4845	3.6288177967071533
+cox13-indom.dlg.22.C.18	cox13.pdbqt.SER530.CB.4901	3.640036106109619
+cox13-indom.dlg.22.C.5	cox13.pdbqt.ALA527.CA.4873	3.641019105911255
+cox13-indom.dlg.22.C.3	cox13.pdbqt.ALA527.CB.4876	3.646453857421875
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TRP387.CH2.3529	3.663980484008789
+cox13-indom.dlg.22.C.3	cox13.pdbqt.VAL349.CG1.3121	3.669377565383911
+cox13-indom.dlg.22.C.20	cox13.pdbqt.PHE518.CZ.4805	3.6725783348083496
+cox13-indom.dlg.22.C.6	cox13.pdbqt.LEU531.CD1.4911	3.7104971408843994
+cox13-indom.dlg.22.C.14	cox13.pdbqt.TYR385.CE1.3499	3.731018304824829
+cox13-indom.dlg.22.C.14	cox13.pdbqt.SER530.CB.4901	3.7381417751312256
+cox13-indom.dlg.22.C.7	cox13.pdbqt.TYR355.CE1.3178	3.754298686981201
+cox13-indom.dlg.22.C.19	cox13.pdbqt.ILE523.CD1.4846	3.7543413639068604
+cox13-indom.dlg.22.C.19	cox13.pdbqt.LEU352.C.3150	3.795105218887329
+cox13-indom.dlg.22.C.0	cox13.pdbqt.SER353.CB.3161	3.796278238296509
+cox13-indom.dlg.22.C.9	cox13.pdbqt.VAL349.CG1.3121	3.8266077041625977
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ALA527.CB.4876	3.841301202774048
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU352.CG.3153	3.857367515563965
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.PHE381.CE1.3455	3.888235330581665
+cox13-indom.dlg.22.C.20	cox13.pdbqt.LEU352.CB.3152	3.896840810775757
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TYR385.CE1.3499	3.9032886028289795
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR385.CG.3496	3.911536455154419
+cox13-indom.dlg.22.C.19	cox13.pdbqt.ILE523.CG1.4844	3.9147326946258545
+cox13-indom.dlg.22.C.5	cox13.pdbqt.LEU531.CG.4910	3.921645164489746
+cox13-indom.dlg.22.C.10	cox13.pdbqt.SER530.CB.4901	3.9240529537200928
+cox13-indom.dlg.22.C.16	cox13.pdbqt.SER530.CB.4901	3.9530837535858154
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR385.CE2.3500	3.95554256439209
+cox13-indom.dlg.22.C.4	cox13.pdbqt.ILE523.CG2.4845	3.9734487533569336
+cox13-indom.dlg.22.C.14	cox13.pdbqt.TRP387.CH2.3529	3.990201473236084
+cox13-indom.dlg.22.C.15	cox13.pdbqt.SER530.CB.4901	3.993887424468994
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TRP387.CH2.3529	3.99615478515625
+cox13-indom.dlg.22.C.0	cox13.pdbqt.SER353.CA.3158	4.02227258682251
+cox13-indom.dlg.22.C.0	cox13.pdbqt.VAL349.CG1.3121	4.025752067565918
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TRP387.CZ2.3527	4.028194904327393
+cox13-indom.dlg.22.C.10	cox13.pdbqt.VAL349.CB.3120	4.038537502288818
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TYR385.CZ.3501	4.041302680969238
+cox13-indom.dlg.22.C.13	cox13.pdbqt.VAL349.CG2.3122	4.082576274871826
+cox13-indom.dlg.22.C.18	cox13.pdbqt.GLY526.CA.4868	4.113088607788086
+cox13-indom.dlg.22.C.3	cox13.pdbqt.ALA527.CA.4873	4.142932415008545
+cox13-indom.dlg.22.C.7	cox13.pdbqt.TYR355.CZ.3180	4.143095016479492
+cox13-indom.dlg.22.C.6	cox13.pdbqt.ARG120.CG.879	4.150514602661133
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR385.CD2.3498	4.151401996612549
+cox13-indom.dlg.22.C.25	cox13.pdbqt.VAL116.CB.844	4.16361141204834
+cox13-indom.dlg.22.C.9	cox13.pdbqt.VAL349.CA.3117	4.166639804840088
+cox13-indom.dlg.22.C.4	cox13.pdbqt.VAL349.CG1.3121	4.169710159301758
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ARG120.CZ.883	4.18402099609375
+cox13-indom.dlg.22.C.16	cox13.pdbqt.ALA527.CA.4873	4.185290813446045
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ILE523.CG2.4845	4.188680648803711
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TRP387.CE2.3525	4.1901750564575195
+cox13-indom.dlg.22.C.6	cox13.pdbqt.VAL116.CG1.845	4.197666168212891
+cox13-indom.dlg.22.C.6	cox13.pdbqt.ALA527.CA.4873	4.2184906005859375
+cox13-indom.dlg.22.C.25	cox13.pdbqt.TYR355.CZ.3180	4.218846321105957
+cox13-indom.dlg.22.C.19	cox13.pdbqt.SER353.C.3159	4.219645977020264
+cox13-indom.dlg.22.C.20	cox13.pdbqt.SER353.CB.3161	4.22328519821167
+cox13-indom.dlg.22.C.15	cox13.pdbqt.GLY526.C.4869	4.257312774658203
+cox13-indom.dlg.22.C.0	cox13.pdbqt.ILE523.CG2.4845	4.268666744232178
+cox13-indom.dlg.22.C.4	cox13.pdbqt.ALA527.CB.4876	4.271944046020508
+cox13-indom.dlg.22.C.12	cox13.pdbqt.ALA527.CA.4873	4.282702922821045
+cox13-indom.dlg.22.C.4	cox13.pdbqt.SER353.CB.3161	4.305519104003906
+cox13-indom.dlg.22.C.12	cox13.pdbqt.VAL349.CG2.3122	4.306073188781738
+cox13-indom.dlg.22.C.18	cox13.pdbqt.ALA527.CB.4876	4.319990634918213
+cox13-indom.dlg.22.C.19	cox13.pdbqt.ILE523.CG2.4845	4.322510242462158
+cox13-indom.dlg.22.C.20	cox13.pdbqt.LEU352.CA.3149	4.329537391662598
+cox13-indom.dlg.22.C.10	cox13.pdbqt.ALA527.CA.4873	4.33457088470459
+cox13-indom.dlg.22.C.4	cox13.pdbqt.TYR355.CE1.3178	4.357483863830566
+cox13-indom.dlg.22.C.13	cox13.pdbqt.LEU352.CD1.3154	4.369983673095703
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ALA527.CB.4876	4.376263618469238
+cox13-indom.dlg.22.C.1	cox13.pdbqt.LEU352.CB.3152	4.380345821380615
+cox13-indom.dlg.22.C.5	cox13.pdbqt.LEU531.CD2.4912	4.389415740966797
+cox13-indom.dlg.22.C.9	cox13.pdbqt.VAL349.CB.3120	4.400050640106201
+cox13-indom.dlg.22.C.6	cox13.pdbqt.ARG120.CD.880	4.403043270111084
+cox13-indom.dlg.22.C.15	cox13.pdbqt.GLY526.CA.4868	4.403286457061768
+cox13-indom.dlg.22.C.5	cox13.pdbqt.VAL349.CG1.3121	4.416942119598389
+cox13-indom.dlg.22.C.19	cox13.pdbqt.TYR355.CZ.3180	4.422807693481445
+cox13-indom.dlg.22.C.19	cox13.pdbqt.LEU352.CB.3152	4.4229912757873535
+cox13-indom.dlg.22.C.6	cox13.pdbqt.ARG120.CZ.883	4.430056571960449
+cox13-indom.dlg.22.C.0	cox13.pdbqt.ILE523.CG1.4844	4.431405067443848
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU352.CA.3149	4.433083534240723
+cox13-indom.dlg.22.C.25	cox13.pdbqt.TYR355.CD1.3176	4.440720081329346
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ILE523.CB.4843	4.449295997619629
+cox13-indom.dlg.22.C.14	cox13.pdbqt.TRP387.CZ2.3527	4.4624176025390625
+cox13-indom.dlg.22.C.14	cox13.pdbqt.LEU352.CD1.3154	4.464394569396973
+cox13-indom.dlg.22.C.8	cox13.pdbqt.TYR355.CD1.3176	4.46515417098999
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ARG120.CZ.883	4.472304821014404
+cox13-indom.dlg.22.C.5	cox13.pdbqt.ALA527.C.4874	4.474338054656982
+cox13-indom.dlg.22.C.1	cox13.pdbqt.VAL349.CB.3120	4.479729175567627
+cox13-indom.dlg.22.C.8	cox13.pdbqt.SER353.CB.3161	4.48171854019165
+cox13-indom.dlg.22.C.6	cox13.pdbqt.LEU531.CG.4910	4.494183540344238
+cox13-indom.dlg.22.C.13	cox13.pdbqt.TYR348.CE2.3111	4.4973955154418945
+
+lrcdMat_dct: Done.
+
++++ ligand-receptor contact distance matrix +++
++++ distance between center of mass (COM) of lig and rec +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+COM-lig: (26.197994232177734 34.53200149536133 208.09597778320313)
+COM-rec: (28.247900009155273 39.271514892578125 200.7145538330078)
+distance between COMs (A): 9.008358367061135; scaled: 40.537612651775106
+
+lrcdMat_cmd: Done.
+
++++ ligand-receptor contact distance matrix +++
++++ length of the arc between principal axes of lig and rec +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+Angle between principal axis 1 L-R: 74.69672267327833 deg; length of arc: 5.866665659414745 A
+Angle between principal axis 2 L-R: 141.38537955725798 deg; length of arc: 11.104379433351129 A
+Angle between principal axis 3 L-R: 72.55753093631978 deg; length of arc: 5.698653968232368 A
+
+lrcdMat_lapa: Done.
+
++++ ligand-receptor contact distance vector +++
++++ sum of values for each component +++
+
+user info: Complex COX-1 - Indomethacin (Imn), docking poses.
+categories in the lrcd matrix: cmd pp nn pn np arc
+
+ type 	 N 	 dist sum (Angstroms)
+cmd	1	40.537612651775106
+pp	9	31.531017303466797
+nn	120	470.69713044166565
+pn	34	127.37071657180786
+np	39	150.68883681297302
+arc	3	22.66969906099824
+
+lrcdVec_sum: Done.
+
++++ligand-receptor contact distance between two complexes +++
+
+user info: Complex COX-1 - Indomethacin (Imn), docking poses. (frm 2) vs Complex COX-1 - Indomethacin (Imn), docking poses.
+types considered in the L-R complex 1: cmd pp nn pn np arc
+types considered in the L-R complex 2: cmd pp nn pn np arc
+
+ component 	 complex 1 	 complex 2 	 cmplx 2 - cmplx 1
+cmd	40.537612651775106	41.07798140105703	0.5403687492819245
+pp	31.531017303466797	33.091076374053955	1.5600590705871582
+nn	470.69713044166565	434.48480916023254	-36.212321281433105
+pn	127.37071657180786	107.2040479183197	-20.16666865348816
+np	150.68883681297302	134.63274598121643	-16.056090831756592
+arc	22.66969906099824	25.503523655637082	2.833824594638841
+
+lig-rec contacts distance: 44.57107957509033
+
+lrcd: Done.
+
+Calculating COX1-indom frame: 3
+
++++ ligand-receptor contact distance matrix +++
++++ distances by contact type (types: pp pn np nn) +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+ 11 polar - polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ARG120.NH2.887	2.6979825496673584
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG120.NE.881	3.0154106616973877
+cox13-indom.dlg.22.O.22	cox13.pdbqt.TYR355.OH.3181	3.1535260677337646
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU112.O.799	3.1548280715942383
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ARG120.NE.881	3.204954147338867
+cox13-indom.dlg.22.O.24	cox13.pdbqt.ARG120.NH1.884	3.5581107139587402
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG120.NH2.887	3.7344300746917725
+cox13-indom.dlg.22.O.24	cox13.pdbqt.ARG120.NE.881	3.877128839492798
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL116.N.839	4.2044219970703125
+cox13-indom.dlg.22.O.24	cox13.pdbqt.ARG83.NH2.508	4.478122234344482
+cox13-indom.dlg.22.O.24	cox13.pdbqt.ARG120.NH2.887	4.479177474975586
+
+ 28 polar - non-polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.N.2	cox13.pdbqt.VAL116.CG2.846	2.971989631652832
+cox13-indom.dlg.22.O.21	cox13.pdbqt.VAL116.CG1.845	2.9865670204162598
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL116.CG2.846	3.0312342643737793
+cox13-indom.dlg.22.O.24	cox13.pdbqt.VAL119.CG1.871	3.2544915676116943
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ARG120.CZ.883	3.3781685829162598
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG120.CG.879	3.5783214569091797
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU112.CB.800	3.636002779006958
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ILE523.CG2.4845	3.732011079788208
+cox13-indom.dlg.22.O.24	cox13.pdbqt.ARG120.CZ.883	3.762896776199341
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU112.C.798	3.769329071044922
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG120.CZ.883	3.7883946895599365
+cox13-indom.dlg.22.O.22	cox13.pdbqt.TYR355.CE1.3178	3.8025197982788086
+cox13-indom.dlg.22.O.21	cox13.pdbqt.VAL116.CG2.846	3.8067920207977295
+cox13-indom.dlg.22.O.24	cox13.pdbqt.ARG120.CD.880	3.868245840072632
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG120.CD.880	3.868705987930298
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU112.CA.797	3.869814157485962
+cox13-indom.dlg.22.O.21	cox13.pdbqt.VAL116.CB.844	3.920283317565918
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU112.CD2.803	3.936167001724243
+cox13-indom.dlg.22.O.22	cox13.pdbqt.TYR355.CZ.3180	3.949592351913452
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ALA527.CB.4876	3.9967925548553467
+cox13-indom.dlg.22.O.24	cox13.pdbqt.VAL119.CB.870	4.120211601257324
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU357.CD2.3203	4.224233627319336
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU115.CD2.838	4.2304205894470215
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU115.CB.835	4.237150192260742
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL116.CB.844	4.272095203399658
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU112.CG.801	4.311934471130371
+cox13-indom.dlg.22.N.2	cox13.pdbqt.VAL116.CB.844	4.367499828338623
+cox13-indom.dlg.22.N.2	cox13.pdbqt.LEU93.CD1.601	4.428513526916504
+
+ 21 non-polar - polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ARG120.NH2.887	3.1218762397766113
+cox13-indom.dlg.22.C.19	cox13.pdbqt.TYR355.OH.3181	3.1837661266326904
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ARG120.NE.881	3.229482650756836
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ARG120.NH1.884	3.267674207687378
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ARG120.NE.881	3.4914917945861816
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ARG120.NH2.887	3.619706153869629
+cox13-indom.dlg.22.C.19	cox13.pdbqt.ARG120.NH2.887	3.6361911296844482
+cox13-indom.dlg.22.C.20	cox13.pdbqt.TYR355.OH.3181	3.65238618850708
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ARG83.NH2.508	3.692110538482666
+cox13-indom.dlg.22.C.25	cox13.pdbqt.GLU524.OE1.4855	4.015454292297363
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ARG120.NH1.884	4.04547643661499
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ARG120.NE.881	4.162571907043457
+cox13-indom.dlg.22.C.16	cox13.pdbqt.ILE89.O.557	4.289362907409668
+cox13-indom.dlg.22.C.19	cox13.pdbqt.ARG120.NE.881	4.312883377075195
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ARG120.NH1.884	4.345244884490967
+cox13-indom.dlg.22.C.10	cox13.pdbqt.LEU112.O.799	4.354159832000732
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ARG120.NE.881	4.38482666015625
+cox13-indom.dlg.22.C.4	cox13.pdbqt.ARG120.NH2.887	4.385937213897705
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ARG120.NH2.887	4.3881659507751465
+cox13-indom.dlg.22.C.4	cox13.pdbqt.ARG120.NE.881	4.44345235824585
+cox13-indom.dlg.22.C.0	cox13.pdbqt.ARG120.NH2.887	4.467979907989502
+
+ 77 non-polar - non-polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.C.1	cox13.pdbqt.VAL116.CG2.846	2.9433505535125732
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU93.CD1.601	2.999058723449707
+cox13-indom.dlg.22.C.19	cox13.pdbqt.TYR355.CE1.3178	3.151611089706421
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU93.CD2.602	3.239063262939453
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.LEU92.CD2.593	3.2499430179595947
+cox13-indom.dlg.22.C.13	cox13.pdbqt.LEU112.CD2.803	3.2538094520568848
+cox13-indom.dlg.22.C.0	cox13.pdbqt.VAL116.CG2.846	3.389198064804077
+cox13-indom.dlg.22.C.10	cox13.pdbqt.VAL116.CG2.846	3.393153667449951
+cox13-indom.dlg.22.C.3	cox13.pdbqt.VAL116.CG2.846	3.4050145149230957
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU357.CD2.3203	3.453498363494873
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ARG120.CZ.883	3.48542857170105
+cox13-indom.dlg.22.C.9	cox13.pdbqt.VAL116.CG2.846	3.496995210647583
+cox13-indom.dlg.22.C.16	cox13.pdbqt.ILE89.CG2.560	3.5311241149902344
+cox13-indom.dlg.22.C.1	cox13.pdbqt.LEU93.CD1.601	3.5360512733459473
+cox13-indom.dlg.22.C.18	cox13.pdbqt.ILE89.CG2.560	3.5363924503326416
+cox13-indom.dlg.22.C.19	cox13.pdbqt.TYR355.CZ.3180	3.5393338203430176
+cox13-indom.dlg.22.C.18	cox13.pdbqt.LEU93.CD2.602	3.539515256881714
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.LEU92.CB.590	3.56375789642334
+cox13-indom.dlg.22.C.16	cox13.pdbqt.LEU93.CG.600	3.5910027027130127
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ARG120.CZ.883	3.596555471420288
+cox13-indom.dlg.22.C.4	cox13.pdbqt.VAL116.CG2.846	3.634514570236206
+cox13-indom.dlg.22.C.18	cox13.pdbqt.LEU93.CG.600	3.635723829269409
+cox13-indom.dlg.22.C.16	cox13.pdbqt.LEU93.CD2.602	3.645231246948242
+cox13-indom.dlg.22.C.18	cox13.pdbqt.LEU93.CD1.601	3.6797034740448
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU93.CG.600	3.6970725059509277
+cox13-indom.dlg.22.C.13	cox13.pdbqt.LEU112.CD1.802	3.706254720687866
+cox13-indom.dlg.22.C.20	cox13.pdbqt.TYR355.CE1.3178	3.7367866039276123
+cox13-indom.dlg.22.C.9	cox13.pdbqt.TYR355.CE1.3178	3.797123432159424
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.LEU92.CG.591	3.8174381256103516
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ARG120.CZ.883	3.8250386714935303
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TRP100.CH2.683	3.8592464923858643
+cox13-indom.dlg.22.C.14	cox13.pdbqt.TRP100.CH2.683	3.8607301712036133
+cox13-indom.dlg.22.C.9	cox13.pdbqt.TYR355.CD1.3176	3.862516403198242
+cox13-indom.dlg.22.C.14	cox13.pdbqt.LEU112.CD2.803	3.878207206726074
+cox13-indom.dlg.22.C.0	cox13.pdbqt.LEU93.CD1.601	3.8864095211029053
+cox13-indom.dlg.22.C.19	cox13.pdbqt.LEU93.CD1.601	3.892592430114746
+cox13-indom.dlg.22.C.6	cox13.pdbqt.VAL119.CG1.871	3.9220967292785645
+cox13-indom.dlg.22.C.7	cox13.pdbqt.VAL119.CG1.871	3.927393913269043
+cox13-indom.dlg.22.C.13	cox13.pdbqt.LEU112.CG.801	3.9347004890441895
+cox13-indom.dlg.22.C.14	cox13.pdbqt.LEU112.CD1.802	4.018979072570801
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TRP100.CZ2.681	4.0448737144470215
+cox13-indom.dlg.22.C.20	cox13.pdbqt.VAL116.CG1.845	4.068961143493652
+cox13-indom.dlg.22.C.16	cox13.pdbqt.LEU93.CD1.601	4.075732231140137
+cox13-indom.dlg.22.C.25	cox13.pdbqt.VAL119.CG1.871	4.113864898681641
+cox13-indom.dlg.22.C.6	cox13.pdbqt.VAL119.CB.870	4.125752925872803
+cox13-indom.dlg.22.C.12	cox13.pdbqt.LEU93.CD2.602	4.142642974853516
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ARG120.CD.880	4.149862289428711
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TRP100.CH2.683	4.165358066558838
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ARG120.CZ.883	4.165700435638428
+cox13-indom.dlg.22.C.5	cox13.pdbqt.VAL116.CG2.846	4.178638935089111
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TRP100.CZ2.681	4.184803485870361
+cox13-indom.dlg.22.C.20	cox13.pdbqt.TYR355.CZ.3180	4.190317630767822
+cox13-indom.dlg.22.C.0	cox13.pdbqt.TYR355.CE1.3178	4.203208923339844
+cox13-indom.dlg.22.C.19	cox13.pdbqt.TYR355.CD1.3176	4.251969814300537
+cox13-indom.dlg.22.C.13	cox13.pdbqt.LEU112.CB.800	4.301730632781982
+cox13-indom.dlg.22.C.19	cox13.pdbqt.VAL116.CG2.846	4.311997413635254
+cox13-indom.dlg.22.C.1	cox13.pdbqt.VAL116.CB.844	4.345350742340088
+cox13-indom.dlg.22.C.5	cox13.pdbqt.LEU115.CD2.838	4.346233367919922
+cox13-indom.dlg.22.C.12	cox13.pdbqt.LEU112.CD2.803	4.347928524017334
+cox13-indom.dlg.22.C.19	cox13.pdbqt.ARG120.CZ.883	4.355808258056641
+cox13-indom.dlg.22.C.15	cox13.pdbqt.LEU93.CD2.602	4.358654499053955
+cox13-indom.dlg.22.C.1	cox13.pdbqt.LEU93.CD2.602	4.360711574554443
+cox13-indom.dlg.22.C.13	cox13.pdbqt.TRP100.CH2.683	4.364635944366455
+cox13-indom.dlg.22.C.16	cox13.pdbqt.TRP100.CH2.683	4.38673734664917
+cox13-indom.dlg.22.C.7	cox13.pdbqt.VAL119.CB.870	4.397344589233398
+cox13-indom.dlg.22.C.5	cox13.pdbqt.LEU115.CG.836	4.40860652923584
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ARG120.CD.880	4.409101486206055
+cox13-indom.dlg.22.C.3	cox13.pdbqt.VAL116.CA.841	4.417142868041992
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ARG120.CD.880	4.417458534240723
+cox13-indom.dlg.22.C.1	cox13.pdbqt.TYR355.CE1.3178	4.4196858406066895
+cox13-indom.dlg.22.C.10	cox13.pdbqt.LEU357.CD2.3203	4.451075077056885
+cox13-indom.dlg.22.C.20	cox13.pdbqt.VAL116.CG2.846	4.470237731933594
+cox13-indom.dlg.22.C.5	cox13.pdbqt.VAL116.CA.841	4.481345176696777
+cox13-indom.dlg.22.C.3	cox13.pdbqt.VAL116.CB.844	4.4836554527282715
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ARG120.CG.879	4.485191345214844
+cox13-indom.dlg.22.C.0	cox13.pdbqt.VAL116.CB.844	4.487275123596191
+cox13-indom.dlg.22.C.1	cox13.pdbqt.LEU93.CG.600	4.498530864715576
+
+lrcdMat_dct: Done.
+
++++ ligand-receptor contact distance matrix +++
++++ distance between center of mass (COM) of lig and rec +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+COM-lig: (27.83930206298828 26.699491500854492 215.41921997070313)
+COM-rec: (28.247900009155273 39.271514892578125 200.7145538330078)
+distance between COMs (A): 19.350708789725022; scaled: 87.0781895537626
+
+lrcdMat_cmd: Done.
+
++++ ligand-receptor contact distance matrix +++
++++ length of the arc between principal axes of lig and rec +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+Angle between principal axis 1 L-R: 108.29131653785223 deg; length of arc: 8.505178342619606 A
+Angle between principal axis 2 L-R: 116.35006494580416 deg; length of arc: 9.13811083083047 A
+Angle between principal axis 3 L-R: 91.42040181746717 deg; length of arc: 7.180140074663509 A
+
+lrcdMat_lapa: Done.
+
++++ ligand-receptor contact distance vector +++
++++ sum of values for each component +++
+
+user info: Complex COX-1 - Indomethacin (Imn), docking poses.
+categories in the lrcd matrix: cmd pp nn pn np arc
+
+ type 	 N 	 dist sum (Angstroms)
+cmd	1	87.0781895537626
+pp	11	39.55809283256531
+nn	77	303.4797434806824
+pn	28	107.10037899017334
+np	21	82.49020075798035
+arc	3	24.823429248113587
+
+lrcdVec_sum: Done.
+
++++ligand-receptor contact distance between two complexes +++
+
+user info: Complex COX-1 - Indomethacin (Imn), docking poses. (frm 3) vs Complex COX-1 - Indomethacin (Imn), docking poses.
+types considered in the L-R complex 1: cmd pp nn pn np arc
+types considered in the L-R complex 2: cmd pp nn pn np arc
+
+ component 	 complex 1 	 complex 2 	 cmplx 2 - cmplx 1
+cmd	87.0781895537626	41.07798140105703	-46.00020815270557
+pp	39.55809283256531	33.091076374053955	-6.4670164585113525
+nn	303.4797434806824	434.48480916023254	131.00506567955017
+pn	107.10037899017334	107.2040479183197	0.1036689281463623
+np	82.49020075798035	134.63274598121643	52.142545223236084
+arc	24.823429248113587	25.503523655637082	0.6800944075234945
+
+lig-rec contacts distance: 148.45702066146006
+
+lrcd: Done.
+
+Calculating COX1-indom frame: 4
+
++++ ligand-receptor contact distance matrix +++
++++ distances by contact type (types: pp pn np nn) +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+ 6 polar - polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.O.21	cox13.pdbqt.SER530.OG.4902	2.924645185470581
+cox13-indom.dlg.22.O.22	cox13.pdbqt.TYR385.OH.3502	2.9899187088012695
+cox13-indom.dlg.22.O.24	cox13.pdbqt.LEU352.O.3151	3.404601573944092
+cox13-indom.dlg.22.O.24	cox13.pdbqt.SER353.N.3156	3.7766895294189453
+cox13-indom.dlg.22.O.22	cox13.pdbqt.SER530.OG.4902	4.095771312713623
+cox13-indom.dlg.22.O.21	cox13.pdbqt.TYR385.OH.3502	4.111978530883789
+
+ 35 polar - non-polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.O.24	cox13.pdbqt.PHE518.CE2.4804	2.914879322052002
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU531.CD2.4912	2.957465410232544
+cox13-indom.dlg.22.O.24	cox13.pdbqt.PHE518.CZ.4805	3.025174856185913
+cox13-indom.dlg.22.N.2	cox13.pdbqt.VAL349.CG1.3121	3.1086549758911133
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL349.CG1.3121	3.191141128540039
+cox13-indom.dlg.22.O.24	cox13.pdbqt.ILE523.CG1.4844	3.2020833492279053
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU531.CD1.4911	3.2589759826660156
+cox13-indom.dlg.22.O.21	cox13.pdbqt.VAL349.CG2.3122	3.275874614715576
+cox13-indom.dlg.22.O.24	cox13.pdbqt.ILE523.CD1.4846	3.3038196563720703
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU531.CG.4910	3.3238165378570557
+cox13-indom.dlg.22.O.22	cox13.pdbqt.TYR385.CZ.3501	3.465322494506836
+cox13-indom.dlg.22.O.24	cox13.pdbqt.LEU352.C.3150	3.5322349071502686
+cox13-indom.dlg.22.O.22	cox13.pdbqt.TRP387.CH2.3529	3.574612617492676
+cox13-indom.dlg.22.O.21	cox13.pdbqt.SER530.CB.4901	3.5933849811553955
+cox13-indom.dlg.22.O.24	cox13.pdbqt.LEU352.CB.3152	3.735539436340332
+cox13-indom.dlg.22.O.22	cox13.pdbqt.TYR385.CE1.3499	3.7395529747009277
+cox13-indom.dlg.22.O.24	cox13.pdbqt.SER353.CA.3158	3.9184234142303467
+cox13-indom.dlg.22.N.2	cox13.pdbqt.ALA527.CB.4876	4.031264305114746
+cox13-indom.dlg.22.O.21	cox13.pdbqt.TYR348.CE2.3111	4.062258720397949
+cox13-indom.dlg.22.O.22	cox13.pdbqt.TRP387.CZ2.3527	4.096742630004883
+cox13-indom.dlg.22.O.22	cox13.pdbqt.LEU352.CD1.3154	4.125277519226074
+cox13-indom.dlg.22.O.22	cox13.pdbqt.SER530.CB.4901	4.166741847991943
+cox13-indom.dlg.22.O.24	cox13.pdbqt.PHE518.CD2.4802	4.245898723602295
+cox13-indom.dlg.22.O.24	cox13.pdbqt.LEU352.CA.3149	4.246105670928955
+cox13-indom.dlg.22.O.21	cox13.pdbqt.LEU352.CD1.3154	4.302672386169434
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL349.CB.3120	4.303367614746094
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU359.CD1.3223	4.321931838989258
+cox13-indom.dlg.22.N.2	cox13.pdbqt.ALA527.CA.4873	4.325494766235352
+cox13-indom.dlg.22.O.21	cox13.pdbqt.VAL349.CB.3120	4.339935302734375
+cox13-indom.dlg.22.O.22	cox13.pdbqt.TYR385.CE2.3500	4.346080303192139
+cox13-indom.dlg.22.O.21	cox13.pdbqt.TYR348.CD2.3109	4.349123477935791
+cox13-indom.dlg.22.O.24	cox13.pdbqt.PHE518.CE1.4803	4.38714075088501
+cox13-indom.dlg.22.O.22	cox13.pdbqt.TYR348.CE2.3111	4.393362522125244
+cox13-indom.dlg.22.N.2	cox13.pdbqt.VAL349.CB.3120	4.393684387207031
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL349.CG2.3122	4.471717357635498
+
+ 40 non-polar - polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.C.25	cox13.pdbqt.LEU352.O.3151	2.674529790878296
+cox13-indom.dlg.22.C.16	cox13.pdbqt.ARG120.NH2.887	3.0986456871032715
+cox13-indom.dlg.22.C.9	cox13.pdbqt.SER530.OG.4902	3.12689208984375
+cox13-indom.dlg.22.C.16	cox13.pdbqt.ARG120.NE.881	3.211242198944092
+cox13-indom.dlg.22.C.20	cox13.pdbqt.SER530.OG.4902	3.3525967597961426
+cox13-indom.dlg.22.C.6	cox13.pdbqt.SER353.N.3156	3.4154176712036133
+cox13-indom.dlg.22.C.9	cox13.pdbqt.ALA527.O.4875	3.438420295715332
+cox13-indom.dlg.22.C.25	cox13.pdbqt.SER353.N.3156	3.461298942565918
+cox13-indom.dlg.22.C.16	cox13.pdbqt.TYR355.OH.3181	3.531756639480591
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TYR355.OH.3181	3.634976863861084
+cox13-indom.dlg.22.C.18	cox13.pdbqt.ARG120.NE.881	3.7000622749328613
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU531.N.4904	3.7021450996398926
+cox13-indom.dlg.22.C.7	cox13.pdbqt.SER353.N.3156	3.7241811752319336
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR355.OH.3181	3.794447660446167
+cox13-indom.dlg.22.C.19	cox13.pdbqt.SER530.OG.4902	3.8518178462982178
+cox13-indom.dlg.22.C.18	cox13.pdbqt.ARG120.NH2.887	3.965327262878418
+cox13-indom.dlg.22.C.19	cox13.pdbqt.GLY526.O.4870	3.969499349594116
+cox13-indom.dlg.22.C.20	cox13.pdbqt.TYR385.OH.3502	3.9971563816070557
+cox13-indom.dlg.22.C.15	cox13.pdbqt.ARG120.NH2.887	4.016801834106445
+cox13-indom.dlg.22.C.25	cox13.pdbqt.SER353.O.3160	4.033456802368164
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.ARG120.NH2.887	4.050614356994629
+cox13-indom.dlg.22.C.19	cox13.pdbqt.ALA527.N.4871	4.07650899887085
+cox13-indom.dlg.22.C.1	cox13.pdbqt.SER530.OG.4902	4.099098205566406
+cox13-indom.dlg.22.C.15	cox13.pdbqt.ARG120.NE.881	4.121452331542969
+cox13-indom.dlg.22.C.7	cox13.pdbqt.LEU352.O.3151	4.14639949798584
+cox13-indom.dlg.22.C.5	cox13.pdbqt.SER353.N.3156	4.180649280548096
+cox13-indom.dlg.22.C.0	cox13.pdbqt.ALA527.N.4871	4.2247443199157715
+cox13-indom.dlg.22.C.6	cox13.pdbqt.TYR355.OH.3181	4.229925632476807
+cox13-indom.dlg.22.C.18	cox13.pdbqt.TYR355.OH.3181	4.232372760772705
+cox13-indom.dlg.22.C.5	cox13.pdbqt.TYR355.OH.3181	4.233531951904297
+cox13-indom.dlg.22.C.0	cox13.pdbqt.SER530.OG.4902	4.359080791473389
+cox13-indom.dlg.22.C.6	cox13.pdbqt.LEU352.O.3151	4.367324352264404
+cox13-indom.dlg.22.C.5	cox13.pdbqt.VAL349.O.3119	4.380148410797119
+cox13-indom.dlg.22.C.1	cox13.pdbqt.ALA527.N.4871	4.386059761047363
+cox13-indom.dlg.22.C.14	cox13.pdbqt.TYR355.OH.3181	4.396761894226074
+cox13-indom.dlg.22.C.1	cox13.pdbqt.ALA527.O.4875	4.429243564605713
+cox13-indom.dlg.22.C.6	cox13.pdbqt.VAL349.O.3119	4.456467151641846
+cox13-indom.dlg.22.C.6	cox13.pdbqt.SER353.OG.3162	4.483083724975586
+cox13-indom.dlg.22.C.9	cox13.pdbqt.GLY526.O.4870	4.4921956062316895
+cox13-indom.dlg.22.C.9	cox13.pdbqt.ALA527.N.4871	4.4938249588012695
+
+ 114 non-polar - non-polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ILE523.CD1.4846	2.91178822517395
+cox13-indom.dlg.22.C.6	cox13.pdbqt.SER353.CA.3158	3.059814691543579
+cox13-indom.dlg.22.C.6	cox13.pdbqt.SER353.CB.3161	3.1033432483673096
+cox13-indom.dlg.22.C.14	cox13.pdbqt.TYR355.CE1.3178	3.1107120513916016
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TYR355.CE1.3178	3.131377696990967
+cox13-indom.dlg.22.C.9	cox13.pdbqt.SER530.CB.4901	3.137439489364624
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU531.CG.4910	3.1867687702178955
+cox13-indom.dlg.22.C.25	cox13.pdbqt.LEU352.C.3150	3.187852144241333
+cox13-indom.dlg.22.C.25	cox13.pdbqt.PHE518.CE2.4804	3.256948471069336
+cox13-indom.dlg.22.C.25	cox13.pdbqt.SER353.CA.3158	3.2595014572143555
+cox13-indom.dlg.22.C.14	cox13.pdbqt.VAL116.CG1.845	3.2977118492126465
+cox13-indom.dlg.22.C.10	cox13.pdbqt.VAL349.CG1.3121	3.3004722595214844
+cox13-indom.dlg.22.C.5	cox13.pdbqt.SER353.CB.3161	3.3106086254119873
+cox13-indom.dlg.22.C.3	cox13.pdbqt.VAL349.CG1.3121	3.3297007083892822
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU531.CD2.4912	3.393895387649536
+cox13-indom.dlg.22.C.9	cox13.pdbqt.ALA527.CA.4873	3.444221258163452
+cox13-indom.dlg.22.C.18	cox13.pdbqt.ALA527.CB.4876	3.4493823051452637
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ILE523.CG1.4844	3.467740774154663
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ILE523.CG1.4844	3.5054047107696533
+cox13-indom.dlg.22.C.13	cox13.pdbqt.VAL116.CG1.845	3.5147719383239746
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR355.CE1.3178	3.5407159328460693
+cox13-indom.dlg.22.C.20	cox13.pdbqt.SER530.CB.4901	3.547081470489502
+cox13-indom.dlg.22.C.1	cox13.pdbqt.ALA527.CA.4873	3.568424940109253
+cox13-indom.dlg.22.C.16	cox13.pdbqt.ARG120.CZ.883	3.604147434234619
+cox13-indom.dlg.22.C.19	cox13.pdbqt.SER530.CB.4901	3.608013153076172
+cox13-indom.dlg.22.C.14	cox13.pdbqt.VAL116.CG2.846	3.6349899768829346
+cox13-indom.dlg.22.C.13	cox13.pdbqt.TYR355.CE1.3178	3.693429946899414
+cox13-indom.dlg.22.C.14	cox13.pdbqt.TYR355.CD1.3176	3.7058770656585693
+cox13-indom.dlg.22.C.1	cox13.pdbqt.VAL349.CG1.3121	3.7197582721710205
+cox13-indom.dlg.22.C.16	cox13.pdbqt.TYR355.CE1.3178	3.7541682720184326
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ILE523.CD1.4846	3.763139009475708
+cox13-indom.dlg.22.C.10	cox13.pdbqt.LEU531.CD1.4911	3.7661962509155273
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.VAL116.CG2.846	3.781113386154175
+cox13-indom.dlg.22.C.15	cox13.pdbqt.VAL116.CG1.845	3.782658815383911
+cox13-indom.dlg.22.C.1	cox13.pdbqt.ALA527.CB.4876	3.7871463298797607
+cox13-indom.dlg.22.C.7	cox13.pdbqt.SER353.CA.3158	3.7913615703582764
+cox13-indom.dlg.22.C.25	cox13.pdbqt.PHE518.CZ.4805	3.792083978652954
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.LEU93.CD1.601	3.798339366912842
+cox13-indom.dlg.22.C.5	cox13.pdbqt.VAL349.CG1.3121	3.810824394226074
+cox13-indom.dlg.22.C.5	cox13.pdbqt.SER353.CA.3158	3.8402252197265625
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TYR355.CZ.3180	3.8526289463043213
+cox13-indom.dlg.22.C.0	cox13.pdbqt.ALA527.CA.4873	3.868318796157837
+cox13-indom.dlg.22.C.13	cox13.pdbqt.LEU359.CD2.3224	3.880966901779175
+cox13-indom.dlg.22.C.9	cox13.pdbqt.ALA527.C.4874	3.905214309692383
+cox13-indom.dlg.22.C.7	cox13.pdbqt.LEU352.CB.3152	3.909198045730591
+cox13-indom.dlg.22.C.7	cox13.pdbqt.LEU352.C.3150	3.9161548614501953
+cox13-indom.dlg.22.C.6	cox13.pdbqt.ILE523.CD1.4846	3.9576404094696045
+cox13-indom.dlg.22.C.9	cox13.pdbqt.ALA527.CB.4876	3.9736878871917725
+cox13-indom.dlg.22.C.15	cox13.pdbqt.VAL116.CG2.846	3.9841253757476807
+cox13-indom.dlg.22.C.10	cox13.pdbqt.LEU531.CD2.4912	3.99601149559021
+cox13-indom.dlg.22.C.4	cox13.pdbqt.VAL349.CG1.3121	4.000194072723389
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ILE523.CG1.4844	4.000552654266357
+cox13-indom.dlg.22.C.25	cox13.pdbqt.SER353.C.3159	4.003096580505371
+cox13-indom.dlg.22.C.10	cox13.pdbqt.LEU531.CG.4910	4.006497383117676
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU531.CD1.4911	4.011791706085205
+cox13-indom.dlg.22.C.19	cox13.pdbqt.GLY526.C.4869	4.019624710083008
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR355.CZ.3180	4.033287525177002
+cox13-indom.dlg.22.C.6	cox13.pdbqt.LEU352.C.3150	4.0473456382751465
+cox13-indom.dlg.22.C.6	cox13.pdbqt.ILE523.CG1.4844	4.054470062255859
+cox13-indom.dlg.22.C.7	cox13.pdbqt.PHE518.CZ.4805	4.0673370361328125
+cox13-indom.dlg.22.C.12	cox13.pdbqt.LEU531.CD1.4911	4.072995185852051
+cox13-indom.dlg.22.C.14	cox13.pdbqt.VAL116.CB.844	4.090359687805176
+cox13-indom.dlg.22.C.19	cox13.pdbqt.ALA527.CA.4873	4.092691421508789
+cox13-indom.dlg.22.C.8	cox13.pdbqt.LEU352.CB.3152	4.095407009124756
+cox13-indom.dlg.22.C.8	cox13.pdbqt.PHE518.CZ.4805	4.107927322387695
+cox13-indom.dlg.22.C.1	cox13.pdbqt.SER530.CB.4901	4.116541862487793
+cox13-indom.dlg.22.C.7	cox13.pdbqt.PHE518.CE2.4804	4.120271682739258
+cox13-indom.dlg.22.C.16	cox13.pdbqt.TYR355.CZ.3180	4.137650012969971
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TYR355.CD1.3176	4.138671398162842
+cox13-indom.dlg.22.C.12	cox13.pdbqt.VAL116.CG1.845	4.142354488372803
+cox13-indom.dlg.22.C.13	cox13.pdbqt.TYR355.CD1.3176	4.173836708068848
+cox13-indom.dlg.22.C.13	cox13.pdbqt.LEU359.CD1.3223	4.179934024810791
+cox13-indom.dlg.22.C.0	cox13.pdbqt.VAL349.CG1.3121	4.187996864318848
+cox13-indom.dlg.22.C.16	cox13.pdbqt.ALA527.CB.4876	4.189286231994629
+cox13-indom.dlg.22.C.14	cox13.pdbqt.LEU359.CD2.3224	4.203344821929932
+cox13-indom.dlg.22.C.14	cox13.pdbqt.TYR355.CZ.3180	4.213040351867676
+cox13-indom.dlg.22.C.5	cox13.pdbqt.TYR355.CE1.3178	4.214381694793701
+cox13-indom.dlg.22.C.7	cox13.pdbqt.SER353.CB.3161	4.225142002105713
+cox13-indom.dlg.22.C.9	cox13.pdbqt.SER530.CA.4898	4.227465629577637
+cox13-indom.dlg.22.C.12	cox13.pdbqt.TYR355.CE1.3178	4.235025882720947
+cox13-indom.dlg.22.C.0	cox13.pdbqt.ALA527.CB.4876	4.23875093460083
+cox13-indom.dlg.22.C.9	cox13.pdbqt.SER530.C.4899	4.242333889007568
+cox13-indom.dlg.22.C.20	cox13.pdbqt.LEU352.CD1.3154	4.250750541687012
+cox13-indom.dlg.22.C.6	cox13.pdbqt.ILE523.CG2.4845	4.261695861816406
+cox13-indom.dlg.22.C.18	cox13.pdbqt.TYR355.CE1.3178	4.272010803222656
+cox13-indom.dlg.22.C.0	cox13.pdbqt.SER530.CB.4901	4.287262916564941
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU531.CB.4909	4.287893295288086
+cox13-indom.dlg.22.C.25	cox13.pdbqt.LEU352.CB.3152	4.292412281036377
+cox13-indom.dlg.22.C.25	cox13.pdbqt.LEU352.CA.3149	4.295007705688477
+cox13-indom.dlg.22.C.18	cox13.pdbqt.ARG120.CZ.883	4.301409721374512
+cox13-indom.dlg.22.C.5	cox13.pdbqt.TYR355.CZ.3180	4.3108229637146
+cox13-indom.dlg.22.C.10	cox13.pdbqt.ALA527.CB.4876	4.311500072479248
+cox13-indom.dlg.22.C.25	cox13.pdbqt.PHE518.CD2.4802	4.320159435272217
+cox13-indom.dlg.22.C.1	cox13.pdbqt.VAL349.CG2.3122	4.33389949798584
+cox13-indom.dlg.22.C.6	cox13.pdbqt.TYR355.CZ.3180	4.3433613777160645
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ILE523.CG2.4845	4.344715118408203
+cox13-indom.dlg.22.C.12	cox13.pdbqt.VAL349.CG1.3121	4.3513102531433105
+cox13-indom.dlg.22.C.12	cox13.pdbqt.ALA527.CB.4876	4.359275817871094
+cox13-indom.dlg.22.C.1	cox13.pdbqt.LEU531.CG.4910	4.367035865783691
+cox13-indom.dlg.22.C.25	cox13.pdbqt.SER353.CB.3161	4.370257377624512
+cox13-indom.dlg.22.C.9	cox13.pdbqt.VAL349.CG1.3121	4.371766567230225
+cox13-indom.dlg.22.C.16	cox13.pdbqt.VAL116.CG1.845	4.379227161407471
+cox13-indom.dlg.22.C.9	cox13.pdbqt.VAL349.CG2.3122	4.41217041015625
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU531.CA.4906	4.4141058921813965
+cox13-indom.dlg.22.C.20	cox13.pdbqt.VAL349.CG2.3122	4.414294719696045
+cox13-indom.dlg.22.C.6	cox13.pdbqt.SER353.C.3159	4.41613245010376
+cox13-indom.dlg.22.C.16	cox13.pdbqt.ARG120.CD.880	4.425014495849609
+cox13-indom.dlg.22.C.16	cox13.pdbqt.ILE523.CG2.4845	4.44273042678833
+cox13-indom.dlg.22.C.8	cox13.pdbqt.LEU352.CD1.3154	4.454704284667969
+cox13-indom.dlg.22.C.18	cox13.pdbqt.ILE523.CG2.4845	4.454922676086426
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ILE523.CB.4843	4.472199440002441
+cox13-indom.dlg.22.C.18	cox13.pdbqt.LEU531.CD1.4911	4.473188400268555
+cox13-indom.dlg.22.C.5	cox13.pdbqt.ILE523.CG2.4845	4.483974933624268
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TYR355.CD1.3176	4.49169921875
+
+lrcdMat_dct: Done.
+
++++ ligand-receptor contact distance matrix +++
++++ distance between center of mass (COM) of lig and rec +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+COM-lig: (26.788076400756836 33.70341873168945 209.71705627441406)
+COM-rec: (28.247900009155273 39.271514892578125 200.7145538330078)
+distance between COMs (A): 10.685496246411118; scaled: 48.08473310885003
+
+lrcdMat_cmd: Done.
+
++++ ligand-receptor contact distance matrix +++
++++ length of the arc between principal axes of lig and rec +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+Angle between principal axis 1 L-R: 59.72981271999398 deg; length of arc: 4.691167545065784 A
+Angle between principal axis 2 L-R: 134.94703202596995 deg; length of arc: 10.598712905913276 A
+Angle between principal axis 3 L-R: 116.06060158206274 deg; length of arc: 9.115376436134891 A
+
+lrcdMat_lapa: Done.
+
++++ ligand-receptor contact distance vector +++
++++ sum of values for each component +++
+
+user info: Complex COX-1 - Indomethacin (Imn), docking poses.
+categories in the lrcd matrix: cmd pp nn pn np arc
+
+ type 	 N 	 dist sum (Angstroms)
+cmd	1	48.08473310885003
+pp	6	21.3036048412323
+nn	114	450.5496163368225
+pn	35	134.0297567844391
+np	40	157.54016017913818
+arc	3	24.40525688711395
+
+lrcdVec_sum: Done.
+
++++ligand-receptor contact distance between two complexes +++
+
+user info: Complex COX-1 - Indomethacin (Imn), docking poses. (frm 4) vs Complex COX-1 - Indomethacin (Imn), docking poses.
+types considered in the L-R complex 1: cmd pp nn pn np arc
+types considered in the L-R complex 2: cmd pp nn pn np arc
+
+ component 	 complex 1 	 complex 2 	 cmplx 2 - cmplx 1
+cmd	48.08473310885003	41.07798140105703	-7.006751707793001
+pp	21.3036048412323	33.091076374053955	11.787471532821655
+nn	450.5496163368225	434.48480916023254	-16.064807176589966
+pn	134.0297567844391	107.2040479183197	-26.825708866119385
+np	157.54016017913818	134.63274598121643	-22.907414197921753
+arc	24.40525688711395	25.503523655637082	1.098266768523132
+
+lig-rec contacts distance: 41.13017816096282
+
+lrcd: Done.
+
+Calculating COX1-indom frame: 5
+
++++ ligand-receptor contact distance matrix +++
++++ distances by contact type (types: pp pn np nn) +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+ 11 polar - polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.O.24	cox13.pdbqt.ARG120.NH2.887	2.703909158706665
+cox13-indom.dlg.22.O.24	cox13.pdbqt.TYR355.OH.3181	2.7292842864990234
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ARG83.NH2.508	2.9878995418548584
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG83.NH2.508	3.010237216949463
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU112.O.799	3.4232869148254395
+cox13-indom.dlg.22.O.24	cox13.pdbqt.ARG120.NE.881	3.5429465770721436
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG83.NH1.505	3.963796377182007
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL116.N.839	4.247735977172852
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ARG83.NH1.505	4.251875877380371
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG120.NH1.884	4.4221601486206055
+cox13-indom.dlg.22.O.21	cox13.pdbqt.GLU524.OE1.4855	4.442529678344727
+
+ 18 polar - non-polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ILE89.CD1.561	3.2546756267547607
+cox13-indom.dlg.22.O.24	cox13.pdbqt.TYR355.CE1.3178	3.337381362915039
+cox13-indom.dlg.22.N.2	cox13.pdbqt.VAL116.CG2.846	3.401822566986084
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ILE89.CD1.561	3.445615530014038
+cox13-indom.dlg.22.O.24	cox13.pdbqt.TYR355.CZ.3180	3.474548578262329
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL116.CG2.846	3.4957873821258545
+cox13-indom.dlg.22.O.24	cox13.pdbqt.ARG120.CZ.883	3.5373501777648926
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU115.CD2.838	3.567429780960083
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU112.CD2.803	3.772885322570801
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU115.CB.835	3.883533239364624
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU112.CB.800	3.9088151454925537
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG83.CZ.504	3.9174020290374756
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ARG83.CZ.504	4.009255886077881
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU112.CA.797	4.023045063018799
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU115.CG.836	4.0592427253723145
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU112.C.798	4.071341037750244
+cox13-indom.dlg.22.O.24	cox13.pdbqt.ILE523.CG2.4845	4.302258491516113
+cox13-indom.dlg.22.O.11	cox13.pdbqt.LEU112.CG.801	4.4045915603637695
+
+ 15 non-polar - polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ARG120.NH2.887	3.0900065898895264
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ARG83.NH2.508	3.2453360557556152
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ARG120.NH2.887	3.3734681606292725
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ARG120.NE.881	3.401454210281372
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ARG120.NH2.887	3.4148318767547607
+cox13-indom.dlg.22.C.25	cox13.pdbqt.TYR355.OH.3181	3.4260549545288086
+cox13-indom.dlg.22.C.7	cox13.pdbqt.TYR355.OH.3181	3.489362955093384
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ARG120.NE.881	3.564157485961914
+cox13-indom.dlg.22.C.6	cox13.pdbqt.TYR355.OH.3181	3.7877025604248047
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ARG120.NE.881	3.919025421142578
+cox13-indom.dlg.22.C.14	cox13.pdbqt.ILE89.O.557	4.118783473968506
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ARG120.NH1.884	4.332626819610596
+cox13-indom.dlg.22.C.4	cox13.pdbqt.ARG120.NH2.887	4.36753511428833
+cox13-indom.dlg.22.C.4	cox13.pdbqt.ARG120.NE.881	4.442337512969971
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.LEU92.O.589	4.45485782623291
+
+ 68 non-polar - non-polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.C.5	cox13.pdbqt.VAL116.CG2.846	2.932556390762329
+cox13-indom.dlg.22.C.3	cox13.pdbqt.VAL116.CG2.846	2.988584041595459
+cox13-indom.dlg.22.C.6	cox13.pdbqt.TYR355.CE1.3178	3.021409749984741
+cox13-indom.dlg.22.C.13	cox13.pdbqt.ILE89.CG2.560	3.214118480682373
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.LEU92.CB.590	3.2198374271392822
+cox13-indom.dlg.22.C.14	cox13.pdbqt.ILE89.CG2.560	3.3041532039642334
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ARG120.CZ.883	3.401096820831299
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TRP100.CZ2.681	3.4122657775878906
+cox13-indom.dlg.22.C.18	cox13.pdbqt.LEU112.CD2.803	3.436265230178833
+cox13-indom.dlg.22.C.6	cox13.pdbqt.LEU93.CD1.601	3.4453766345977783
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.LEU92.CD2.593	3.4467740058898926
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU115.CD2.838	3.4538414478302
+cox13-indom.dlg.22.C.5	cox13.pdbqt.LEU93.CD1.601	3.4924585819244385
+cox13-indom.dlg.22.C.14	cox13.pdbqt.LEU93.CG.600	3.5447170734405518
+cox13-indom.dlg.22.C.25	cox13.pdbqt.TYR355.CE1.3178	3.5489158630371094
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ILE89.CD1.561	3.5672311782836914
+cox13-indom.dlg.22.C.7	cox13.pdbqt.TYR355.CE1.3178	3.5673999786376953
+cox13-indom.dlg.22.C.6	cox13.pdbqt.VAL116.CG2.846	3.588221311569214
+cox13-indom.dlg.22.C.16	cox13.pdbqt.TRP100.CH2.683	3.6579623222351074
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TRP100.CH2.683	3.6655197143554688
+cox13-indom.dlg.22.C.14	cox13.pdbqt.LEU93.CD2.602	3.6895084381103516
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TRP100.CH2.683	3.719589948654175
+cox13-indom.dlg.22.C.6	cox13.pdbqt.TYR355.CZ.3180	3.732468605041504
+cox13-indom.dlg.22.C.4	cox13.pdbqt.VAL116.CG2.846	3.739434242248535
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.LEU92.CG.591	3.742124319076538
+cox13-indom.dlg.22.C.10	cox13.pdbqt.VAL116.CG2.846	3.760791540145874
+cox13-indom.dlg.22.C.6	cox13.pdbqt.TYR355.CD1.3176	3.802293539047241
+cox13-indom.dlg.22.C.9	cox13.pdbqt.LEU115.CG.836	3.8308444023132324
+cox13-indom.dlg.22.C.13	cox13.pdbqt.LEU93.CD1.601	3.873661994934082
+cox13-indom.dlg.22.C.13	cox13.pdbqt.LEU93.CG.600	3.9161794185638428
+cox13-indom.dlg.22.C.19	cox13.pdbqt.VAL119.CG1.871	3.9370028972625732
+cox13-indom.dlg.22.C.18	cox13.pdbqt.LEU112.CD1.802	3.9394798278808594
+cox13-indom.dlg.22.C.7	cox13.pdbqt.TYR355.CZ.3180	3.9402079582214355
+cox13-indom.dlg.22.C.13	cox13.pdbqt.LEU93.CD2.602	3.9514970779418945
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ARG120.CZ.883	3.960758686065674
+cox13-indom.dlg.22.C.25	cox13.pdbqt.TYR355.CZ.3180	3.963155746459961
+cox13-indom.dlg.22.C.14	cox13.pdbqt.LEU93.CD1.601	3.978717088699341
+cox13-indom.dlg.22.C.15	cox13.pdbqt.TRP100.CZ2.681	3.991544008255005
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ARG120.CZ.883	3.9990997314453125
+cox13-indom.dlg.22.C.15	cox13.pdbqt.LEU93.CD2.602	4.0657958984375
+cox13-indom.dlg.22.C.16	cox13.pdbqt.LEU112.CD1.802	4.076498985290527
+cox13-indom.dlg.22.C.16	cox13.pdbqt.LEU112.CD2.803	4.076951026916504
+cox13-indom.dlg.22.C.5	cox13.pdbqt.TYR355.CE1.3178	4.141267776489258
+cox13-indom.dlg.22.C.10	cox13.pdbqt.LEU115.CD2.838	4.151707649230957
+cox13-indom.dlg.22.C.18	cox13.pdbqt.LEU112.CG.801	4.164738655090332
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ALA527.CB.4876	4.185302257537842
+cox13-indom.dlg.22.C.7	cox13.pdbqt.VAL116.CG2.846	4.207339763641357
+cox13-indom.dlg.22.C.3	cox13.pdbqt.VAL116.CB.844	4.2469282150268555
+cox13-indom.dlg.22.C.7	cox13.pdbqt.LEU93.CD1.601	4.260769844055176
+cox13-indom.dlg.22.C.1	cox13.pdbqt.VAL116.CG2.846	4.2836384773254395
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.LEU92.C.588	4.284114837646484
+cox13-indom.dlg.22.C.8	cox13.pdbqt.VAL116.CG2.846	4.28555965423584
+cox13-indom.dlg.22.C.15	cox13.pdbqt.LEU93.CG.600	4.294292449951172
+cox13-indom.dlg.22.C.5	cox13.pdbqt.VAL116.CB.844	4.298709392547607
+cox13-indom.dlg.22.C.3	cox13.pdbqt.LEU93.CD1.601	4.336785316467285
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ARG83.CZ.504	4.3458051681518555
+cox13-indom.dlg.22.C.16	cox13.pdbqt.TRP100.CZ2.681	4.356432914733887
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ILE523.CG2.4845	4.374274253845215
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.LEU92.CA.587	4.379080295562744
+cox13-indom.dlg.22.C.5	cox13.pdbqt.LEU93.CD2.602	4.3880815505981445
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ARG120.CD.880	4.439406394958496
+cox13-indom.dlg.22.C.0	cox13.pdbqt.VAL116.CG2.846	4.445365905761719
+cox13-indom.dlg.22.C.20	cox13.pdbqt.VAL119.CG1.871	4.456677436828613
+cox13-indom.dlg.22.C.15	cox13.pdbqt.LEU92.CB.590	4.456806659698486
+cox13-indom.dlg.22.C.18	cox13.pdbqt.TRP100.CH2.683	4.463489532470703
+cox13-indom.dlg.22.C.6	cox13.pdbqt.VAL116.CG1.845	4.485252857208252
+cox13-indom.dlg.22.C.25	cox13.pdbqt.VAL116.CG1.845	4.493353366851807
+cox13-indom.dlg.22.C.19	cox13.pdbqt.ARG120.CZ.883	4.499638080596924
+
+lrcdMat_dct: Done.
+
++++ ligand-receptor contact distance matrix +++
++++ distance between center of mass (COM) of lig and rec +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+COM-lig: (27.622255325317383 26.165807723999023 215.54940795898438)
+COM-rec: (28.247900009155273 39.271514892578125 200.7145538330078)
+distance between COMs (A): 19.80464310705861; scaled: 89.12089398176374
+
+lrcdMat_cmd: Done.
+
++++ ligand-receptor contact distance matrix +++
++++ length of the arc between principal axes of lig and rec +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+Angle between principal axis 1 L-R: 110.2049271415749 deg; length of arc: 8.655472936713865 A
+Angle between principal axis 2 L-R: 62.00157086277129 deg; length of arc: 4.869590975247885 A
+Angle between principal axis 3 L-R: 86.69805800357545 deg; length of arc: 6.8092481359892165 A
+
+lrcdMat_lapa: Done.
+
++++ ligand-receptor contact distance vector +++
++++ sum of values for each component +++
+
+user info: Complex COX-1 - Indomethacin (Imn), docking poses.
+categories in the lrcd matrix: cmd pp nn pn np arc
+
+ type 	 N 	 dist sum (Angstroms)
+cmd	1	89.12089398176374
+pp	11	39.725661754608154
+nn	68	266.321129322052
+pn	18	67.86698150634766
+np	15	56.42754101753235
+arc	3	20.334312047950966
+
+lrcdVec_sum: Done.
+
++++ligand-receptor contact distance between two complexes +++
+
+user info: Complex COX-1 - Indomethacin (Imn), docking poses. (frm 5) vs Complex COX-1 - Indomethacin (Imn), docking poses.
+types considered in the L-R complex 1: cmd pp nn pn np arc
+types considered in the L-R complex 2: cmd pp nn pn np arc
+
+ component 	 complex 1 	 complex 2 	 cmplx 2 - cmplx 1
+cmd	89.12089398176374	41.07798140105703	-48.04291258070671
+pp	39.725661754608154	33.091076374053955	-6.634585380554199
+nn	266.321129322052	434.48480916023254	168.16367983818054
+pn	67.86698150634766	107.2040479183197	39.337066411972046
+np	56.42754101753235	134.63274598121643	78.20520496368408
+arc	20.334312047950966	25.503523655637082	5.169211607686115
+
+lig-rec contacts distance: 195.75837661536772
+
+lrcd: Done.
+
+Calculating COX1-indom frame: 6
+
++++ ligand-receptor contact distance matrix +++
++++ distances by contact type (types: pp pn np nn) +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+ 19 polar - polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.O.24	cox13.pdbqt.PRO86.O.529	2.524096965789795
+cox13-indom.dlg.22.O.22	cox13.pdbqt.GLU524.OE1.4855	2.81597900390625
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG83.NH2.508	3.3326244354248047
+cox13-indom.dlg.22.O.24	cox13.pdbqt.HIS90.N.562	3.4674999713897705
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG120.NH1.884	3.5233805179595947
+cox13-indom.dlg.22.O.24	cox13.pdbqt.GLU524.OE2.4856	3.605806350708008
+cox13-indom.dlg.22.N.2	cox13.pdbqt.ARG120.NH2.887	3.7237396240234375
+cox13-indom.dlg.22.O.11	cox13.pdbqt.ARG120.NE.881	3.785188913345337
+cox13-indom.dlg.22.O.21	cox13.pdbqt.GLU524.OE1.4855	3.886064291000366
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ARG83.NH2.508	3.889530658721924
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL116.O.843	4.114686965942383
+cox13-indom.dlg.22.N.2	cox13.pdbqt.ARG120.NE.881	4.115640640258789
+cox13-indom.dlg.22.O.24	cox13.pdbqt.HIS90.ND1.569	4.117598533630371
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ARG120.NH1.884	4.141849517822266
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ARG83.NH1.505	4.255733489990234
+cox13-indom.dlg.22.N.2	cox13.pdbqt.ARG120.NH1.884	4.285350799560547
+cox13-indom.dlg.22.O.24	cox13.pdbqt.TYR355.OH.3181	4.308597087860107
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL116.N.839	4.421435832977295
+cox13-indom.dlg.22.O.22	cox13.pdbqt.PHE470.O.4350	4.478146553039551
+
+ 24 polar - non-polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.O.24	cox13.pdbqt.HIS90.CB.567	3.2410056591033936
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL116.CG2.846	3.359208583831787
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL116.CA.841	3.462524652481079
+cox13-indom.dlg.22.O.24	cox13.pdbqt.PRO86.C.528	3.4827301502227783
+cox13-indom.dlg.22.O.24	cox13.pdbqt.HIS90.CA.564	3.5693519115448
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL116.CB.844	3.7437539100646973
+cox13-indom.dlg.22.N.2	cox13.pdbqt.ARG120.CZ.883	3.828864812850952
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL116.CG1.845	3.871919870376587
+cox13-indom.dlg.22.O.24	cox13.pdbqt.PRO86.CA.527	3.91051983833313
+cox13-indom.dlg.22.O.11	cox13.pdbqt.ARG120.CG.879	3.9807634353637695
+cox13-indom.dlg.22.O.21	cox13.pdbqt.VAL119.CG1.871	4.003059387207031
+cox13-indom.dlg.22.O.22	cox13.pdbqt.GLU524.CD.4854	4.026661396026611
+cox13-indom.dlg.22.O.24	cox13.pdbqt.HIS90.CG.568	4.116955280303955
+cox13-indom.dlg.22.O.11	cox13.pdbqt.ARG120.CD.880	4.1501240730285645
+cox13-indom.dlg.22.O.22	cox13.pdbqt.PRO86.CG.531	4.162274360656738
+cox13-indom.dlg.22.O.22	cox13.pdbqt.ARG83.CZ.504	4.175772190093994
+cox13-indom.dlg.22.O.11	cox13.pdbqt.ARG120.CZ.883	4.264257907867432
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG83.CZ.504	4.284749984741211
+cox13-indom.dlg.22.O.11	cox13.pdbqt.VAL116.C.842	4.292891025543213
+cox13-indom.dlg.22.O.24	cox13.pdbqt.PRO86.CB.530	4.300652980804443
+cox13-indom.dlg.22.O.24	cox13.pdbqt.ILE89.C.556	4.345672130584717
+cox13-indom.dlg.22.N.2	cox13.pdbqt.ILE89.CG2.560	4.365653991699219
+cox13-indom.dlg.22.O.24	cox13.pdbqt.ILE89.CB.558	4.40366268157959
+cox13-indom.dlg.22.O.21	cox13.pdbqt.ARG120.CZ.883	4.434749126434326
+
+ 49 non-polar - polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.C.6	cox13.pdbqt.TYR355.OH.3181	2.917576789855957
+cox13-indom.dlg.22.C.8	cox13.pdbqt.GLU524.OE2.4856	3.0515310764312744
+cox13-indom.dlg.22.C.25	cox13.pdbqt.GLU524.OE2.4856	3.0851893424987793
+cox13-indom.dlg.22.C.20	cox13.pdbqt.GLU524.OE1.4855	3.14872670173645
+cox13-indom.dlg.22.C.3	cox13.pdbqt.ARG120.NH2.887	3.163433790206909
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ARG83.NH2.508	3.2929844856262207
+cox13-indom.dlg.22.C.25	cox13.pdbqt.PRO86.O.529	3.317938804626465
+cox13-indom.dlg.22.C.4	cox13.pdbqt.ARG120.NH2.887	3.337348222732544
+cox13-indom.dlg.22.C.5	cox13.pdbqt.ARG120.NH2.887	3.416452646255493
+cox13-indom.dlg.22.C.5	cox13.pdbqt.TYR355.OH.3181	3.422133684158325
+cox13-indom.dlg.22.C.7	cox13.pdbqt.GLU524.OE2.4856	3.4298291206359863
+cox13-indom.dlg.22.C.7	cox13.pdbqt.PRO86.O.529	3.4307355880737305
+cox13-indom.dlg.22.C.19	cox13.pdbqt.GLU524.OE1.4855	3.4449474811553955
+cox13-indom.dlg.22.C.19	cox13.pdbqt.ARG83.NH2.508	3.454061508178711
+cox13-indom.dlg.22.C.8	cox13.pdbqt.PRO86.O.529	3.619802951812744
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ARG120.NH1.884	3.659851312637329
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ARG120.NH2.887	3.6791131496429443
+cox13-indom.dlg.22.C.4	cox13.pdbqt.GLU524.OE2.4856	3.6822121143341064
+cox13-indom.dlg.22.C.6	cox13.pdbqt.ARG120.NH2.887	3.7373759746551514
+cox13-indom.dlg.22.C.0	cox13.pdbqt.ARG120.NH1.884	3.7894890308380127
+cox13-indom.dlg.22.C.19	cox13.pdbqt.ARG83.NH1.505	3.8247056007385254
+cox13-indom.dlg.22.C.9	cox13.pdbqt.ARG83.NH2.508	3.8350067138671875
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ARG120.NH2.887	3.854567289352417
+cox13-indom.dlg.22.C.8	cox13.pdbqt.GLU524.OE1.4855	3.8814525604248047
+cox13-indom.dlg.22.C.25	cox13.pdbqt.HIS90.ND1.569	3.9021449089050293
+cox13-indom.dlg.22.C.0	cox13.pdbqt.GLU524.OE1.4855	3.9162840843200684
+cox13-indom.dlg.22.C.7	cox13.pdbqt.TYR355.OH.3181	3.922001838684082
+cox13-indom.dlg.22.C.7	cox13.pdbqt.HIS90.N.562	3.9350438117980957
+cox13-indom.dlg.22.C.0	cox13.pdbqt.ARG120.NH2.887	3.969237804412842
+cox13-indom.dlg.22.C.4	cox13.pdbqt.ARG120.NH1.884	3.9699549674987793
+cox13-indom.dlg.22.C.4	cox13.pdbqt.GLU524.OE1.4855	4.023760795593262
+cox13-indom.dlg.22.C.1	cox13.pdbqt.ARG120.NH1.884	4.024839878082275
+cox13-indom.dlg.22.C.19	cox13.pdbqt.ARG120.NH1.884	4.134680271148682
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ARG83.NH1.505	4.136642932891846
+cox13-indom.dlg.22.C.1	cox13.pdbqt.ARG120.NH2.887	4.184616565704346
+cox13-indom.dlg.22.C.25	cox13.pdbqt.TYR355.OH.3181	4.2466583251953125
+cox13-indom.dlg.22.C.3	cox13.pdbqt.ARG120.NH1.884	4.2698493003845215
+cox13-indom.dlg.22.C.6	cox13.pdbqt.HIS90.N.562	4.292579650878906
+cox13-indom.dlg.22.C.6	cox13.pdbqt.GLU524.OE2.4856	4.310976028442383
+cox13-indom.dlg.22.C.3	cox13.pdbqt.ARG120.NE.881	4.335599422454834
+cox13-indom.dlg.22.C.10	cox13.pdbqt.ARG120.NE.881	4.34382438659668
+cox13-indom.dlg.22.C.0	cox13.pdbqt.GLU524.OE2.4856	4.351394176483154
+cox13-indom.dlg.22.C.0	cox13.pdbqt.ARG83.NH2.508	4.357216835021973
+cox13-indom.dlg.22.C.25	cox13.pdbqt.HIS513.NE2.4758	4.357440948486328
+cox13-indom.dlg.22.C.1	cox13.pdbqt.ARG120.NE.881	4.473805904388428
+cox13-indom.dlg.22.C.1	cox13.pdbqt.ARG83.NH2.508	4.479801654815674
+cox13-indom.dlg.22.C.10	cox13.pdbqt.ARG120.NH2.887	4.489246845245361
+cox13-indom.dlg.22.C.3	cox13.pdbqt.GLU524.OE2.4856	4.491754531860352
+cox13-indom.dlg.22.C.19	cox13.pdbqt.GLU524.OE2.4856	4.49965763092041
+
+ 87 non-polar - non-polar L-R contacts:
+ ligand atom 	 receptor atom 	 distance (Angstroms)
+cox13-indom.dlg.22.C.13	cox13.pdbqt.VAL116.CG2.846	3.2074978351593018
+cox13-indom.dlg.22.C.12	cox13.pdbqt.VAL116.CG2.846	3.276759147644043
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.LEU112.CD1.802	3.326582908630371
+cox13-indom.dlg.22.C.14	cox13.pdbqt.LEU93.CD1.601	3.4463515281677246
+cox13-indom.dlg.22.C.9	cox13.pdbqt.VAL119.CG1.871	3.4611377716064453
+cox13-indom.dlg.22.C.14	cox13.pdbqt.LEU93.CD2.602	3.494260549545288
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.LEU112.CD2.803	3.5059218406677246
+cox13-indom.dlg.22.C.13	cox13.pdbqt.LEU93.CD1.601	3.543806791305542
+cox13-indom.dlg.22.C.14	cox13.pdbqt.VAL116.CG2.846	3.5556581020355225
+cox13-indom.dlg.22.C.0	cox13.pdbqt.ILE89.CD1.561	3.5590643882751465
+cox13-indom.dlg.22.C.5	cox13.pdbqt.LEU93.CD1.601	3.566019058227539
+cox13-indom.dlg.22.C.6	cox13.pdbqt.LEU93.CD1.601	3.5908637046813965
+cox13-indom.dlg.22.C.19	cox13.pdbqt.ILE89.CD1.561	3.624939441680908
+cox13-indom.dlg.22.C.8	cox13.pdbqt.PRO86.CA.527	3.6569902896881104
+cox13-indom.dlg.22.C.18	cox13.pdbqt.VAL116.CG2.846	3.6702184677124023
+cox13-indom.dlg.22.C.25	cox13.pdbqt.HIS90.CB.567	3.69520902633667
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.LEU112.CG.801	3.724799156188965
+cox13-indom.dlg.22.C.3	cox13.pdbqt.ARG120.CZ.883	3.7361092567443848
+cox13-indom.dlg.22.C.6	cox13.pdbqt.TYR355.CZ.3180	3.738344192504883
+cox13-indom.dlg.22.C.10	cox13.pdbqt.VAL116.CG2.846	3.739030361175537
+cox13-indom.dlg.22.C.25	cox13.pdbqt.HIS513.CE1.4757	3.7433295249938965
+cox13-indom.dlg.22.C.5	cox13.pdbqt.ILE89.CG2.560	3.7545483112335205
+cox13-indom.dlg.22.C.3	cox13.pdbqt.ILE89.CG2.560	3.7888684272766113
+cox13-indom.dlg.22.C.8	cox13.pdbqt.GLU524.CD.4854	3.7933568954467773
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.LEU112.CB.800	3.7978711128234863
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TRP100.CH2.683	3.8444294929504395
+cox13-indom.dlg.22.C.4	cox13.pdbqt.ILE89.CD1.561	3.844493865966797
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ILE89.CB.558	3.8513574600219727
+cox13-indom.dlg.22.C.4	cox13.pdbqt.ARG120.CZ.883	3.853893756866455
+cox13-indom.dlg.22.C.6	cox13.pdbqt.ILE89.CG2.560	3.85827898979187
+cox13-indom.dlg.22.C.4	cox13.pdbqt.ILE89.CG2.560	3.887286424636841
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.LEU357.CD2.3203	3.8942229747772217
+cox13-indom.dlg.22.C.14	cox13.pdbqt.LEU93.CG.600	3.9217965602874756
+cox13-indom.dlg.22.C.14	cox13.pdbqt.LEU357.CD2.3203	3.928169012069702
+cox13-indom.dlg.22.C.15	cox13.pdbqt.VAL116.CG2.846	3.9405272006988525
+cox13-indom.dlg.22.C.20	cox13.pdbqt.ARG83.CZ.504	3.9568769931793213
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ILE89.CB.558	3.979008197784424
+cox13-indom.dlg.22.C.16	cox13.pdbqt.LEU115.CD2.838	3.979509115219116
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ILE89.CG2.560	3.995354652404785
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.LEU93.CD2.602	3.995758533477783
+cox13-indom.dlg.22.C.16	cox13.pdbqt.VAL116.CG2.846	4.010655879974365
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ILE89.CG2.560	4.01144552230835
+cox13-indom.dlg.22.C.0	cox13.pdbqt.ARG120.CZ.883	4.011447906494141
+cox13-indom.dlg.22.C.1	cox13.pdbqt.ARG120.CZ.883	4.021289348602295
+cox13-indom.dlg.22.C.19	cox13.pdbqt.ARG83.CZ.504	4.035693645477295
+cox13-indom.dlg.22.C.25	cox13.pdbqt.PRO86.C.528	4.071732997894287
+cox13-indom.dlg.22.C.1	cox13.pdbqt.ILE89.CD1.561	4.080800533294678
+cox13-indom.dlg.22.C.8	cox13.pdbqt.PRO86.C.528	4.09665060043335
+cox13-indom.dlg.22.C.5	cox13.pdbqt.TYR355.CZ.3180	4.099470138549805
+cox13-indom.dlg.22.C.8	cox13.pdbqt.PRO86.CB.530	4.099637031555176
+cox13-indom.dlg.22.C.4	cox13.pdbqt.ILE89.CB.558	4.103693962097168
+cox13-indom.dlg.22.C.25	cox13.pdbqt.GLU524.CD.4854	4.148348808288574
+cox13-indom.dlg.22.C.25	cox13.pdbqt.HIS90.CG.568	4.153252601623535
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ILE89.CD1.561	4.169521331787109
+cox13-indom.dlg.22.C.15	cox13.pdbqt.LEU93.CD2.602	4.174934387207031
+cox13-indom.dlg.22.C.7	cox13.pdbqt.HIS90.CA.564	4.232013702392578
+cox13-indom.dlg.22.C.9	cox13.pdbqt.VAL119.CB.870	4.261172771453857
+cox13-indom.dlg.22.C.15	cox13.pdbqt.LEU357.CD2.3203	4.264986515045166
+cox13-indom.dlg.22.C.7	cox13.pdbqt.PRO86.C.528	4.267423152923584
+cox13-indom.dlg.22.C.4	cox13.pdbqt.GLU524.CD.4854	4.27052116394043
+cox13-indom.dlg.22.C.18	cox13.pdbqt.LEU115.CD2.838	4.281310558319092
+cox13-indom.dlg.22.C.20	cox13.pdbqt.GLU524.CD.4854	4.311436653137207
+cox13-indom.dlg.22.C.7	cox13.pdbqt.PRO86.CA.527	4.312102317810059
+cox13-indom.dlg.22.C.7	cox13.pdbqt.HIS90.CB.567	4.314183712005615
+cox13-indom.dlg.22.C.5	cox13.pdbqt.ARG120.CZ.883	4.326630115509033
+cox13-indom.dlg.22.C.5	cox13.pdbqt.TYR355.CE1.3178	4.331853866577148
+cox13-indom.dlg.22.C.19	cox13.pdbqt.GLU524.CD.4854	4.33611536026001
+cox13-indom.dlg.22.C.6	cox13.pdbqt.ILE89.CB.558	4.3396430015563965
+cox13-indom.dlg.22.C.25	cox13.pdbqt.ILE523.CG2.4845	4.362908840179443
+cox13-indom.dlg.22.C.25	cox13.pdbqt.PRO86.CB.530	4.366964817047119
+cox13-indom.dlg.22.C.6	cox13.pdbqt.HIS90.CA.564	4.374388694763184
+cox13-indom.dlg.22.CL.17	cox13.pdbqt.TRP100.CZ3.682	4.37462854385376
+cox13-indom.dlg.22.C.6	cox13.pdbqt.TYR355.CE1.3178	4.402975082397461
+cox13-indom.dlg.22.C.10	cox13.pdbqt.VAL116.CA.841	4.408764362335205
+cox13-indom.dlg.22.C.13	cox13.pdbqt.LEU93.CD2.602	4.428213119506836
+cox13-indom.dlg.22.C.7	cox13.pdbqt.ILE89.C.556	4.43817663192749
+cox13-indom.dlg.22.C.25	cox13.pdbqt.HIS90.CA.564	4.445852756500244
+cox13-indom.dlg.22.C.6	cox13.pdbqt.TYR355.CE2.3179	4.448383808135986
+cox13-indom.dlg.22.C.25	cox13.pdbqt.PRO86.CA.527	4.456791400909424
+cox13-indom.dlg.22.C.12	cox13.pdbqt.VAL116.CB.844	4.461034297943115
+cox13-indom.dlg.22.C.7	cox13.pdbqt.GLU524.CD.4854	4.465084075927734
+cox13-indom.dlg.22.C.8	cox13.pdbqt.ARG120.CZ.883	4.478115558624268
+cox13-indom.dlg.22.C.10	cox13.pdbqt.ARG120.CZ.883	4.478643417358398
+cox13-indom.dlg.22.C.13	cox13.pdbqt.ILE89.CG2.560	4.479379177093506
+cox13-indom.dlg.22.C.13	cox13.pdbqt.LEU93.CG.600	4.482669830322266
+cox13-indom.dlg.22.C.19	cox13.pdbqt.PRO86.CA.527	4.48844575881958
+cox13-indom.dlg.22.C.3	cox13.pdbqt.ILE89.CB.558	4.4935526847839355
+
+lrcdMat_dct: Done.
+
++++ ligand-receptor contact distance matrix +++
++++ distance between center of mass (COM) of lig and rec +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+COM-lig: (26.719844818115234 25.928281784057617 213.26849365234375)
+COM-rec: (28.247900009155273 39.271514892578125 200.7145538330078)
+distance between COMs (A): 18.384184165817388; scaled: 82.72882874617824
+
+lrcdMat_cmd: Done.
+
++++ ligand-receptor contact distance matrix +++
++++ length of the arc between principal axes of lig and rec +++
+
+cutoff: 4.5
+selInfo selId: COX1-indom   title: Complex COX-1 - Indomethacin (Imn), docking poses.
+ligand: id: 1; sel: noh
+receptor: id: 0; sel: noh
+
+Angle between principal axis 1 L-R: 131.50061129502035 deg; length of arc: 10.32803171098864 A
+Angle between principal axis 2 L-R: 141.17796412057282 deg; length of arc: 11.088089066436966 A
+Angle between principal axis 3 L-R: 51.597440041876816 deg; length of arc: 4.052452621400997 A
+
+lrcdMat_lapa: Done.
+
++++ ligand-receptor contact distance vector +++
++++ sum of values for each component +++
+
+user info: Complex COX-1 - Indomethacin (Imn), docking poses.
+categories in the lrcd matrix: cmd pp nn pn np arc
+
+ type 	 N 	 dist sum (Angstroms)
+cmd	1	82.72882874617824
+pp	19	72.79295015335083
+nn	87	350.20144176483154
+pn	24	95.77777934074402
+np	49	188.8954794406891
+arc	3	25.4685733988266
+
+lrcdVec_sum: Done.
+
++++ligand-receptor contact distance between two complexes +++
+
+user info: Complex COX-1 - Indomethacin (Imn), docking poses. (frm 6) vs Complex COX-1 - Indomethacin (Imn), docking poses.
+types considered in the L-R complex 1: cmd pp nn pn np arc
+types considered in the L-R complex 2: cmd pp nn pn np arc
+
+ component 	 complex 1 	 complex 2 	 cmplx 2 - cmplx 1
+cmd	82.72882874617824	41.07798140105703	-41.65084734512121
+pp	72.79295015335083	33.091076374053955	-39.701873779296875
+nn	350.20144176483154	434.48480916023254	84.283367395401
+pn	95.77777934074402	107.2040479183197	11.426268577575684
+np	188.8954794406891	134.63274598121643	-54.262733459472656
+arc	25.4685733988266	25.503523655637082	0.03495025681048247
+
+lig-rec contacts distance: 116.14526664174944
+
+lrcd: Done.
