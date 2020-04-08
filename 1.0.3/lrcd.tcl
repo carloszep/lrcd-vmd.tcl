@@ -21,7 +21,10 @@
 #  LRCMDI - Ligand-Receptor Contact Manhattan Distance Index [= 1/(1 + LRCMD)].
 #  LRCP   - Ligand-Receptor Contact Projection.
 # 
-# Reference: ...
+# reference: Gómez-Castro CZ, López-Martínez M, Hernández-Pineda J,
+#            Trujillo-Ferrara JG, Padilla-Martínez II. Profiling the
+#            interaction of 1-phenylbenzimidazoles to cyclooxygenases.
+#            J Mol Recognit. 2019;32:e2801. https://doi.org/10.1002/jmr.2801
 #
 # This script should be sourced within the program VMD either in the TkConsole,
 # in the VMD's command line or from a .vmdrc file:
