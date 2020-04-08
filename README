@@ -1,0 +1,116 @@
+# lrcd-vmd.tcl (Apr 8, 2020)
+Tcl scripts and utilities for calculating the LRCD parameter
+
+Repository started from personal libraries (lrcd.tcl, version 1.0.3) and refering
+to the published work in Journal of Molecular Recognition (2019).
+
+Below the original readme.
+
+#   reference: Gómez-Castro CZ, López-Martínez M, Hernández-Pineda J,
+#              Trujillo-Ferrara JG, Padilla-Martínez II. Profiling the
+#              interaction of 1-phenylbenzimidazoles to cyclooxygenases.
+#              J Mol Recognit. 2019;32:e2801. 
+#
+# 
+# continues from lrcd.tcl v-1.0.3:
+#
+# Tcl script for VMD to calculate the Ligand-Receptor Contact Distance (LRCD)
+# parameter that compares the interaction profile of two complexes involving
+# small molecules as the ligands and macromolecules as the receptors.
+#
+# Several variants of the LRCD parameter are implemented:
+#  LRCD   - Ligand-Receptor Contact Distance.
+#  LRCND  - Ligand-Receptor Contact Normalized Distance.
+#  LRCDI  - Ligand-Receptor Contact Distance Index [= 1/(1 + LRCND)].
+#  LRCMD  - Ligand-Receptor Contact Manhattan Distance.
+#  LRCMDI - Ligand-Receptor Contact Manhattan Distance Index [= 1/(1 + LRCMD)].
+#  LRCP   - Ligand-Receptor Contact Projection.
+# 
+#
+# This script should be sourced within the program VMD either in the TkConsole,
+# in the VMD's command line or from a .vmdrc file:
+#
+# i.e.
+# # from the VMD's TkConsole:
+# source lrcd.tcl
+# # from the command line:
+# vmd -e lrcd.tcl
+#
+# Instructions:
+#
+#   -This library was created to be used within the TkConsole of VMD, with
+#    the molecules forming ligand-receptor complexes already loaded. The
+#    ligand and receptor moieties of a complex may either be part of the
+#    same molecule or come from different molecules, i.e., they may be
+#    provided as separated files.
+#
+#   -This library requires prior definition by the user of the atom selections
+#    specifying at least two complexes (A and B), each involving a ligand
+#    (ligA and ligB) and a receptor (recA and recB) moieties. Each of this
+#    four atom selections have to specify also the Id assigned by VMD when the
+#    molecule containing the atom selections was loaded.
+#
+#   -The atom selections and Ids are stored in a Tcl array called selInfo.
+#    The array keys follow the format: selInfo(<UserLabel>,<Keyword>).
+#    The user specifies a label to identify a complex (<UserLabel>) and,
+#    separated by a comma, one of the following keywords: 'ligId', 'ligSelTxt',
+#    'recId', 'recSelTxt', and 'title'. Some examples below:
+#      set selInfo(MyComplex,ligId) 0
+#      set selInfo(MyComplex,ligSelTxt) "noh"
+#      set selInfo(MyComplex,recId) 1
+#      set selInfo(MyComplex,recSelTxt) "protein and chain A and noh"
+#      set selInfo(MyComplex,title) "First lig-rec complex declared"
+#
+#   -Note that the ligId and recId correspond to the Ids in VMD of already
+#    loaded molecules. ligSelTxt and recSelTxt are text (enclosed by "")
+#    in VMD's atom selection language. See Selection Methods in the VMD
+#    user's guide.
+#
+#   -Once declared two or more complexes in the selInfo array, the procedures
+#    lrcdMat_dct, lrcdMat_cmd, and lrcdMat_lapa may be used in sequence to
+#    calculate the lrcd matrix that stores lig-rec interaction measurements.
+#    Then the lrcdVec_sum procedure is used to calculate the lrcd vectors
+#    for each complex with sums over each interaction type. Finally, the
+#    lrcd procedure uses two lrcd vectors to calculate the LRCD parameter.
+#    See lrcd_test1 procedure below for an example on these steps.
+#
+#   -Alternatively, the procedures lrcd_pwMat and lrcd_dlgTab perform the
+#    whole sequence of steps to calculate the LRCD parameter for several
+#    complexes. These procedures also show the usage of lower-level procedures.
+#    The lrcd_pwMat procedure calculate all pairs in a set of complexes
+#    declared in the selInfo array, and specified by a list of <UserLabel>
+#    identifiers. See lrcd_test2 below for an usage example. The lrcd_dlgTab
+#    procedure calculate the LRCD parameter for all the complexes in a .dlg
+#    file obtained from an AutoDock (version 3 or 4) molecular docking
+#    calculation. In this case, the .dlg file is loaded into VMD specifying
+#    PDB format. The best binding poses from the cluster analysis performed
+#    by AutoDock are loaded as frames in a single molecule. Thus, the
+#    procedure runs over these frames and calculate the LRCD against a
+#    common reference complex. Obviously, all poses consider the same receptor.
+#    See lrcd_test3 procedure below for an usage example. Several .dlg files
+#    may be processed with the proper set up of the selInfo array.
+#
+#   -Note that the lrcd_dlgTab does not actually use any information from the
+#    .dlg file, but rather only the poses of a ligand taken from a .dlg file
+#    are loaded into VMD as a PDB file with several frames. Thus, the procedure
+#    is independent from the docking program used to generate the complexes 
+#    whenever the resulting poses may be loaded into VMD in a single molecule.
+#
+#   -The procedures lrcd_test* provide examples of different ways of performing
+#    the LRCD calculation:
+#      -lrcd_test1: performs the whole calculation for a single
+#       pair of complexes taken from two PDB structures.
+#      -lrcd_test2: calculates a pairwise matrix of LRCD for a set of 16
+#       COX-1/2 - ligand complexes, downloading the files
+#       from the repository using the internet.
+#      -lrcd_test3: calculate the LRCD for the best binding poses obtained
+#       from a .dlg AutoDock molecular docking calculation taken the lowest-
+#       energy pose as reference for the rest.
+#      -lrcd_test4: calculate the LRCD for a list of complexes or a list
+#       of docking poses (.dlg file) taking as reference LRC vectors
+#       pre-calculated for a set of PDB complexes (as a data base).
+#
+#   -In order to run the test procedures it may be neccessary to change to
+#    the directory containing the lrcd.tcl script and the subdirectories
+#    test1, ..., test4 with the 'cd' command in the TkConsole of VMD.
+#
