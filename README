@@ -12,7 +12,7 @@ Below the original readme.
 #            J Mol Recognit. 2019;32:e2801. https://doi.org/10.1002/jmr.2801
 #
 # 
-# continues from lrcd.tcl v-1.0.3:
+# lrcd.tcl v-1.0.5:
 #
 # Tcl script for VMD to calculate the Ligand-Receptor Contact Distance (LRCD)
 # parameter that compares the interaction profile of two complexes involving
@@ -26,6 +26,7 @@ Below the original readme.
 #  LRCMDI - Ligand-Receptor Contact Manhattan Distance Index [= 1/(1 + LRCMD)].
 #  LRCP   - Ligand-Receptor Contact Projection.
 # 
+# Reference: ...
 #
 # This script should be sourced within the program VMD either in the TkConsole,
 # in the VMD's command line or from a .vmdrc file:
