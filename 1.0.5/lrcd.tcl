@@ -3,11 +3,13 @@
 #
 #    Profiling the interaction of 1-phenylbenzimidazoles to cyclooxygenases
 #
-#  Carlos Z. Gómez-Castro, Margarita López-Martínez, Jessica Hernández-Pineda,
-#          José G. Trujillo-Ferrara, and Itzia I. Padilla-Martínez
+# reference: Gómez-Castro CZ, López-Martínez M, Hernández-Pineda J,
+#            Trujillo-Ferrara JG, Padilla-Martínez II. Profiling the
+#            interaction of 1-phenylbenzimidazoles to cyclooxygenases.
+#            J Mol Recognit. 2019;32:e2801. https://doi.org/10.1002/jmr.2801
 #
 # 
-# lrcd.tcl v-1.0.4:
+# lrcd.tcl v-1.0.5:
 #
 # Tcl script for VMD to calculate the Ligand-Receptor Contact Distance (LRCD)
 # parameter that compares the interaction profile of two complexes involving
@@ -21,10 +23,7 @@
 #  LRCMDI - Ligand-Receptor Contact Manhattan Distance Index [= 1/(1 + LRCMD)].
 #  LRCP   - Ligand-Receptor Contact Projection.
 # 
-# reference: Gómez-Castro CZ, López-Martínez M, Hernández-Pineda J,
-#            Trujillo-Ferrara JG, Padilla-Martínez II. Profiling the
-#            interaction of 1-phenylbenzimidazoles to cyclooxygenases.
-#            J Mol Recognit. 2019;32:e2801. https://doi.org/10.1002/jmr.2801
+# Reference: ...
 #
 # This script should be sourced within the program VMD either in the TkConsole,
 # in the VMD's command line or from a .vmdrc file:
@@ -115,18 +114,20 @@
 
 
 
-#|-lrcd104.tcl :| {condText}
+#|-lrcd105.tcl :| {condText}
 #|  -Tcl-language script library for VMD to calculate the LRCD parameter
 #|   _ and its variants .
 #|  -authors :-Carlos Z. Gómez-Castro ;
-#|  -reference :-... ;
-#|  -date :-2019-06-11.tue ;
-#|  -version :-1.0.4 ;
+#|  -reference :-J. Mol. Recognit. 2019, e2801 ;
+#|  -date :-2019-09-18.Wed ;
+#|  -version :-1.0.5 ;
 #|  -version information :
 #|    -changes done in this version :
-#|      -few bugs in the output of lrcd_dbTab corrected .
-#|      -in progress improving the naming of log files ;;
+#|      -for lrcd_dlgTab, the lrcd* values are stored into the user field .
+#|      -the id of the ligand is included in the table reported by lrcd_dlgTab ;
 #|  -notes from previous versions :
+#|    -few bugs in the output of lrcd_dbTab were corrected .
+#|    -in progress improving the naming of log files .
 #|    -implemented and tested procedure lrcd_test4 ... .
 #|    -implemented and tested procedure lrcdVec_writeDB and lrcdVec_readDB .
 #|    -implemented and tested procedure lrcd_dbTab .
@@ -181,7 +182,7 @@
 
 # public version (started from library anMol-v.0.1.4)
 global lrcd_version selInfo   ;# global variables
-set lrcd_version 1.0.4
+set lrcd_version 1.0.5
 
 # printing info when sourcing the library
 
@@ -1323,7 +1324,7 @@ proc lrcd_dlgTab {selIdL selIdRef cutoff {vecDist nd} {outPref "lrcnd_dlgTab"} \
   foreach selId $selIdL {
     set id $selInfo($selId,ligId)
     puts $log "\nCalculating LRCD for each structure in complex $selId"
-    puts -nonewline $loSt "$selId\t"
+    puts -nonewline $loSt "$id\t$selId\t"
     for {set f 0} {$f < [molinfo $id get numframes]} {incr f} {
       mol top $id
       animate goto $f
@@ -1337,10 +1338,16 @@ proc lrcd_dlgTab {selIdL selIdRef cutoff {vecDist nd} {outPref "lrcnd_dlgTab"} \
         puts -nonewline "---\t"
       } else {
         puts -nonewline [format "%.2f\t" $lrcdi]
+# storing the calculated lrcd in the user field of each frame
+        [atomselect $id all frame $f] set user [format "%.2f\t" $lrcdi]
         }
       }
     animate goto 0
     puts $loSt ""
+    }
+# this updates the ranges of the user field from 0.0 to $max
+  foreach selId $selIdL {
+    mol scaleminmax $id 1 
     }
   if {$outPref != "stdout"} {close $log}
   puts "\nlrcd_dlgTab: Done."
@@ -1419,12 +1426,12 @@ proc lrcd_dbTab {selIdL lrcdVecArr {cutoff 4.5} {vecDist d} \
   puts $loSt "flags for LRCD matrices for each complex: $lrcdMatL"
   puts $loSt "LRCD parameter type: lrc$vecDist"
   puts $loSt "cutoff: $cutoff"
-  puts $loSt "output log: $outPref\n"
+  puts $loSt "output log: $outPref"
   puts $log "\n+++ LRCD Table for a set of complexes against a lrcdVec data base +++"
   puts $log "lrcd.tcl v-$lrcd_version, lrcd_dbTab, [exec date]"
   puts $log "\nCalculating LRCD table for the complexes: $selIdL"
 # creating header for output table in the console
-  puts -nonewline $loSt "\nRef-PDBID-LIG\t "
+  puts -nonewline $loSt "\nNo.\tRef-PDBID-LIG\t "
   foreach selId $selIdL {
     puts -nonewline "$selId"
     set ligId $selInfo($selId,ligId)
@@ -1448,10 +1455,11 @@ proc lrcd_dbTab {selIdL lrcdVecArr {cutoff 4.5} {vecDist d} \
     animate goto 0
     }
 # caclulating lrcd for each frame in each $selId taking each ref vector
+  set ic 0
   foreach refCompId [array names lrcdVecDB] {   ;# running over ref complexes
     puts $log "\nEvaluating LRCD with reference lrcdVec: $refCompId"
     set lrcdVecRef $lrcdVecDB($refCompId)
-    puts -nonewline $loSt "$refCompId\t"
+    puts -nonewline $loSt "$ic\t$refCompId\t"
     foreach selId $selIdL {
       set ligId $selInfo($selId,ligId)
       puts $log "Calculating lrcd for complexes in selId: $selId"
@@ -1466,6 +1474,7 @@ proc lrcd_dbTab {selIdL lrcdVecArr {cutoff 4.5} {vecDist d} \
         }
       }
     puts $loSt ""
+    incr ic
     }
   if {$outPref != "stdout"} {close $log}
   puts "\nlrcd_dbTab: Done."
