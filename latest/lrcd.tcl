@@ -3,12 +3,12 @@
 #
 #    Profiling the interaction of 1-phenylbenzimidazoles to cyclooxygenases
 #
-#ref: Gómez-Castro CZ, López-Martínez M, Hernández-Pineda J, 
-#     Trujillo-Ferrara JG, and Padilla-Martínez II.
-#     J. Mol. Recognit., 32, e2801 (2019). https://doi.org/10.1002/jmr.2801
-#
+# reference: Gómez-Castro CZ, López-Martínez M, Hernández-Pineda J,
+#            Trujillo-Ferrara JG, Padilla-Martínez II. Profiling the
+#            interaction of 1-phenylbenzimidazoles to cyclooxygenases.
+#            J Mol Recognit. 2019; 32:e2801. https://doi.org/10.1002/jmr.2801
 # 
-# lrcd.tcl v-1.0.6:
+# lrcd.tcl v-1.0.7:
 #
 # Tcl script for VMD to calculate the Ligand-Receptor Contact Distance (LRCD)
 # parameter that compares the interaction profile of two complexes involving
@@ -113,22 +113,24 @@
 
 
 
-#|-lrcd106.tcl :| {condText}
+#|-lrcd107.tcl :| {condText}
 #|  -Tcl-language script library for VMD to calculate the LRCD parameter
 #|   _ and its variants .
 #|  -authors :-Carlos Z. Gómez-Castro ;
 #|  -reference :-J. Mol. Recognit. 2019, e2801 ;
-#|  -date :-2020-06-09.Tue ;
-#|  -version :-1.0.6 ;
+#|  -date :-2020-06-12.Thu ;
+#|  -version :-1.0.7 ;
 #|  -version information :
 #|    -changes done in this version :
-#|      -implemented procedure lr_pdbIdsFile :
-#|        -automating detection of LR complexes in PDB structures .
-#|        -cleaning structures for docking calculations ;
-#|      -updated lrcdVec_writeDB .
-#|      - ;
+#|      -improving ligand selection/exclusion scheme in lr_pdbIdsFile :
+#|        -now regular expressions may be used to specify ligands .
+#|        - ;;
 #|    -finished version ;
 #|  -notes from previous versions :
+#|    -implemented procedure lr_pdbIdsFile :
+#|      -automating detection of LR complexes in PDB structures .
+#|      -cleaning structures for docking calculations .
+#|      -updated lrcdVec_writeDB ;
 #|    -for lrcd_dlgTab, the lrcd* values are stored into the user field .
 #|    -the id of the ligand is included in the table reported by lrcd_dlgTab .
 #|    -few bugs in the output of lrcd_dbTab were corrected .
@@ -188,7 +190,7 @@
 
 # public version (started from library anMol-v.0.1.4)
 global lrcd_version selInfo   ;# global variables
-set lrcd_version 1.0.6
+set lrcd_version 1.0.7
 
 # printing info when sourcing the library
 
@@ -798,11 +800,21 @@ proc lrcdVec_sum {lrcdMat {infoM ""} {loSt stdout}} {
 #|         _ the receptor structure formatted as a list of lists .
 #|        -each sublist contains the specification of a single ligand .
 #|        -the specified ligands will be excluded as ligands in complexes .
-#|        -list format :-{{pdbId chain resName resId} ...} ;;
+#|        -list format :
+#|          -{{pdbId chain resName resId} ...} :
+#|            -'chain' and 'resName' may contain regular expressions :
+#|              -examples: '\".*', '\"[ABCD]\"', ',\"^C.*\"' ;
+#|            -'pdbId' may take the value ".*" to specify all the pdbIds but
+#|             _ it is not a real regular expression .
+#|            -'resId' may be either a specific value or a range
+#|             _ (e.g. '"1 to 100"', '192') .
+#|            -examples :
+#|              -{{".*" \"[ABCD]\" \"C[AB][0-9]+\" "1 to 100"}} .
+#|              -{{6cox A HEM 682} {3pgh "A B C D" FLP 701}} ;;;;
 #|      -ll_ligExclude, ll_ligexclude, ligExcludes, ligexcludes :
 #|        -list of lists with the specification of ligands to be excluded .
 #|        -each sublist contains the specification of a single ligand .
-#|        -list format :-{{pdbId chain resName resId} ...} ;;
+#|        -list format :-see 'll_ligRec' argument above ;;
 #|      -pdbPath, pdbpath, molPath, molpath :
 #|        -common folder path where the PDB files are loaded from .
 #|        -used only with the argument 'source' set to "file" :
@@ -811,7 +823,7 @@ proc lrcdVec_sum {lrcdMat {infoM ""} {loSt stdout}} {
 #|        -the file path must finish with a '/' character .
 #|        -example: "/path/to/files/"
 #|        -default value :-"" ;;
-#|      -workPath, workpath, outPath, outpath :
+#|      -workPath, workpath, outPath, outpath, workFolder, workfolder :
 #|        -path prepended to all output files and folders .
 #|        -the path must end with the '/' character .
 #|        -acceptable values :
@@ -839,7 +851,8 @@ proc lrcdVec_sum {lrcdMat {infoM ""} {loSt stdout}} {
 #|      -to be considered when writing receptor structures for docking ;
 #|    -the vmd 'name' field for the pdbs must be the same as the PDBID .
 #|    -for the moment, no frame specification in each pdb is handled :
-#|      -after loading the molecule, the first frame is seeked ;;;
+#|      -after loading the molecule, the first frame is seeked ;
+#|    -it is still pending to report information to feed Autogrid4 ;;
 proc lr_pdbIdsFile {l_pdbId args} {
 # global variables ...
 # default values for variables and arguments
@@ -870,7 +883,8 @@ proc lr_pdbIdsFile {l_pdbId args} {
         "ll_ligExclude" - "ll_ligexclude" - "ligExcludes" - "ligexcludes" {
           set ll_ligExclude $val}
         "pdbPath" - "pdbpath" -  "molPath" - "molpath" {set molPath $val}
-        "workPath" - "workpath" - "outPath" - "outpath" {set workPath $val}
+        "workPath" - "workpath" - "outPath" - "outpath" - "workFolder" - "workfolder" {
+          set workPath $val}
         "loSt" - "lost" -  "channelId" - "channelid" - "log" {
           set loSt $val
           if {$loSt == "none"} {set out 0}
@@ -926,7 +940,6 @@ proc lr_pdbIdsFile {l_pdbId args} {
   if {$workPath == "none"} {set saveDir 0} else {set saveDir 1}
   if {($workPath == ".") || ($workPath == "")} {set workPath "./"}
   if {[string index $workPath end] != "/"} {set workPath "$workPath/"}
-  puts "workPath: $workPath"
   if $saveDir {if {![file exist $workPath]} {exec mkdir $workPath}}
 # processing each mol id
   foreach id ${l_id} {
@@ -935,7 +948,10 @@ proc lr_pdbIdsFile {l_pdbId args} {
     if $saveDir {
       exec mkdir -p "${workPath}${pdbId}/"
       [atomselect $id "all"] writepdb "${workPath}${pdbId}/${pdbId}.pdb"
+      exec mkdir -p "${workPath}${pdbId}/lig/pdb/"
+      exec mkdir -p "${workPath}${pdbId}/rec/pdb/"
       }
+    set selTxtLigRec "(protein)"
     if {(${l_chain} == "all") || (${l_chain} == {})} {
 # look for available chains
       set l_chain {}
@@ -943,9 +959,9 @@ proc lr_pdbIdsFile {l_pdbId args} {
         set chain [[atomselect $id "index $indAt"] get chain]
         if {[lsearch ${l_chain} $chain] == -1} {lappend l_chain $chain}
         }
-      puts $loSt "$procName: id: $id ($pdbId): chains found: ${l_chain}"
+      puts $loSt "id: $id ($pdbId): chains found: ${l_chain}"
     } else {
-      puts $loSt "$procName: id: $id ($pdbId): specified chains: ${l_chain}"
+      puts $loSt "id: $id ($pdbId): specified chains: ${l_chain}"
       }
 # processing each chain
     foreach chain ${l_chain} {
@@ -961,9 +977,9 @@ proc lr_pdbIdsFile {l_pdbId args} {
               lappend l_resName $resName}}
           }
         $ligSel delete
-        puts $loSt "$procName: id: $id ($pdbId): chain: $chain: ligand residue names found: ${l_resName}"
+        puts $loSt "id: $id ($pdbId): chain: $chain: ligand residue names found: ${l_resName}"
       } else {
-        puts $loSt "$procName: id: $id ($pdbId): chain: $chain: specified ligand residue names: ${l_resName}"
+        puts $loSt "id: $id ($pdbId): chain: $chain: specified ligand residue names: ${l_resName}"
         }
 # processing each ligand resname
       foreach resName ${l_resName} {
@@ -979,41 +995,52 @@ proc lr_pdbIdsFile {l_pdbId args} {
               }
             }
           $ligSel delete
-          puts $loSt "$procName: id: $id ([molinfo $id get name]): chain: $chain: resName: $resName: ligand resIds found: ${l_resId}"
+          puts $loSt "id: $id ([molinfo $id get name]): chain: $chain: resName: $resName: ligand resIds found: ${l_resId}"
         } else {
-          puts $loSt "$procName: id: $id ([molinfo $id get name]): chain: $chain: resName: $resName: specified ligand resId: ${l_resId}"
+          puts $loSt "id: $id ([molinfo $id get name]): chain: $chain: resName: $resName: specified ligand resId: ${l_resId}"
           }
 # processing each ligand resids
         foreach resId ${l_resId} {
+          set writeLigand 1
           set l_ligRes [list $pdbId $chain $resName $resId]
-          if {[lsearch -exact ${ll_ligExclude} ${l_ligRes}] >= 0} {continue}
-          if {[lsearch -exact ${ll_ligRec} ${l_ligRes}] >= 0} {continue}
-          if $saveDir {
-            exec mkdir -p "${workPath}${pdbId}/lig/pdb/"
-            set tmpSel [atomselect $id "chain $chain and resname $resName and resid $resId"]
-            if {[$tmpSel num] > 0} {
-              $tmpSel writepdb "${workPath}${pdbId}/lig/pdb/[join ${l_ligRes} "-"].pdb"
+          set tmpSel [atomselect $id "chain $chain and resname $resName and resid $resId"]
+          set testIndex [lindex [$tmpSel get index] 0]
+          foreach l_ligExclude $ll_ligExclude {
+            lassign $l_ligExclude pdbIdLig chainLig resNameLig resIdLig
+            if {($pdbIdLig == $pdbId) || ($pdbIdLig == ".*") || ($pdbIdLig == "\".*\"")} {
+              set tmpSelLig [atomselect $id "chain $chainLig and resname $resNameLig and resid $resIdLig"]
+              if {[lsearch [$tmpSelLig get index] $testIndex] >= 0} {
+                set writeLigand 0
+                }
+              $tmpSelLig delete
               }
-            $tmpSel delete
             }
+          foreach l_ligRec $ll_ligRec {
+            lassign $l_ligRec pdbIdLig chainLig resNameLig resIdLig
+            if {($pdbIdLig == $pdbId) || ($pdbIdLig == ".*") || ($pdbIdLig == "\".*\"")} {
+              set tmpSelLig [atomselect $id "chain $chainLig and resname $resNameLig and resid $resIdLig"]
+              if {[lsearch [$tmpSelLig get index] $testIndex] >= 0} {
+# adding user-specified ligands to the receptor selection text
+                set res "(chain $chain and resname $resName and resid $resId)"
+                set selTxtLigRec [concat $selTxtLigRec " or " $res]
+                set writeLigand 0
+                }
+              $tmpSelLig delete
+              }
+            }
+          if {($writeLigand) && ([$tmpSel num] > 0)} {
 # storing identified ligand residues and writing pdbIdsFile
-          if $out {puts $loSt "ligand written: ${l_ligRes}"}
-          puts $outIds ${l_ligRes}
+            if $saveDir {$tmpSel writepdb "${workPath}${pdbId}/lig/pdb/[join ${l_ligRes} "-"].pdb"}
+            if $out {puts $loSt "ligand written: ${l_ligRes}"}
+            puts $outIds ${l_ligRes}
+            }
+          $tmpSel delete
           }
         }
       }
 # adding user specified ligand residues that are part of the receptor
+    if $out {puts $loSt "Receptor residues included in $pdbId: $selTxtLigRec"}
     if $saveDir {
-      set selTxtLigRec "(protein)"
-      foreach ligRec ${ll_ligRec} {
-        if {[lindex $ligRec 0] == $pdbId} {
-          lassign $ligRec pdbId chain resName resId
-          set resTxt "(chain $chain and resname $resName and resid $resId)"
-          set selTxtLigRec [concat $selTxtLigRec " or " $resTxt]
-          }
-        }
-      if $out {puts "$procName: Lig residues part of the rec: $selTxtLigRec"}
-      exec mkdir -p "${workPath}${pdbId}/rec/pdb/"
       [atomselect $id $selTxtLigRec] writepdb "${workPath}${pdbId}/rec/pdb/${pdbId}.rec.pdb"
       }
     }
