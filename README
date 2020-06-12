@@ -1,4 +1,4 @@
-# lrcd-vmd.tcl (Apr 8, 2020)
+# lrcd-vmd.tcl (Jun 10, 2020)
 Tcl scripts and utilities for calculating the LRCD parameter
 
 Repository started from personal libraries (lrcd.tcl, version 1.0.5) and
@@ -11,7 +11,7 @@ Below the original readme.
 #            interaction of 1-phenylbenzimidazoles to cyclooxygenases.
 #            J Mol Recognit. 2019; 32:e2801. https://doi.org/10.1002/jmr.2801
 #
-# lrcd.tcl v-1.0.6:
+# lrcd.tcl v-1.0.7:
 #
 # Tcl script for VMD to calculate the Ligand-Receptor Contact Distance (LRCD)
 # parameter that compares the interaction profile of two complexes involving
