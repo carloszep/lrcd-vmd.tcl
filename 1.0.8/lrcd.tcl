@@ -125,6 +125,7 @@
 #|    -changes done in this version :
 #|      -updated output in lrcdMat_dct (chain id missing) .
 #|      -case-insensitive variable arguments in lr_pdbIdsFile proc .
+#|      -lr_pdbIdsFile: writting 'grid' and 'dock' folder tree .
 #|      - ;;
 #|    -finished version ;
 #|  -notes from previous versions :
@@ -761,15 +762,15 @@ proc lrcdVec_sum {lrcdMat {infoM ""} {loSt stdout}} {
 #|      -'source', 'src' :
 #|        -specify the source of the PDB files to be processed .
 #|        -acceptable values :
-#|          -'download' :
+#|          -"download", "pdbLoad", "internet" :
 #|            -the l_pdbid arg must be a list of PDBIDs to be downloaded
 #|             _ from the RCSB PDB web site (uses 'mol pdbload') ;
-#|          -'file' :
+#|          -"file", "loadFile", "pdbFile" :
 #|            -the l_pdbid arg must be a list of PDB file names to be loaded .
 #|            -PDB format is assumed .
 #|            -it is recommended to avoid including paths to files, instead
 #|             _ use the argument 'pdbPath' ;
-#|          -'molId', 'idl', 'id' :
+#|          -"molId", "idl", "id", "ids", "vmdId", "loaded" :
 #|            -the l_pdbid arg must be a list of preloaded VMD mol Ids ;;
 #|        -default value :-'download' ;;
 #|      -'pdbIdsFile', 'out', 'output', '-o' :
@@ -879,7 +880,7 @@ proc lr_pdbIdsFile {l_pdbId args} {
         "src" - "source" {set src $val}
         "pdbidsfile" - "output" - "out" - "-o" {set pdbIdsFile $val}
         "chain" - "chains" - "l_chain" {set l_chainUsr $val}
-        "resname" - "resnames" - "l_resname" - {set l_resNameUsr $val}
+        "resname" - "resnames" - "l_resname" {set l_resNameUsr $val}
         "resid" - "resids" - "l_resid" {set l_resIdUsr $val}
         "ll_ligrec" - "ligrecs" {set ll_ligRec $val}
         "ll_ligexclude" - "ligexcludes" {set ll_ligExclude $val}
@@ -913,14 +914,14 @@ proc lr_pdbIdsFile {l_pdbId args} {
     }
 # loading pdb molecules, and creating list of ids
   set l_id {}
-  switch $src {
-    "download" {
+  switch [string tolower $src] {
+    "download" - "pdbload" - "internet" {
       foreach pdbId ${l_pdbId} {
         lappend l_id [mol pdbload $pdbId]
         animate goto start
         }
       }
-    "file" {
+    "file" - "loadfile" - "internet" {
       foreach pdbFile ${pdbPath}${l_pdbId} {
         set id [mol new $pdbFile type pdb waitfor all]
         aminate goto start
@@ -930,7 +931,7 @@ proc lr_pdbIdsFile {l_pdbId args} {
         lappend l_id $id
         }
       }
-    "molId" - "molid" - "idl" - "id" {set l_id ${l_pdbId}}
+    "molid" - "idl" - "id" - "ids" - "vmdId" - "loaded" {set l_id ${l_pdbId}}
     default {
       if $out {puts $loSt "$procName: unknown option in 'source' arg."}
       return ""
@@ -1006,6 +1007,7 @@ proc lr_pdbIdsFile {l_pdbId args} {
           set l_ligRes [list $pdbId $chain $resName $resId]
           set tmpSel [atomselect $id "chain $chain and resname $resName and resid $resId"]
           set testIndex [lindex [$tmpSel get index] 0]
+# excluding user-specified ligands excluded
           foreach l_ligExclude $ll_ligExclude {
             lassign $l_ligExclude pdbIdLig chainLig resNameLig resIdLig
             if {($pdbIdLig == $pdbId) || ($pdbIdLig == ".*") || ($pdbIdLig == "\".*\"")} {
@@ -1016,6 +1018,7 @@ proc lr_pdbIdsFile {l_pdbId args} {
               $tmpSelLig delete
               }
             }
+# adding user-specified residues that are part of the receptor
           foreach l_ligRec $ll_ligRec {
             lassign $l_ligRec pdbIdLig chainLig resNameLig resIdLig
             if {($pdbIdLig == $pdbId) || ($pdbIdLig == ".*") || ($pdbIdLig == "\".*\"")} {
@@ -1031,7 +1034,11 @@ proc lr_pdbIdsFile {l_pdbId args} {
             }
           if {($writeLigand) && ([$tmpSel num] > 0)} {
 # storing identified ligand residues and writing pdbIdsFile
-            if $saveDir {$tmpSel writepdb "${workPath}${pdbId}/lig/pdb/[join ${l_ligRes} "-"].pdb"}
+            if $saveDir {
+              $tmpSel writepdb "${workPath}${pdbId}/lig/pdb/[join ${l_ligRes} "-"].pdb"
+              exec mkdir -p "${workPath}${pdbId}/grid/[join ${l_ligRes} "-"]"
+              exec mkdir -p "${workPath}${pdbId}/dock/[join ${l_ligRes} "-"]"
+              }
             if $out {puts $loSt "ligand written: ${l_ligRes}"}
             puts $outIds ${l_ligRes}
             }
@@ -1046,7 +1053,8 @@ proc lr_pdbIdsFile {l_pdbId args} {
       }
     }
   close $outIds
-  if $out {puts $loSt "$procName: Done."}
+  
+  if $out {puts $loSt "output file written: $pdbIdsFile\n$procName: Done."}
   }   ;# *** lr_pdbIdsFile ***
 
 
