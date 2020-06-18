@@ -118,12 +118,15 @@
 #|   _ and its variants .
 #|  -authors :-Carlos Z. Gómez-Castro ;
 #|  -reference :
-#|    -J Mol Recognit. 2019; 32:e2801. https://doi.org/10.1002/jmr.2801 ;
+#|    -J. Mol. Recognit. 2019; 32:e2801. https://doi.org/10.1002/jmr.2801 ;
 #|  -date :-2020-06-16.Tue ;
 #|  -version :-1.0.8 ;
 #|  -version information :
 #|    -changes done in this version :
-#|      -updated output in lrcdMat_dct (chain id missing) ;;
+#|      -updated output in lrcdMat_dct (chain id missing) .
+#|      -case-insensitive variable arguments in lr_pdbIdsFile proc .
+#|      -lr_pdbIdsFile: writting 'grid' and 'dock' folder tree .
+#|      - ;;
 #|    -finished version ;
 #|  -notes from previous versions :
 #|    -improving ligand selection/exclusion scheme in lr_pdbIdsFile :
@@ -191,7 +194,7 @@
 
 # public version (started from library anMol-v.0.1.4)
 global lrcd_version selInfo   ;# global variables
-set lrcd_version 1.0.7
+set lrcd_version 1.0.8
 
 # printing info when sourcing the library
 
@@ -755,25 +758,25 @@ proc lrcdVec_sum {lrcdMat {infoM ""} {loSt stdout}} {
 #|    -l_pdbId :
 #|      -list of PDBIDs to be processed .
 #|      -the source of the PDB files depends on the value of the 'source' arg .
-#|    -args (variable arguments) :
-#|      -source, src :
+#|    -args (variable arguments, case insensitive) :
+#|      -'source', 'src' :
 #|        -specify the source of the PDB files to be processed .
 #|        -acceptable values :
-#|          -'download' :
+#|          -"download", "pdbLoad", "internet" :
 #|            -the l_pdbid arg must be a list of PDBIDs to be downloaded
 #|             _ from the RCSB PDB web site (uses 'mol pdbload') ;
-#|          -'file' :
+#|          -"file", "loadFile", "pdbFile" :
 #|            -the l_pdbid arg must be a list of PDB file names to be loaded .
 #|            -PDB format is assumed .
 #|            -it is recommended to avoid including paths to files, instead
 #|             _ use the argument 'pdbPath' ;
-#|          -'molId', 'molid', 'idl', 'id' :
+#|          -"molId", "idl", "id", "ids", "vmdId", "loaded" :
 #|            -the l_pdbid arg must be a list of preloaded VMD mol Ids ;;
 #|        -default value :-'download' ;;
-#|      -pdbIdsFile, pdbidsfile, out, output :
+#|      -'pdbIdsFile', 'out', 'output', '-o' :
 #|        -name of the file for writing the list of Ids of ligands .
 #|        -default value :-"pdbId-ligDB.txt" ;;
-#|      -l_chain, chains :
+#|      -'chain', 'chains', 'l_chain' :
 #|        -list of chain identifiers to be considered .
 #|        -acceptable values :
 #|          -list of chain identifiers (e.g. '{A B P}') :
@@ -781,7 +784,7 @@ proc lrcdVec_sum {lrcdMat {infoM ""} {loSt stdout}} {
 #|          -'all', {}, "" :
 #|            -all chains contained in the PDB are considered ;
 #|        -default value :-'all' ;;
-#|      -l_resName, l_resname, resNames, resnames :
+#|      -'resName', 'resNames',  'l_resName' :
 #|        -list of non-protein residue names to be considered as ligands .
 #|        -resnames for water molecules are ignored (e.g. WAT, HOH) .
 #|        -acceptable values :
@@ -790,33 +793,33 @@ proc lrcdVec_sum {lrcdMat {infoM ""} {loSt stdout}} {
 #|          -'all', {}, "" :
 #|            -all non-protein resnames (but waters) are considered ;;
 #|        -default value :-'all' ;
-#|      -l_resId, l_resid, resIds, resids :
+#|      -'resId', 'resIds', 'l_resId' :
 #|        -list of residue seq. numbers for ligands to be considered .
 #|        -acceptable values :
 #|          -list of 1- to 4-letter resid numbers for ligands (e.g. {600 700}) .
 #|          -'all' :
 #|            -all non-protein resids are considered ;;;
-#|      -ll_ligRec, ll_ligrec, ligRecs, ligrecs :
+#|      -'ll_ligRec', 'ligRecs' :
 #|        -specification of non-protein ligands to be considered as part of
 #|         _ the receptor structure formatted as a list of lists .
 #|        -each sublist contains the specification of a single ligand .
 #|        -the specified ligands will be excluded as ligands in complexes .
 #|        -list format :
-#|          -{{pdbId chain resName resId} ...} :
-#|            -'chain' and 'resName' may contain regular expressions :
-#|              -examples: '\".*', '\"[ABCD]\"', ',\"^C.*\"' ;
-#|            -'pdbId' may take the value ".*" to specify all the pdbIds but
-#|             _ it is not a real regular expression .
-#|            -'resId' may be either a specific value or a range
+#|          -{{<pdbId> <chain> <resName> <resId>} ...} :
+#|            -<pdbId> may take the value '".*"' to specify all the pdbIds
+#|             _ but it is not a real regular expression .
+#|            -<chain> and <resName> may contain regular expressions :
+#|              -examples: '\".*\"', '\"[ABCD]\"', ',\"^C.*\"' ;
+#|            -<resId> may be either a specific value or a range
 #|             _ (e.g. '"1 to 100"', '192') .
 #|            -examples :
 #|              -{{".*" \"[ABCD]\" \"C[AB][0-9]+\" "1 to 100"}} .
 #|              -{{6cox A HEM 682} {3pgh "A B C D" FLP 701}} ;;;;
-#|      -ll_ligExclude, ll_ligexclude, ligExcludes, ligexcludes :
+#|      -'ll_ligExclude', 'ligExcludes' :
 #|        -list of lists with the specification of ligands to be excluded .
 #|        -each sublist contains the specification of a single ligand .
 #|        -list format :-see 'll_ligRec' argument above ;;
-#|      -pdbPath, pdbpath, molPath, molpath :
+#|      -'pdbPath', 'molPath' :
 #|        -common folder path where the PDB files are loaded from .
 #|        -used only with the argument 'source' set to "file" :
 #|          -the l_pdbId argument would be expected to contain only file names
@@ -824,7 +827,7 @@ proc lrcdVec_sum {lrcdMat {infoM ""} {loSt stdout}} {
 #|        -the file path must finish with a '/' character .
 #|        -example: "/path/to/files/"
 #|        -default value :-"" ;;
-#|      -workPath, workpath, outPath, outpath, workFolder, workfolder :
+#|      -'workPath', 'workFolder', 'workDir', 'outPath', 'outFolder', 'outDir' :
 #|        -path prepended to all output files and folders .
 #|        -the path must end with the '/' character .
 #|        -acceptable values :
@@ -835,11 +838,11 @@ proc lrcdVec_sum {lrcdMat {infoM ""} {loSt stdout}} {
 #|          -an absolute or relative (linux) folder path finishing with '/' ;
 #|        -default value :
 #|          -"./" ;
-#|      -loSt, lost, channelId, channelid, log :
+#|      -'loSt', 'channelId', 'log' :
 #|        -output stream (channel) for log messages .
 #|        -acceptable values :
 #|          -a channel Id refering to an already opened output text file .
-#|          -'none':
+#|          -"none":
 #|            -will avoid any output ;;
 #|        -default value :
 #|          -stdout ;;;;
@@ -873,20 +876,17 @@ proc lr_pdbIdsFile {l_pdbId args} {
 # decode variable arguments
   if {[expr {[llength $args]%2}] == 0} {   ;# even or 0 optional arguments
     foreach {arg val} $args {
-      switch $arg {
+      switch [string tolower $arg] {
         "src" - "source" {set src $val}
-        "pdbIdsFile" - "pdbidsfile" - "output" - "out" {set pdbIdsFile $val}
-        "l_chain" - "chains" {set l_chainUsr $val}
-        "l_resName" - "l_resname" - "resNames" - "resnames" {
-          set l_resNameUsr $val}
-        "l_resId" - "l_resid" - "resIds" - "resids" {set l_resIdUsr $val}
-        "ll_ligRec" - "ll_ligrec" - "ligRecs" - "ligrecs" {set ll_ligRec $val}
-        "ll_ligExclude" - "ll_ligexclude" - "ligExcludes" - "ligexcludes" {
-          set ll_ligExclude $val}
-        "pdbPath" - "pdbpath" -  "molPath" - "molpath" {set molPath $val}
-        "workPath" - "workpath" - "outPath" - "outpath" - "workFolder" - "workfolder" {
-          set workPath $val}
-        "loSt" - "lost" -  "channelId" - "channelid" - "log" {
+        "pdbidsfile" - "output" - "out" - "-o" {set pdbIdsFile $val}
+        "chain" - "chains" - "l_chain" {set l_chainUsr $val}
+        "resname" - "resnames" - "l_resname" {set l_resNameUsr $val}
+        "resid" - "resids" - "l_resid" {set l_resIdUsr $val}
+        "ll_ligrec" - "ligrecs" {set ll_ligRec $val}
+        "ll_ligexclude" - "ligexcludes" {set ll_ligExclude $val}
+        "pdbpath" - "molpath" {set molPath $val}
+        "workpath" - "workfolder" - "workdir" - "outpath" - "outfolder" - "outdir" {set workPath $val}
+        "loSt" - "lost" - "channelId" - "channelid" - "log" {
           set loSt $val
           if {$loSt == "none"} {set out 0}
           }
@@ -901,7 +901,7 @@ proc lr_pdbIdsFile {l_pdbId args} {
       return ""
       }
 # report user-provided parameters (arguments) to the log output ...
-  if {$loSt == "none"} {set out 0} else {set out 1}
+#  if {$loSt == "none"} {set out 0} else {set out 1}
   if $out {
     puts $loSt "\n+++ Autodetect ligand-receptor complexes in PDBs ($procName) +++"
     puts $loSt " list of pdbIds (source: $src): ${l_pdbId}"
@@ -910,17 +910,18 @@ proc lr_pdbIdsFile {l_pdbId args} {
     puts $loSt " user list of non-prot res to be excluded: $ll_ligExclude"
     puts $loSt " pdbPath for input files: $pdbPath"
     puts $loSt " output workPath: $workPath"
+    if {$args_rest != {}} {puts $loSt " unused arguments: $args_rest"}
     }
 # loading pdb molecules, and creating list of ids
   set l_id {}
-  switch $src {
-    "download" {
+  switch [string tolower $src] {
+    "download" - "pdbload" - "internet" {
       foreach pdbId ${l_pdbId} {
         lappend l_id [mol pdbload $pdbId]
         animate goto start
         }
       }
-    "file" {
+    "file" - "loadfile" - "internet" {
       foreach pdbFile ${pdbPath}${l_pdbId} {
         set id [mol new $pdbFile type pdb waitfor all]
         aminate goto start
@@ -930,7 +931,7 @@ proc lr_pdbIdsFile {l_pdbId args} {
         lappend l_id $id
         }
       }
-    "molId" - "molid" - "idl" - "id" {set l_id ${l_pdbId}}
+    "molid" - "idl" - "id" - "ids" - "vmdId" - "loaded" {set l_id ${l_pdbId}}
     default {
       if $out {puts $loSt "$procName: unknown option in 'source' arg."}
       return ""
@@ -1006,6 +1007,7 @@ proc lr_pdbIdsFile {l_pdbId args} {
           set l_ligRes [list $pdbId $chain $resName $resId]
           set tmpSel [atomselect $id "chain $chain and resname $resName and resid $resId"]
           set testIndex [lindex [$tmpSel get index] 0]
+# excluding user-specified ligands excluded
           foreach l_ligExclude $ll_ligExclude {
             lassign $l_ligExclude pdbIdLig chainLig resNameLig resIdLig
             if {($pdbIdLig == $pdbId) || ($pdbIdLig == ".*") || ($pdbIdLig == "\".*\"")} {
@@ -1016,6 +1018,7 @@ proc lr_pdbIdsFile {l_pdbId args} {
               $tmpSelLig delete
               }
             }
+# adding user-specified residues that are part of the receptor
           foreach l_ligRec $ll_ligRec {
             lassign $l_ligRec pdbIdLig chainLig resNameLig resIdLig
             if {($pdbIdLig == $pdbId) || ($pdbIdLig == ".*") || ($pdbIdLig == "\".*\"")} {
@@ -1031,7 +1034,11 @@ proc lr_pdbIdsFile {l_pdbId args} {
             }
           if {($writeLigand) && ([$tmpSel num] > 0)} {
 # storing identified ligand residues and writing pdbIdsFile
-            if $saveDir {$tmpSel writepdb "${workPath}${pdbId}/lig/pdb/[join ${l_ligRes} "-"].pdb"}
+            if $saveDir {
+              $tmpSel writepdb "${workPath}${pdbId}/lig/pdb/[join ${l_ligRes} "-"].pdb"
+              exec mkdir -p "${workPath}${pdbId}/grid/[join ${l_ligRes} "-"]"
+              exec mkdir -p "${workPath}${pdbId}/dock/[join ${l_ligRes} "-"]"
+              }
             if $out {puts $loSt "ligand written: ${l_ligRes}"}
             puts $outIds ${l_ligRes}
             }
@@ -1046,7 +1053,8 @@ proc lr_pdbIdsFile {l_pdbId args} {
       }
     }
   close $outIds
-  if $out {puts $loSt "$procName: Done."}
+  
+  if $out {puts $loSt "output file written: $pdbIdsFile\n$procName: Done."}
   }   ;# *** lr_pdbIdsFile ***
 
 
