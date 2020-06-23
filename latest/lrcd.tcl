@@ -119,13 +119,14 @@
 #|  -authors :-Carlos Z. Gómez-Castro ;
 #|  -reference :
 #|    -J. Mol. Recognit. 2019; 32:e2801. https://doi.org/10.1002/jmr.2801 ;
-#|  -date :-2020-06-16.Tue ;
+#|  -date :-2020-06-23.Tue ;
 #|  -version :-1.0.8 ;
 #|  -version information :
 #|    -changes done in this version :
 #|      -updated output in lrcdMat_dct (chain id missing) .
 #|      -case-insensitive variable arguments in lr_pdbIdsFile proc .
 #|      -lr_pdbIdsFile: writting 'grid' and 'dock' folder tree .
+#|      -each grid folder written will contain its own 'gridcenter.txt' file .
 #|      - ;;
 #|    -finished version ;
 #|  -notes from previous versions :
@@ -1038,6 +1039,11 @@ proc lr_pdbIdsFile {l_pdbId args} {
               $tmpSel writepdb "${workPath}${pdbId}/lig/pdb/[join ${l_ligRes} "-"].pdb"
               exec mkdir -p "${workPath}${pdbId}/grid/[join ${l_ligRes} "-"]"
               exec mkdir -p "${workPath}${pdbId}/dock/[join ${l_ligRes} "-"]"
+# storing gridcenter.txt file with coordinates for the script gengpf.sh
+              set gcfile [open "${workPath}${pdbId}/grid/[join ${l_ligRes} "-"]/gridcenter.txt" w]
+              lassign [measure center $tmpSel] cx cy cz
+              puts -nonewline $gcfile "[format "'%.2f,%.2f,%.2f'" $cx $cy $cz]"
+              close $gcfile
               }
             if $out {puts $loSt "ligand written: ${l_ligRes}"}
             puts $outIds ${l_ligRes}
