@@ -922,10 +922,10 @@ proc lr_pdbIdsFile {l_pdbId args} {
         animate goto start
         }
       }
-    "file" - "loadfile" - "internet" {
+    "file" - "loadfile" {
       foreach pdbFile ${pdbPath}${l_pdbId} {
         set id [mol new $pdbFile type pdb waitfor all]
-        aminate goto start
+        animate goto start
         set name [string range $pdbFile 0 \
           [expr {[string last ".pdb" $pdbFile]-1}]]
         mol rename $id $name
