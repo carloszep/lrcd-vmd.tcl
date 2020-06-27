@@ -119,7 +119,7 @@
 #|  -authors :-Carlos Z. Gómez-Castro ;
 #|  -reference :
 #|    -J. Mol. Recognit. 2019; 32:e2801. https://doi.org/10.1002/jmr.2801 ;
-#|  -date :-2020-06-25.Thu ;
+#|  -date :-2020-06-26.Fri ;
 #|  -version :-1.0.8 ;
 #|  -version information :
 #|    -changes done in this version :
@@ -127,6 +127,7 @@
 #|      -case-insensitive variable arguments in lr_pdbIdsFile proc .
 #|      -lr_pdbIdsFile: writting 'grid' and 'dock' folder tree .
 #|      -each grid folder written will contain its own 'gridcenter.txt' file .
+#|      -readme files added to folder tree in ld_pdbIdsFile .
 #|      - ;;
 #|    -finished version ;
 #|  -notes from previous versions :
@@ -952,7 +953,11 @@ proc lr_pdbIdsFile {l_pdbId args} {
       exec mkdir -p "${workPath}${pdbId}/"
       [atomselect $id "all"] writepdb "${workPath}${pdbId}/${pdbId}.pdb"
       exec mkdir -p "${workPath}${pdbId}/lig/pdb/"
+      exec mkdir -p "${workPath}${pdbId}/lig/pdbqt/"
+      exec echo "Use genligpdbqt.sh to populate from ../*.pdb files." > "${workPath}${pdbId}/lig/pdbqt/README.txt"
       exec mkdir -p "${workPath}${pdbId}/rec/pdb/"
+      exec mkdir -p "${workPath}${pdbId}/rec/pdbqt/"
+      exec echo "Use genrecpdbqt.sh to populate from ../*.pdb files." > "${workPath}${pdbId}/rec/pdbqt/README.txt"
       }
     set selTxtLigRec "(protein)"
     if {(${l_chain} == "all") || (${l_chain} == {})} {
@@ -1038,12 +1043,14 @@ proc lr_pdbIdsFile {l_pdbId args} {
             if $saveDir {
               $tmpSel writepdb "${workPath}${pdbId}/lig/pdb/[join ${l_ligRes} "-"].pdb"
               exec mkdir -p "${workPath}${pdbId}/grid/[join ${l_ligRes} "-"]"
+              exec echo "Use gengpf.sh to generate AG4 grid parameter file (gridcenter.txt file required).
+Use ag4 *gpf to run autogrid4." > "${workPath}${pdbId}/grid/[join ${l_ligRes} "-"]/README.txt"
               exec mkdir -p "${workPath}${pdbId}/dock/[join ${l_ligRes} "-"]"
+              exec echo "Use gendpf.sh to populate with AD4 docking parameter files from ../../lig/pdbqt/*.pdbqt files.
+Use ad4 *dpf to run autodock4." > "${workPath}${pdbId}/dock/[join ${l_ligRes} "-"]/README.txt"
 # storing gridcenter.txt file with coordinates for the script gengpf.sh
-              set gcfile [open "${workPath}${pdbId}/grid/[join ${l_ligRes} "-"]/gridcenter.txt" w]
               lassign [measure center $tmpSel] cx cy cz
-              puts -nonewline $gcfile "[format "%.2f,%.2f,%.2f" $cx $cy $cz]"
-              close $gcfile
+              exec echo "[format "%.2f,%.2f,%.2f" $cx $cy $cz]" > "${workPath}${pdbId}/grid/[join ${l_ligRes} "-"]/gridcenter.txt"
               }
             if $out {puts $loSt "ligand written: ${l_ligRes}"}
             puts $outIds ${l_ligRes}
