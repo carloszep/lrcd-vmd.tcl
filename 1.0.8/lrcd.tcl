@@ -741,7 +741,7 @@ proc lrcdVec_sum {lrcdMat {infoM ""} {loSt stdout}} {
 #|  -for each PDBID and chain, all non-protein residues are browsed
 #|   _ to detect "native" LR complexes to populate a list of ids .
 #|  -optionally a folder tree is created for cleaned structures of proteins,
-#|   _ ligands, and complexes (for other calculations) .
+#|   _ ligands, and complexes (for docking calculations) .
 #|  -folder tree and files created (for automated autodock4 calculations) :
 #|    -'<workPath>' :
 #|      -'<pdbId>/' :
@@ -1044,10 +1044,10 @@ proc lr_pdbIdsFile {l_pdbId args} {
               $tmpSel writepdb "${workPath}${pdbId}/lig/pdb/[join ${l_ligRes} "-"].pdb"
               exec mkdir -p "${workPath}${pdbId}/grid/[join ${l_ligRes} "-"]"
               exec echo "Use gengpf.sh to generate AG4 grid parameter file (gridcenter.txt file required).
-Use ag4 *gpf to run autogrid4." > "${workPath}${pdbId}/grid/[join ${l_ligRes} "-"]/README.txt"
+Use ag4.sh *gpf to run autogrid4." > "${workPath}${pdbId}/grid/[join ${l_ligRes} "-"]/README.txt"
               exec mkdir -p "${workPath}${pdbId}/dock/[join ${l_ligRes} "-"]"
               exec echo "Use gendpf.sh to populate with AD4 docking parameter files from ../../lig/pdbqt/*.pdbqt files.
-Use ad4 *dpf to run autodock4." > "${workPath}${pdbId}/dock/[join ${l_ligRes} "-"]/README.txt"
+Use ad4.sh *dpf to run autodock4." > "${workPath}${pdbId}/dock/[join ${l_ligRes} "-"]/README.txt"
 # storing gridcenter.txt file with coordinates for the script gengpf.sh
               lassign [measure center $tmpSel] cx cy cz
               exec echo "[format "%.2f,%.2f,%.2f" $cx $cy $cz]" > "${workPath}${pdbId}/grid/[join ${l_ligRes} "-"]/gridcenter.txt"
