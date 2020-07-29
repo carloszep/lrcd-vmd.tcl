@@ -198,7 +198,7 @@
 
 # public version (started from library anMol-v.0.1.4)
 global lrcd_version selInfo   ;# global variables
-set lrcd_version 1.0.8
+set lrcd_version 1.0.9
 
 # printing info when sourcing the library
 
@@ -758,7 +758,7 @@ proc lrcdVec_sum {lrcdMat {infoM ""} {loSt stdout}} {
 #|            -'<pdbId>-<chain>-<resName>-<resId>.pdb' ;;
 #|        -'rec/' :
 #|          -'pdb/' :
-#|            -'<pdbId>.rec.pdb' ;;;;;
+#|            -'<pdbId>.pdb' ;;;;;
 #|  -arguments :
 #|    -l_pdbId :
 #|      -list of PDBIDs to be processed .
@@ -827,10 +827,11 @@ proc lrcdVec_sum {lrcdMat {infoM ""} {loSt stdout}} {
 #|        -list format :-see 'll_ligRec' argument above ;;
 #|      -'chainRecExclude', 'recChainExclude', 'recExclude' :
 #|        -chain dentifiers to be excluded from the receptor molecule .
-#|        -affects only the <pdbId>.rec.pdb file .
+#|        -affects only the <pdbId>.pdb file .
 #|        -acceptable values :
 #|          -"none", {}, "" :-no chains are excluded ;
 #|          -list of chain identifiers (e.g. "A", "B C E P") ;
+#|        -default value :-{} ;;
 #|      -'pdbPath', 'molPath' :
 #|        -common folder path where the PDB files are loaded from .
 #|        -used only with the argument 'source' set to "file" :
@@ -880,7 +881,7 @@ proc lr_pdbIdsFile {l_pdbId args} {
   set l_resIdUsr {}
   set ll_ligRec {}
   set ll_ligExclude {}
-  set recExcl "none"
+  set recExcl {}
   set pdbPath ""
   set workPath "none"
   set loSt stdout
@@ -1056,7 +1057,7 @@ proc lr_pdbIdsFile {l_pdbId args} {
             if $saveDir {
               $tmpSel writepdb "${workPath}${pdbId}/lig/pdb/[join ${l_ligRes} "-"].pdb"
               exec mkdir -p "${workPath}${pdbId}/grid/[join ${l_ligRes} "-"]"
-              exec echo "Use gengpf.sh to generate AG4 grid parameter file (gridcenter.txt file required).
+              exec echo "Use gengpf.sh to generate AG4 grid parameter file (gridcenter.txt and recname.txt files required).
 Use ag4.sh *gpf to run autogrid4." > "${workPath}${pdbId}/grid/[join ${l_ligRes} "-"]/README.txt"
               exec mkdir -p "${workPath}${pdbId}/dock/[join ${l_ligRes} "-"]"
               exec echo "Use gendpf.sh to populate with AD4 docking parameter files from ../../lig/pdbqt/*.pdbqt files.
@@ -1064,6 +1065,7 @@ Use ad4.sh *dpf to run autodock4." > "${workPath}${pdbId}/dock/[join ${l_ligRes}
 # storing gridcenter.txt file with coordinates for the script gengpf.sh
               lassign [measure center $tmpSel] cx cy cz
               exec echo "[format "%.2f,%.2f,%.2f" $cx $cy $cz]" > "${workPath}${pdbId}/grid/[join ${l_ligRes} "-"]/gridcenter.txt"
+              exec echo "${pdbId}.pdbqt" > "${workPath}${pdbId}/grid/[join ${l_ligRes} "-"]/recname.txt"
               }
             if $out {puts $loSt "ligand written: ${l_ligRes}"}
             puts $outIds ${l_ligRes}
@@ -1072,13 +1074,13 @@ Use ad4.sh *dpf to run autodock4." > "${workPath}${pdbId}/dock/[join ${l_ligRes}
           }
         }
       }
-# excluding user-specified chains from the .rec.pdb file
-    if {($recExcl != "none") || ($recExcl != {})} {
+# excluding user-specified chains from the .pdb file
+    if {$recExcl != {}} {
       set selTxtLigRec "($selTxtLigRec) and not chain $recExcl"
       }
 # adding user specified ligand residues that are part of the receptor
     if $saveDir {
-      [atomselect $id $selTxtLigRec] writepdb "${workPath}${pdbId}/rec/pdb/${pdbId}.rec.pdb"
+      [atomselect $id $selTxtLigRec] writepdb "${workPath}${pdbId}/rec/pdb/${pdbId}.pdb"
       }
     if $out {puts $loSt "Receptor residues included in $pdbId: $selTxtLigRec"}
     }
