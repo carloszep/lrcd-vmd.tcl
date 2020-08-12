@@ -227,12 +227,12 @@ if {[file exist "lr_pdbIdsFile.tcl"]} {
   source lr_pdbIdsFile.tcl
   puts "  lr_pdbIdsFile.tcl script loaded."
 } elseif {[info exists tclScriptPath]} {
-  if {[file exist ${tclScriptPath}/lrcd-vmd.tcl/tools/lr_pdbIdsFile.tcl]} {
-    source ${tclScriptPath}/lrcd-vmd.tcl/tools/lr_pdbIdsFile.tcl
-    puts "${tclScriptPath}/lrcd-vmd.tcl/tools/lr_pdbIdsFile.tcl script sourced."
-  } elseif {[file exist ${tclScriptPath}/lrcd/tools/lr_pdbIdsFile.tcl]} {
-    source ${tclScriptPath}/lrcd/tools/lr_pdbIdsFile.tcl
-    puts "${tclScriptPath}/lrcd/tools/lr_pdbIdsFile.tcl script sourced."
+  if {[file exist ${tclScriptPath}lrcd-vmd.tcl/tools/lr_pdbIdsFile.tcl]} {
+    source ${tclScriptPath}lrcd-vmd.tcl/tools/lr_pdbIdsFile.tcl
+    puts "${tclScriptPath}lrcd-vmd.tcl/tools/lr_pdbIdsFile.tcl script sourced."
+  } elseif {[file exist ${tclScriptPath}lrcd/tools/lr_pdbIdsFile.tcl]} {
+    source ${tclScriptPath}lrcd/tools/lr_pdbIdsFile.tcl
+    puts "${tclScriptPath}lrcd/tools/lr_pdbIdsFile.tcl script sourced."
   } else {puts "  lr_pdbIdsFile.tcl script not found."}
 } else {puts "  lr_pdbIdsFile.tcl script not found."}
 
