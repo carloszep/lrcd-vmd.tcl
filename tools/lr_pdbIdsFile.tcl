@@ -15,18 +15,17 @@
 #|  -the argument 'workPath' must be specified to create the folder tree .
 #|  -folder tree and files created (for automated autodock4 calculations) :
 #|    -'<workPath>' :
-#|      -'<pdbId>/' :
-#|        -'<pdbId>.pdb' .
-#|        -'lig/' :
-#|          -'pdb/' :
-#|            -'<pdbId>-<chain>-<resName>-<resId>.pdb' ;;
-#|        -'dock/' :
-#|          -'<pdbId>-<chain>-<resName>-<resId>/' ;
-#|        -'grid/' :
-#|          -'<pdbId>-<chain>-<resName>-<resId>/' ;
-#|        -'rec/' :
-#|          -'pdb/' :
-#|            -'<pdbId>.pdb' ;;;;;
+#|      -'lig/' :
+#|        -'pdb/' :
+#|          -'<pdbId>-<chain>-<resName>-<resId>.pdb' ;;
+#|      -'rec/' :
+#|        -'pdb/' :
+#|          -'full/<pdbId>.pdb' ;
+#|          -'<pdbId>.pdb' ;;
+#|      -'grid/' :
+#|        -'<pdbId>-<chain>-<resName>-<resId>/' ;
+#|      -'dock/' :
+#|        -'<pdbId>-<chain>-<resName>-<resId>/' ;;;
 #|  -arguments :
 #|    -l_pdbId :
 #|      -list of PDBIDs to be processed .
@@ -232,13 +231,13 @@ proc lr_pdbIdsFile {l_pdbId args} {
     set l_chain $l_chainUsr
     set pdbId [molinfo $id get name]
     if $saveDir {
-      exec mkdir -p "${workPath}${pdbId}/"
-      [atomselect $id "all"] writepdb "${workPath}${pdbId}/${pdbId}.pdb"
-      exec mkdir -p "${workPath}${pdbId}/lig/pdb/"
-      exec mkdir -p "${workPath}${pdbId}/lig/pdbqt/"
-      exec echo "Use genligpdbqt.sh to populate from ../*.pdb files." > "${workPath}${pdbId}/lig/pdbqt/README.txt"
-      exec mkdir -p "${workPath}${pdbId}/rec/pdb/"
-      exec mkdir -p "${workPath}${pdbId}/rec/pdbqt/"
+      exec mkdir -p "${workPath}"
+      exec mkdir -p "${workPath}lig/pdb/"
+      exec mkdir -p "${workPath}lig/pdbqt/"
+      exec echo "Use genligpdbqt.sh to populate from ../*.pdb files." > "${workPath}lig/pdbqt/README.txt"
+      exec mkdir -p "${workPath}rec/pdb/"
+      exec mkdir -p "${workPath}rec/pdbqt/"
+      [atomselect $id "all"] writepdb "${workPath}full/${pdbId}.pdb"
       exec echo "Use genrecpdbqt.sh to populate from ../*.pdb files." > "${workPath}${pdbId}/rec/pdbqt/README.txt"
       }
     set selTxtLigRec "(protein)"
@@ -323,13 +322,9 @@ proc lr_pdbIdsFile {l_pdbId args} {
           if {($writeLigand) && ([$tmpSel num] > 0)} {
 # storing identified ligand residues and writing pdbIdsFile
             if $saveDir {
-              $tmpSel writepdb "${workPath}${pdbId}/lig/pdb/[join ${l_ligRes} "-"].pdb"
-              exec mkdir -p "${workPath}${pdbId}/grid/[join ${l_ligRes} "-"]"
-              exec echo "Use gengpf.sh to generate AG4 grid parameter file (gridcenter.txt and recname.txt files required).
-Use ag4.sh *gpf to run autogrid4." > "${workPath}${pdbId}/grid/[join ${l_ligRes} "-"]/README.txt"
+              $tmpSel writepdb "${workPath}lig/pdb/[join ${l_ligRes} "-"].pdb"
+              exec mkdir -p "${workPath}grid/[join ${l_ligRes} "-"]"
               exec mkdir -p "${workPath}${pdbId}/dock/[join ${l_ligRes} "-"]"
-              exec echo "Use gendpf.sh to populate with AD4 docking parameter files from ../../lig/pdbqt/*.pdbqt files.
-Use ad4.sh *dpf to run autodock4." > "${workPath}${pdbId}/dock/[join ${l_ligRes} "-"]/README.txt"
 # storing gridcenter.txt file with coordinates for the script gengpf.sh
               lassign [measure center $tmpSel] cx cy cz
               exec echo "[format "%.2f,%.2f,%.2f" $cx $cy $cz]" > "${workPath}${pdbId}/grid/[join ${l_ligRes} "-"]/gridcenter.txt"
@@ -352,6 +347,8 @@ Use ad4.sh *dpf to run autodock4." > "${workPath}${pdbId}/dock/[join ${l_ligRes}
       }
     if $out {puts $loSt "Receptor residues included in $pdbId: $selTxtLigRec"}
     }
+    exec echo "Use 'gengpf.sh <folders>' to generate AG4 grid parameter file (gridcenter.txt and recname.txt files required).\nUse 'run_grids.sh <folders>' to run autogrid4." > "${workPath}grid/README.txt"
+    exec echo "Use 'gendpf.sh <folders>' to populate with AD4 docking parameter files from ../lig/pdbqt/*.pdbqt files.\nUse 'run_docks.sh <folders>' to run autodock4." > "${workPath}dock/README.txt"
   close $outIds 
   if $out {puts $loSt "output file written: $pdbIdsFile\n$procName: Done."}
   }   ;# *** lr_pdbIdsFile ***
