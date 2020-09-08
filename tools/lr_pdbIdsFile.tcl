@@ -47,6 +47,7 @@
 #|    -args (variable arguments, case insensitive) :
 #|      -'pdbIdsFile', 'out', 'output', '-o' :
 #|        -name of the file for writing the list of Ids of ligands .
+#|        -if the file already exists the output will be appended .
 #|        -default value :-"pdbId-ligDB.txt" ;;
 #|      -'chain', 'chains', 'l_chain' :
 #|        -list of chain identifiers to be considered .
@@ -219,7 +220,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
       }
     }
 # creating output files and folders
-  set outIds [open $pdbIdsFile w]
+  set outIds [open $pdbIdsFile a]
   if {$workPath == "none"} {set saveDir 0} else {set saveDir 1}
   if {($workPath == ".") || ($workPath == "")} {set workPath "./"}
   if {[string index $workPath end] != "/"} {set workPath "$workPath/"}

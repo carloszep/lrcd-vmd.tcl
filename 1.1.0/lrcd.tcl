@@ -123,6 +123,8 @@
 #|  -version :-1.1.0 ;
 #|  -version information :
 #|    -changes in this version :
+#|      -the output file of proc lr_pdbIdsFile is now appended instead of
+#|       _ rewritten .
 #|      -the 'src' argument of proc lr_pdbIdsFile is no longer variable .
 #|      -the directory tree and some readme files updated to the latest scheme
 #|       _ of VS scripts for ad4 (lr_pdbIdsFile) .
