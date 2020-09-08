@@ -123,6 +123,7 @@
 #|  -version :-1.1.0 ;
 #|  -version information :
 #|    -changes in this version :
+#|      -the 'src' argument of proc lr_pdbIdsFile is no longer variable .
 #|      -the directory tree and some readme files updated to the latest scheme
 #|       _ of VS scripts for ad4 (lr_pdbIdsFile) .
 #|      -the procedure lr_pdbIdsFile is separated from the main script .

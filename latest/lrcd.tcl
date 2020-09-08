@@ -119,10 +119,13 @@
 #|  -authors :-Carlos Z. Gómez-Castro ;
 #|  -reference :
 #|    -J. Mol. Recognit. 2019; 32:e2801. https://doi.org/10.1002/jmr.2801 ;
-#|  -date :-2020-08-11.Tue ;
+#|  -date :-2020-09-07.Mon ;
 #|  -version :-1.1.0 ;
 #|  -version information :
 #|    -changes in this version :
+#|      -the 'src' argument of proc lr_pdbIdsFile is no longer variable .
+#|      -the directory tree and some readme files updated to the latest scheme
+#|       _ of VS scripts for ad4 (lr_pdbIdsFile) .
 #|      -the procedure lr_pdbIdsFile is separated from the main script .
 #|      -it is rather sourced from the main script lrcd.tcl ;
 #|    -finished version ;

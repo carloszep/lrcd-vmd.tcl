@@ -1,5 +1,5 @@
 
-#|-lr_pdbIdsFile {l_pdbId args} :
+#|-lr_pdbIdsFile {l_pdbId {src "download"} args} :
 #|  -detect ligand-receptor complexes in lists of PDB files .
 #|  -this procedure is part of the carloszep/lrcd-vmd.tcl library .
 #|  -creates a pdbIdsFile used by proc lrcdVec_writeDB to store LRC vectors .
@@ -30,21 +30,21 @@
 #|    -l_pdbId :
 #|      -list of PDBIDs to be processed .
 #|      -the source of the PDB files depends on the value of the 'source' arg .
+#|    -src :
+#|      -specify the source of the PDB files to be processed .
+#|      -acceptable values :
+#|        -"download", "pdbLoad", "internet" :
+#|          -the l_pdbid arg must be a list of PDBIDs to be downloaded
+#|           _ from the RCSB PDB web site (uses 'mol pdbload') ;
+#|        -"file", "loadFile", "pdbFile" :
+#|          -the l_pdbid arg must be a list of PDB file names to be loaded .
+#|          -PDB format is assumed .
+#|          -it is recommended to avoid including paths to files, instead
+#|           _ use the argument 'pdbPath' ;
+#|        -"molId", "idl", "id", "ids", "vmdId", "loaded" :
+#|          -the l_pdbid arg must be a list of preloaded VMD mol Ids ;;
+#|      -default value :-'download' ;;
 #|    -args (variable arguments, case insensitive) :
-#|      -'source', 'src' :
-#|        -specify the source of the PDB files to be processed .
-#|        -acceptable values :
-#|          -"download", "pdbLoad", "internet" :
-#|            -the l_pdbid arg must be a list of PDBIDs to be downloaded
-#|             _ from the RCSB PDB web site (uses 'mol pdbload') ;
-#|          -"file", "loadFile", "pdbFile" :
-#|            -the l_pdbid arg must be a list of PDB file names to be loaded .
-#|            -PDB format is assumed .
-#|            -it is recommended to avoid including paths to files, instead
-#|             _ use the argument 'pdbPath' ;
-#|          -"molId", "idl", "id", "ids", "vmdId", "loaded" :
-#|            -the l_pdbid arg must be a list of preloaded VMD mol Ids ;;
-#|        -default value :-'download' ;;
 #|      -'pdbIdsFile', 'out', 'output', '-o' :
 #|        -name of the file for writing the list of Ids of ligands .
 #|        -default value :-"pdbId-ligDB.txt" ;;
@@ -137,11 +137,10 @@
 #|    -for the moment, no frame specification in each pdb is handled :
 #|      -after loading the molecule, the first frame is seeked ;
 #|    -it is still pending to report information to feed Autogrid4 ;;
-proc lr_pdbIdsFile {l_pdbId args} {
+proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
 # global variables ...
 # default values for variables and arguments
   set procName [lindex [info level 0] 0]
-  set src "download"
   set pdbIdsFile "pdbId-ligDB.txt"
   set l_chainUsr {}
   set l_resNameUsr {}
@@ -158,7 +157,6 @@ proc lr_pdbIdsFile {l_pdbId args} {
   if {[expr {[llength $args]%2}] == 0} {   ;# even or 0 optional arguments
     foreach {arg val} $args {
       switch [string tolower $arg] {
-        "src" - "source" {set src $val}
         "pdbidsfile" - "output" - "out" - "-o" {set pdbIdsFile $val}
         "chain" - "chains" - "l_chain" {set l_chainUsr $val}
         "resname" - "resnames" - "l_resname" {set l_resNameUsr $val}
