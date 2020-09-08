@@ -225,7 +225,13 @@ proc lr_pdbIdsFile {l_pdbId args} {
   if {$workPath == "none"} {set saveDir 0} else {set saveDir 1}
   if {($workPath == ".") || ($workPath == "")} {set workPath "./"}
   if {[string index $workPath end] != "/"} {set workPath "$workPath/"}
-  if $saveDir {if {![file exist $workPath]} {exec mkdir $workPath}}
+  if $saveDir {
+    if {![file exist $workPath]} {exec mkdir $workPath}
+  } else {
+    if $out {
+      puts $loSt "  Warning: no 'workPath' specified, no output directory tree for VS will be created."
+      }
+    }
 # processing each mol id
   foreach id ${l_id} {
     set l_chain $l_chainUsr
@@ -237,8 +243,9 @@ proc lr_pdbIdsFile {l_pdbId args} {
       exec echo "Use genligpdbqt.sh to populate from ../*.pdb files." > "${workPath}lig/pdbqt/README.txt"
       exec mkdir -p "${workPath}rec/pdb/"
       exec mkdir -p "${workPath}rec/pdbqt/"
-      [atomselect $id "all"] writepdb "${workPath}full/${pdbId}.pdb"
-      exec echo "Use genrecpdbqt.sh to populate from ../*.pdb files." > "${workPath}${pdbId}/rec/pdbqt/README.txt"
+      exec mkdir -p "${workPath}rec/pdb/full/"
+      [atomselect $id "all"] writepdb "${workPath}rec/pdb/full/${pdbId}.pdb"
+      exec echo "Use genrecpdbqt.sh to populate from ../*.pdb files." > "${workPath}rec/pdbqt/README.txt"
       }
     set selTxtLigRec "(protein)"
     if {(${l_chain} == "all") || (${l_chain} == {})} {
@@ -324,11 +331,11 @@ proc lr_pdbIdsFile {l_pdbId args} {
             if $saveDir {
               $tmpSel writepdb "${workPath}lig/pdb/[join ${l_ligRes} "-"].pdb"
               exec mkdir -p "${workPath}grid/[join ${l_ligRes} "-"]"
-              exec mkdir -p "${workPath}${pdbId}/dock/[join ${l_ligRes} "-"]"
+              exec mkdir -p "${workPath}dock/[join ${l_ligRes} "-"]"
 # storing gridcenter.txt file with coordinates for the script gengpf.sh
               lassign [measure center $tmpSel] cx cy cz
-              exec echo "[format "%.2f,%.2f,%.2f" $cx $cy $cz]" > "${workPath}${pdbId}/grid/[join ${l_ligRes} "-"]/gridcenter.txt"
-              exec echo "${pdbId}.pdbqt" > "${workPath}${pdbId}/grid/[join ${l_ligRes} "-"]/recname.txt"
+              exec echo "[format "%.2f,%.2f,%.2f" $cx $cy $cz]" > "${workPath}grid/[join ${l_ligRes} "-"]/gridcenter.txt"
+              exec echo "${pdbId}.pdbqt" > "${workPath}grid/[join ${l_ligRes} "-"]/recname.txt"
               }
             if $out {puts $loSt "ligand written: ${l_ligRes}"}
             puts $outIds ${l_ligRes}
@@ -343,12 +350,14 @@ proc lr_pdbIdsFile {l_pdbId args} {
       }
 # adding user specified ligand residues that are part of the receptor
     if $saveDir {
-      [atomselect $id $selTxtLigRec] writepdb "${workPath}${pdbId}/rec/pdb/${pdbId}.pdb"
+      [atomselect $id $selTxtLigRec] writepdb "${workPath}rec/pdb/${pdbId}.pdb"
       }
     if $out {puts $loSt "Receptor residues included in $pdbId: $selTxtLigRec"}
     }
-    exec echo "Use 'gengpf.sh <folders>' to generate AG4 grid parameter file (gridcenter.txt and recname.txt files required).\nUse 'run_grids.sh <folders>' to run autogrid4." > "${workPath}grid/README.txt"
-    exec echo "Use 'gendpf.sh <folders>' to populate with AD4 docking parameter files from ../lig/pdbqt/*.pdbqt files.\nUse 'run_docks.sh <folders>' to run autodock4." > "${workPath}dock/README.txt"
+    if $saveDir {
+      exec echo "Use 'gengpf.sh <folders>' to generate AG4 grid parameter file (gridcenter.txt and recname.txt files required).\nUse 'run_grids.sh <folders>' to run autogrid4." > "${workPath}grid/README.txt"
+      exec echo "Use 'gendpf.sh <folders>' to populate with AD4 docking parameter files from ../lig/pdbqt/*.pdbqt files.\nUse 'run_docks.sh <folders>' to run autodock4." > "${workPath}dock/README.txt"
+      }
   close $outIds 
   if $out {puts $loSt "output file written: $pdbIdsFile\n$procName: Done."}
   }   ;# *** lr_pdbIdsFile ***
