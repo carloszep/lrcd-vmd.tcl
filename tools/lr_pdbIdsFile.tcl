@@ -17,13 +17,13 @@
 #|    -'<workPath>' :
 #|      -'<pdbId>/' :
 #|        -'<pdbId>.pdb' .
+#|        -'lig/' :
+#|          -'pdb/' :
+#|            -'<pdbId>-<chain>-<resName>-<resId>.pdb' ;;
 #|        -'dock/' :
 #|          -'<pdbId>-<chain>-<resName>-<resId>/' ;
 #|        -'grid/' :
 #|          -'<pdbId>-<chain>-<resName>-<resId>/' ;
-#|        -'lig/' :
-#|          -'pdb/' :
-#|            -'<pdbId>-<chain>-<resName>-<resId>.pdb' ;;
 #|        -'rec/' :
 #|          -'pdb/' :
 #|            -'<pdbId>.pdb' ;;;;;
