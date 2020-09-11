@@ -123,9 +123,10 @@
 #|  -version :-1.1.1 ;
 #|  -version information :
 #|    -changes in this version :
-#|      - .
+#|      -new variable argument 'minLigSize' added to proc lr_pdbIdsFile :
+#|        -used to exclude small residues from being considered as ligands ;
 #|      -adding default filters for small ligands in proc lr_pdbIdsFile ;
-#|    -unfinished version ;
+#|    -finished version ;
 #|  -notes from previous versions :
 #|    -changes in v111 :
 #|      -the output file of proc lr_pdbIdsFile is now appended instead of

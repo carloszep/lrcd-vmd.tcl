@@ -121,8 +121,13 @@
 #|        -the file path must finish with a '/' character .
 #|        -example: "/path/to/files/"
 #|        -default value :-"" ;;
-#|      -'minLigNumAtm', 'minLigSize',... :
-#|        - ;
+#|      -'minLigSize', 'minLigNumAtm' :
+#|        -the ligands detected will be excluded if has less atoms than the
+#|         _ value of this parameter .
+#|        -acceptable values :
+#|          -positive integer ;
+#|        -default value :
+#|          -7 ;;
 #|      -'loSt', 'channelId', 'log' :
 #|        -output stream (channel) for log messages .
 #|        -acceptable values :
@@ -142,8 +147,7 @@
 #|      -to be considered when writing receptor structures for docking ;
 #|    -the vmd 'name' field for the pdbs must be the same as the PDBID .
 #|    -for the moment, no frame specification in each pdb is handled :
-#|      -after loading the molecule, the first frame is seeked ;
-#|    -it is still pending to report information to feed Autogrid4 ;;
+#|      -after loading the molecule, the first frame is seeked ;;;
 proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
 # global variables ...
 # default values for variables and arguments
@@ -167,6 +171,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
     foreach {arg val} $args {
       switch [string tolower $arg] {
         "pdbidsfile" - "output" - "out" - "-o" {set pdbIdsFile $val}
+        "workpath" - "workfolder" - "outtree" - "dirtree" {set workPath $val}
         "chain" - "chains" - "l_chain" {set l_chainUsr $val}
         "resname" - "resnames" - "l_resname" {set l_resNameUsr $val}
         "resid" - "resids" - "l_resid" {set l_resIdUsr $val}
@@ -174,7 +179,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
         "ll_ligexclude" - "ligexcludes" {set ll_ligExclude $val}
         "recchainexclude" - "chainrecexclude" - "recexclude" {set recExcl $val}
         "pdbpath" - "molpath" {set molPath $val}
-        "workpath" - "workfolder" - "outtree" - "dirtree" {set workPath $val}
+        "minligsize" - "minlignumatm" {set minLigNumAtm $val}
         "loSt" - "lost" - "channelId" - "channelid" - "log" {
           set loSt $val
           if {$loSt == "none"} {set out 0}
