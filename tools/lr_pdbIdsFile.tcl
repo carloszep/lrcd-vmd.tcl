@@ -1,17 +1,18 @@
 
 #|-lr_pdbIdsFile {l_pdbId {src "download"} args} :
 #|  -detect ligand-receptor complexes in lists of PDB files .
-#|  -this procedure is part of the carloszep/lrcd-vmd.tcl library .
+#|  -this procedure is part of the https://github.com/carloszep/lrcd-vmd.tcl
+#|   _ library .
 #|  -creates a pdbIdsFile used by proc lrcdVec_writeDB to store LRC vectors .
 #|  -pdbIdsFile format (4 columns) :
 #|     -(1) 4-letter PDBID .
 #|     -(2) 1-letter chain identifier (generally A) .
 #|     -(3) 3-letter PDB residue name for the ligand .
-#|     -(4) 1- to 4-letter residue seq. number (resid) (new in v.1.0.6) ;
+#|     -(4) 1- to 4-letter residue seq. number (resid) ;
 #|  -for each PDBID and chain, all non-protein residues are browsed
-#|   _ to detect "native" LR complexes to populate a list of ids .
+#|   _ to detect "native" LR complexes to populate a list of ligands .
 #|  -optionally a folder tree is created for cleaned structures of proteins,
-#|   _ ligands, and complexes (for docking calculations) .
+#|   _ ligands, and complexes (for docking VS calculations) .
 #|  -the argument 'workPath' must be specified to create the folder tree .
 #|  -folder tree and files created (for automated autodock4 calculations) :
 #|    -'<workPath>' :
@@ -29,7 +30,7 @@
 #|  -arguments :
 #|    -l_pdbId :
 #|      -list of PDBIDs to be processed .
-#|      -the source of the PDB files depends on the value of the 'source' arg .
+#|      -the source of the PDB files depends on the value of the 'src' arg .
 #|    -src :
 #|      -specify the source of the PDB files to be processed .
 #|      -acceptable values :
@@ -49,6 +50,17 @@
 #|        -name of the file for writing the list of Ids of ligands .
 #|        -if the file already exists the output will be appended .
 #|        -default value :-"pdbId-ligDB.txt" ;;
+#|      -'workPath', 'workFolder', 'outTree', 'dirTree' :
+#|        -path prepended to all output files and folders .
+#|        -the path must end with the '/' character .
+#|        -acceptable values :
+#|          -"none" :
+#|            -no output folders for cleaned structures are created ;
+#|          -"", ".", "./" :
+#|            -the current folder is used as workPath ;
+#|          -an absolute or relative (linux) folder path finishing with '/' ;
+#|        -default value :
+#|          -"none" ;;
 #|      -'chain', 'chains', 'l_chain' :
 #|        -list of chain identifiers to be considered .
 #|        -acceptable values :
@@ -75,7 +87,8 @@
 #|            -all non-protein resids are considered ;;;
 #|      -'ll_ligRec', 'ligRecs' :
 #|        -specification of non-protein ligands to be considered as part of
-#|         _ the receptor structure formatted as a list of lists .
+#|         _ the receptor structure .
+#|        -formatted as a list of lists .
 #|        -each sublist contains the specification of a single ligand .
 #|        -the specified ligands will be excluded as ligands in complexes .
 #|        -list format :
@@ -95,7 +108,7 @@
 #|        -list format :-see 'll_ligRec' argument above ;;
 #|      -'chainRecExclude', 'recChainExclude', 'recExclude' :
 #|        -chain dentifiers to be excluded from the receptor molecule .
-#|        -affects only the <pdbId>.pdb file .
+#|        -affects only the 'rec/pdb/<pdbId>.pdb' file .
 #|        -acceptable values :
 #|          -"none", {}, "" :-no chains are excluded ;
 #|          -list of chain identifiers (e.g. "A", "B C E P") ;
@@ -108,17 +121,8 @@
 #|        -the file path must finish with a '/' character .
 #|        -example: "/path/to/files/"
 #|        -default value :-"" ;;
-#|      -'workPath', 'workFolder', 'workDir', 'outPath', 'outFolder', 'outDir' :
-#|        -path prepended to all output files and folders .
-#|        -the path must end with the '/' character .
-#|        -acceptable values :
-#|          -"none" :
-#|            -no output folders for cleaned structures are created ;
-#|          -"", ".", "./" :
-#|            -the current folder is used as workPath ;
-#|          -an absolute or relative (linux) folder path finishing with '/' ;
-#|        -default value :
-#|          -"none" ;
+#|      -'minLigNumAtm', 'minLigSize',... :
+#|        - ;
 #|      -'loSt', 'channelId', 'log' :
 #|        -output stream (channel) for log messages .
 #|        -acceptable values :
@@ -131,6 +135,8 @@
 #|    -from version 1.0.6 the resid of a ligand is included for a total of
 #|     _ four columns in the pdbIdFile .
 #|    -water molecules are excluded by default .
+#|    -from v111, the parameter minLigNumAtm and the list exclLigName will
+#|     _ define the filtering of ligands .
 #|    -in case a ligand is interacting with more than one chain, the receptor
 #|     _ moiety should consider a list of chain ids :
 #|      -to be considered when writing receptor structures for docking ;
@@ -153,6 +159,8 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
   set workPath "none"
   set loSt stdout
   set out 1
+  set minLigNumAtm 7   ;#minimum num of atoms to consider a residue as a ligand
+  set exclLigName [list "HOH" "WAT"]
   set args_rest {}   ;# list of unrecognized arguments; may be reused
 # decode variable arguments
   if {[expr {[llength $args]%2}] == 0} {   ;# even or 0 optional arguments
@@ -166,7 +174,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
         "ll_ligexclude" - "ligexcludes" {set ll_ligExclude $val}
         "recchainexclude" - "chainrecexclude" - "recexclude" {set recExcl $val}
         "pdbpath" - "molpath" {set molPath $val}
-        "workpath" - "workfolder" - "workdir" - "outpath" - "outfolder" - "outdir" {set workPath $val}
+        "workpath" - "workfolder" - "outtree" - "dirtree" {set workPath $val}
         "loSt" - "lost" - "channelId" - "channelid" - "log" {
           set loSt $val
           if {$loSt == "none"} {set out 0}
@@ -182,14 +190,16 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
       return ""
       }
 # report user-provided parameters (arguments) to the log output ...
-#  if {$loSt == "none"} {set out 0} else {set out 1}
   if $out {
-    puts $loSt "\n+++ Autodetect ligand-receptor complexes in PDBs ($procName) +++"
+    puts $loSt "\n+++ Autodetect ligand-receptor complexes in PDBs +++"
+    puts $loSt " command line: $procName {$l_pdbId} $src $args"
     puts $loSt " list of pdbIds (source: $src): ${l_pdbId}"
     puts $loSt " output pdbIdsFile: $pdbIdsFile"
     puts $loSt " user list of non-prot res in the receptor: $ll_ligRec"
     puts $loSt " user list of non-prot res to be excluded: $ll_ligExclude"
     puts $loSt " chains excluded from the output receptor file: $recExcl"
+    puts $loSt " default minimum number of atoms in ligands: $minLigNumAtm"
+    puts $loSt " default list of resNames excluded as ligands: $exclLigName"
     puts $loSt " pdbPath for input files: $pdbPath"
     puts $loSt " output workPath: $workPath"
     if {$args_rest != {}} {puts $loSt " unused arguments: $args_rest"}
@@ -268,7 +278,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
         foreach indAt [$ligSel get index] {
           set resName [[atomselect $id "index $indAt"] get resname]
           if {[lsearch ${l_resName} $resName] == -1} {
-            if {($resName != "HOH") && ($resName != "WAT")} {
+            if {[lsearch ${exclLigName} $resName] == -1} {
               lappend l_resName $resName}}
           }
         $ligSel delete
@@ -299,6 +309,10 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
           set writeLigand 1
           set l_ligRes [list $pdbId $chain $resName $resId]
           set tmpSel [atomselect $id "chain $chain and resname $resName and resid $resId"]
+          if {[$tmpSel num] < $minLigNumAtm} {
+            set writeLigand 0
+            if $out {puts $loSt "ligand excluded by size: $pdbId $chain $resName $resId ([$tmpSel num] atoms)"}
+            }
           set testIndex [lindex [$tmpSel get index] 0]
 # excluding user-specified ligands excluded
           foreach l_ligExclude $ll_ligExclude {
@@ -336,7 +350,8 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
               exec echo "[format "%.2f,%.2f,%.2f" $cx $cy $cz]" > "${workPath}grid/[join ${l_ligRes} "-"]/gridcenter.txt"
               exec echo "${pdbId}.pdbqt" > "${workPath}grid/[join ${l_ligRes} "-"]/recname.txt"
               }
-            if $out {puts $loSt "ligand written: ${l_ligRes}"}
+            if $out {
+              puts $loSt "ligand written: ${l_ligRes} ([$tmpSel num] atoms)"}
             puts $outIds ${l_ligRes}
             }
           $tmpSel delete
