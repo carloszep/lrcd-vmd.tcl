@@ -203,7 +203,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
     puts $loSt " user list of non-prot res in the receptor: $ll_ligRec"
     puts $loSt " user list of non-prot res to be excluded: $ll_ligExclude"
     puts $loSt " chains excluded from the output receptor file: $recExcl"
-    puts $loSt " default minimum number of atoms in ligands: $minLigNumAtm"
+    puts $loSt " minimum number of atoms in ligands: $minLigNumAtm"
     puts $loSt " default list of resNames excluded as ligands: $exclLigName"
     puts $loSt " pdbPath for input files: $pdbPath"
     puts $loSt " output workPath: $workPath"

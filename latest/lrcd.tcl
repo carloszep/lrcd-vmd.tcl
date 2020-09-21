@@ -8,7 +8,7 @@
 #            interaction of 1-phenylbenzimidazoles to cyclooxygenases.
 #            J Mol Recognit. 2019; 32:e2801. https://doi.org/10.1002/jmr.2801
 # 
-# lrcd.tcl v-1.1.0:
+# lrcd.tcl v-1.1.1:
 #
 # Tcl script for VMD to calculate the Ligand-Receptor Contact Distance (LRCD)
 # parameter that compares the interaction profile of two complexes involving
@@ -119,10 +119,16 @@
 #|  -authors :-Carlos Z. Gómez-Castro ;
 #|  -reference :
 #|    -J. Mol. Recognit. 2019; 32:e2801. https://doi.org/10.1002/jmr.2801 ;
-#|  -date :-2020-09-07.Mon ;
-#|  -version :-1.1.0 ;
+#|  -date :-2020-09-09.Wed ;
+#|  -version :-1.1.1 ;
 #|  -version information :
 #|    -changes in this version :
+#|      -new variable argument 'minLigSize' added to proc lr_pdbIdsFile :
+#|        -used to exclude small residues from being considered as ligands ;
+#|      -adding default filters for small ligands in proc lr_pdbIdsFile ;
+#|    -finished version ;
+#|  -notes from previous versions :
+#|    -changes in v111 :
 #|      -the output file of proc lr_pdbIdsFile is now appended instead of
 #|       _ rewritten .
 #|      -the 'src' argument of proc lr_pdbIdsFile is no longer variable .
@@ -130,8 +136,6 @@
 #|       _ of VS scripts for ad4 (lr_pdbIdsFile) .
 #|      -the procedure lr_pdbIdsFile is separated from the main script .
 #|      -it is rather sourced from the main script lrcd.tcl ;
-#|    -finished version ;
-#|  -notes from previous versions :
 #|    -implemented excluding receptor chains in proc lr_pdbIdsFile .
 #|    -the folder tree created by proc lr_pdbIdsFile is no longer
 #|     _ created by default; the 'workPath' argument is required for that .
@@ -206,7 +210,7 @@
 
 # public version (started from library anMol-v.0.1.4)
 global lrcd_version selInfo   ;# global variables
-set lrcd_version 1.1.0
+set lrcd_version 1.1.1
 
 # printing info when sourcing the library
 
@@ -1373,9 +1377,9 @@ proc lrcd_dlgTab {selIdL selIdRef cutoff {vecDist nd} {outPref "lrcnd_dlgTab"} \
       set lrcdVec [lrcdVec_sum $lrcdMat "$selInfo($selId,title)" $log]
       set lrcdi [lrc$vecDist $lrcdVec $lrcdVecRef "$selInfo($selId,title) (frm $f) vs $selInfo($selIdRef,title)" $log]
       if {$lrcdi == "-"} {
-        puts -nonewline "---\t"
+        puts -nonewline $log "---\t"
       } else {
-        puts -nonewline [format "%.2f\t" $lrcdi]
+        puts -nonewline $log [format "%.2f\t" $lrcdi]
 # storing the calculated lrcd in the user field of each frame
         [atomselect $id all frame $f] set user [format "%.2f\t" $lrcdi]
         }
