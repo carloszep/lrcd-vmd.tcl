@@ -1377,9 +1377,9 @@ proc lrcd_dlgTab {selIdL selIdRef cutoff {vecDist nd} {outPref "lrcnd_dlgTab"} \
       set lrcdVec [lrcdVec_sum $lrcdMat "$selInfo($selId,title)" $log]
       set lrcdi [lrc$vecDist $lrcdVec $lrcdVecRef "$selInfo($selId,title) (frm $f) vs $selInfo($selIdRef,title)" $log]
       if {$lrcdi == "-"} {
-        puts -nonewline $log "---\t"
+        puts -nonewline $loSt "---\t"
       } else {
-        puts -nonewline $log [format "%.2f\t" $lrcdi]
+        puts -nonewline $loSt [format "%.2f\t" $lrcdi]
 # storing the calculated lrcd in the user field of each frame
         [atomselect $id all frame $f] set user [format "%.2f\t" $lrcdi]
         }
