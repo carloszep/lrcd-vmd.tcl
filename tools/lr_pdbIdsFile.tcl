@@ -18,15 +18,15 @@
 #|    -'<workPath>' :
 #|      -'lig/' :
 #|        -'pdb/' :
-#|          -'<pdbId>-<chain>-<resName>-<resId>.pdb' ;;
+#|          -'<pdbId><chain>-<resName><resId>.pdb' ;;
 #|      -'rec/' :
 #|        -'pdb/' :
 #|          -'full/<pdbId>.pdb' ;
 #|          -'<pdbId>.pdb' ;;
 #|      -'grid/' :
-#|        -'<pdbId>-<chain>-<resName>-<resId>/' ;
+#|        -'<pdbId><chain>-<resName><resId>/' ;
 #|      -'dock/' :
-#|        -'<pdbId>-<chain>-<resName>-<resId>/' ;;;
+#|        -'<pdbId><chain>-<resName><resId>/' ;;;
 #|  -arguments :
 #|    -l_pdbId :
 #|      -list of PDBIDs to be processed .
@@ -219,7 +219,8 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
         }
       }
     "file" - "loadfile" {
-      foreach pdbFile ${pdbPath}${l_pdbId} {
+      foreach pdbName ${l_pdbId} {
+        set pdbFile ${pdbPath}${pdbName}
         set id [mol new $pdbFile type pdb waitfor all]
         animate goto start
         set name [string range $pdbFile 0 \
@@ -347,13 +348,14 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
           if {($writeLigand) && ([$tmpSel num] > 0)} {
 # storing identified ligand residues and writing pdbIdsFile
             if $saveDir {
-              $tmpSel writepdb "${workPath}lig/pdb/[join ${l_ligRes} "-"].pdb"
-              exec mkdir -p "${workPath}grid/[join ${l_ligRes} "-"]"
-              exec mkdir -p "${workPath}dock/[join ${l_ligRes} "-"]"
+              set gridName "[lindex $l_ligRes 0][lindex $l_ligRes 1]-[lindex $l_ligRes 2][lindex $l_ligRes 3]"
+              $tmpSel writepdb "${workPath}lig/pdb/$gridName.pdb"
+              exec mkdir -p "${workPath}grid/$gridName"
+              exec mkdir -p "${workPath}dock/$gridName"
 # storing gridcenter.txt file with coordinates for the script gengpf.sh
               lassign [measure center $tmpSel] cx cy cz
-              exec echo "[format "%.2f,%.2f,%.2f" $cx $cy $cz]" > "${workPath}grid/[join ${l_ligRes} "-"]/gridcenter.txt"
-              exec echo "${pdbId}.pdbqt" > "${workPath}grid/[join ${l_ligRes} "-"]/recname.txt"
+              exec echo "[format "%.2f,%.2f,%.2f" $cx $cy $cz]" > "${workPath}grid/$gridName/gridcenter.txt"
+              exec echo "$pdbId.pdbqt" > "${workPath}grid/$gridName/recname.txt"
               }
             if $out {
               puts $loSt "ligand written: ${l_ligRes} ([$tmpSel num] atoms)"}
@@ -373,10 +375,10 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
       }
     if $out {puts $loSt "Receptor residues included in $pdbId: $selTxtLigRec"}
     }
-    if $saveDir {
-      exec echo "Use 'gengpf.sh <folders>' to generate AG4 grid parameter file (gridcenter.txt and recname.txt files required).\nUse 'run_grids.sh <folders>' to run autogrid4." > "${workPath}grid/README.txt"
-      exec echo "Use 'gendpf.sh <folders>' to populate with AD4 docking parameter files from ../lig/pdbqt/*.pdbqt files.\nUse 'run_docks.sh <folders>' to run autodock4." > "${workPath}dock/README.txt"
-      }
+  if $saveDir {
+    exec echo "Use 'gengpf.sh <folders>' to generate AG4 grid parameter file (gridcenter.txt and recname.txt files required).\nUse 'run_grids.sh <folders>' to run autogrid4." > "${workPath}grid/README.txt"
+    exec echo "Use 'gendpf.sh <folders>' to populate with AD4 docking parameter files from ../lig/pdbqt/*.pdbqt files.\nUse 'run_docks.sh <folders>' to run autodock4." > "${workPath}dock/README.txt"
+    }
   close $outIds 
   if $out {puts $loSt "output file written: $pdbIdsFile\n$procName: Done."}
   }   ;# *** lr_pdbIdsFile ***
