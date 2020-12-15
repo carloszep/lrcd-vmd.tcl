@@ -892,7 +892,7 @@ proc lrcdVec_readDB {lrcdVecFile {lrcdVecDB {}} {loSt stdout}} {
   if {$out} {
     puts $loSt "\n $nComp records were read from file: $lrcdVecFile."
     puts $loSt " total number of records: [llength [array names lrcdVecs]]"
-    puts $loSt " complexIDs: [array names lrcdVecs]"
+    puts $loSt " complexIDs: [lrange [array names lrcdVecs] 0 1] .. [lindex [array names lrcdVecs] end]"
     puts $loSt "\n$pName: Done."
     }
   return [array get lrcdVecs]
