@@ -1393,9 +1393,9 @@ proc lrcd_dlgTab {selIdL selIdRef cutoff {vecDist nd} {outPref "lrcnd_dlgTab"} \
     puts $loSt ""
     }
 # this updates the ranges of the user field from 0.0 to $max
-  foreach selId $selIdL {
-    mol scaleminmax $id 1 
-    }
+#  foreach selId $selIdL {
+#    mol scaleminmax $id 1 
+#    }
   if {$outPref != "stdout"} {close $log}
   puts "\nlrcd_dlgTab: Done."
   }   ;# *** -lrcd_dlgTab ***
