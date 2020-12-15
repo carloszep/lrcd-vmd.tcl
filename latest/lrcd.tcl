@@ -892,7 +892,7 @@ proc lrcdVec_readDB {lrcdVecFile {lrcdVecDB {}} {loSt stdout}} {
   if {$out} {
     puts $loSt "\n $nComp records were read from file: $lrcdVecFile."
     puts $loSt " total number of records: [llength [array names lrcdVecs]]"
-    puts $loSt " complexIDs: [array names lrcdVecs]"
+    puts $loSt " complexIDs: [lrange [array names lrcdVecs] 0 1] .. [lindex [array names lrcdVecs] end]"
     puts $loSt "\n$pName: Done."
     }
   return [array get lrcdVecs]
@@ -1393,9 +1393,9 @@ proc lrcd_dlgTab {selIdL selIdRef cutoff {vecDist nd} {outPref "lrcnd_dlgTab"} \
     puts $loSt ""
     }
 # this updates the ranges of the user field from 0.0 to $max
-#  foreach selId $selIdL {
-#    mol scaleminmax $id 1 
-#    }
+  foreach selId $selIdL {
+    mol scaleminmax $id 1 
+    }
   if {$outPref != "stdout"} {close $log}
   puts "\nlrcd_dlgTab: Done."
   }   ;# *** -lrcd_dlgTab ***
