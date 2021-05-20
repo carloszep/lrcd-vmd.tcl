@@ -6,7 +6,7 @@
 #|  -creates a pdbIdsFile used by proc lrcdVec_writeDB to store LRC vectors .
 #|  -pdbIdsFile format (4 columns) :
 #|     -(1) 4-letter PDBID .
-#|     -(2) 1-letter chain identifier (generally A) .
+#|     -(2) 1-letter chain identifier (i.e. A) .
 #|     -(3) 3-letter PDB residue name for the ligand .
 #|     -(4) 1- to 4-letter residue seq. number (resid) ;
 #|  -for each PDBID and chain, all non-protein residues are browsed
