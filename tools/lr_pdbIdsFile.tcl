@@ -69,7 +69,6 @@
 #|          -'all', {}, "" :
 #|            -all chains contained in the PDB are considered ;
 #|        -default value :-'all' ;;
-#|        -default value :-"none" ;;
 #|      -'resName', 'resNames',  'l_resName' :
 #|        -list of non-protein residue names to be considered as ligands .
 #|        -resnames for water molecules are ignored (e.g. WAT, HOH) .
