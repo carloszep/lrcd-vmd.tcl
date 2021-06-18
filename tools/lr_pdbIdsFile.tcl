@@ -18,7 +18,7 @@
 #|    -'<workPath>' :
 #|      -'lig/' :
 #|        -'pdb/' :
-#|          -'<pdbId><chain>-<resName><resId>.pdb' ;;
+#|          -'<resName><resId>-<pdbId><chain>.pdb' ;;
 #|      -'rec/' :
 #|        -'pdb/' :
 #|          -'full/<pdbId>.pdb' ;
@@ -169,6 +169,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
 # decode variable arguments
   if {[expr {[llength $args]%2}] == 0} {   ;# even or 0 optional arguments
     foreach {arg val} $args {
+      puts "arg: $arg    val: $val"
       switch [string tolower $arg] {
         "pdbidsfile" - "output" - "out" - "-o" {set pdbIdsFile $val}
         "workpath" - "workfolder" - "outtree" - "dirtree" {set workPath $val}
@@ -178,7 +179,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
         "ll_ligrec" - "ligrecs" {set ll_ligRec $val}
         "ll_ligexclude" - "ligexcludes" {set ll_ligExclude $val}
         "recchainexclude" - "chainrecexclude" - "recexclude" {set recExcl $val}
-        "pdbpath" - "molpath" {set molPath $val}
+        "pdbpath" - "molpath" {set pdbPath $val; puts "molPath: $molPath"}
         "minligsize" - "minlignumatm" {set minLigNumAtm $val}
         "loSt" - "lost" - "channelId" - "channelid" - "log" {
           set loSt $val
