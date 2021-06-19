@@ -8,7 +8,7 @@
 #            interaction of 1-phenylbenzimidazoles to cyclooxygenases.
 #            J Mol Recognit. 2019; 32:e2801. https://doi.org/10.1002/jmr.2801
 # 
-# lrcd.tcl v-1.1.2:
+# lrcd.tcl v-1.1.3:
 #
 # Tcl script for VMD to calculate the Ligand-Receptor Contact Distance (LRCD)
 # parameter that compares the interaction profile of two complexes involving
@@ -22,8 +22,6 @@
 #  LRCMDI - Ligand-Receptor Contact Manhattan Distance Index [= 1/(1 + LRCMD)].
 #  LRCP   - Ligand-Receptor Contact Projection.
 # 
-# Reference: ...
-#
 # This script should be sourced within the program VMD either in the TkConsole,
 # in the VMD's command line or from a .vmdrc file:
 #
@@ -119,14 +117,20 @@
 #|  -authors :-Carlos Z. Gómez-Castro ;
 #|  -reference :
 #|    -J. Mol. Recognit. 2019; 32:e2801. https://doi.org/10.1002/jmr.2801 ;
-#|  -date :-2020-09-22.Tue ;
-#|  -version :-1.1.2 ;
+#|  -date :-2021-06-19.Sat ;
+#|  -version :-1.1.3 ;
 #|  -version information :
+#|    -chainges in v113 :
+#|      -changes in proc tools/lr_pdbIdsFile :
+#|        -the name of the saved ligands now differs from grid/dock
+#|         _ dir names (start with resnames) ;
+#|      -some bugfixes were covered when the option 'pdbLoad' is used in
+#|       _ the src argument ;
+#|    -finished version ;
+#|  -notes from previous versions :
 #|    -changes in v112 :
 #|      -the naming of files and folders in proc lr_pdbIdsFile is updated .
 #|      -the option 'file' of the argument 'src' was corrected ;
-#|    -unfinished version ;
-#|  -notes from previous versions :
 #|    -changes in v111 :
 #|      -new variable argument 'minLigSize' added to proc lr_pdbIdsFile :
 #|        -used to exclude small residues from being considered as ligands ;
@@ -213,7 +217,7 @@
 
 # public version (started from library anMol-v.0.1.4)
 global lrcd_version selInfo   ;# global variables
-set lrcd_version 1.1.2
+set lrcd_version 1.1.3
 
 # printing info when sourcing the library
 

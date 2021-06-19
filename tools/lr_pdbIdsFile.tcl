@@ -145,6 +145,8 @@
 #|     _ moiety should consider a list of chain ids :
 #|      -to be considered when writing receptor structures for docking ;
 #|    -the vmd 'name' field for the pdbs must be the same as the PDBID .
+#|    -exclLigName stores a list residue names to be ignored :
+#|      -current list: "HOH" "WAT" "PEG" "NAG" ;
 #|    -for the moment, no frame specification in each pdb is handled :
 #|      -after loading the molecule, the first frame is seeked ;;;
 proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
@@ -163,7 +165,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
   set loSt stdout
   set out 1
   set minLigNumAtm 7   ;#minimum num of atoms to consider a residue as a ligand
-  set exclLigName [list "HOH" "WAT"]
+  set exclLigName [list "HOH" "WAT" "PEG" "NAG"]
   set args_rest {}   ;# list of unrecognized arguments; may be reused
 # decode variable arguments
   if {[expr {[llength $args]%2}] == 0} {   ;# even or 0 optional arguments
@@ -222,8 +224,9 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
         set pdbFile ${pdbPath}${pdbName}
         set id [mol new $pdbFile type pdb waitfor all]
         animate goto start
-        set name [string range $pdbFile 0 \
-          [expr {[string last ".pdb" $pdbFile]-1}]]
+        set name [string range $pdbFile \
+          [expr {[string last / $pdbFile] + 1}] \
+          [expr {[string last ".pdb" $pdbFile] - 1}]]
         mol rename $id $name
         lappend l_id $id
         }
@@ -279,6 +282,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
       if {(${l_resName} == "all") || (${l_resName} == {})} {
 # look for available ligand resNames
         set l_resName {}
+        if {$chain == ""} {continue}
         set ligSel [atomselect $id "not protein and chain $chain"]
         foreach indAt [$ligSel get index] {
           set resName [[atomselect $id "index $indAt"] get resname]
@@ -297,6 +301,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
         if {(${l_resId} == "all") || (${l_resId} == {})} {
 # look for available ligand resIds
           set l_resId {}
+          if {$resName == ""} {continue}
           set ligSel [atomselect $id "not protein and chain $chain and resname $resName"]
           foreach indAt [$ligSel get index] {
             set resId [[atomselect $id "index $indAt"] get resid]
@@ -313,6 +318,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
         foreach resId ${l_resId} {
           set writeLigand 1
           set l_ligRes [list $pdbId $chain $resName $resId]
+          if {$resId == ""} {continue}
           set tmpSel [atomselect $id "chain $chain and resname $resName and resid $resId"]
           if {[$tmpSel num] < $minLigNumAtm} {
             set writeLigand 0
@@ -348,7 +354,8 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
 # storing identified ligand residues and writing pdbIdsFile
             if $saveDir {
               set gridName "[lindex $l_ligRes 0][lindex $l_ligRes 1]-[lindex $l_ligRes 2][lindex $l_ligRes 3]"
-              $tmpSel writepdb "${workPath}lig/pdb/$gridName.pdb"
+              set ligName "[lindex $l_ligRes 2][lindex $l_ligRes 3]-[lindex $l_ligRes 0][lindex $l_ligRes 1]"
+              $tmpSel writepdb "${workPath}lig/pdb/$ligName.pdb"
               exec mkdir -p "${workPath}grid/$gridName"
               exec mkdir -p "${workPath}dock/$gridName"
 # storing gridcenter.txt file with coordinates for the script gengpf.sh
