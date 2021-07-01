@@ -18,11 +18,14 @@
 #|    -'<workPath>' :
 #|      -'lig/' :
 #|        -'pdb/' :
-#|          -'<resName><resId>-<pdbId><chain>.pdb' ;;
+#|          -'refs/' :
+#|            -'<resName><resId>-<pdbId><chain>.pdb' ;;;
 #|      -'rec/' :
 #|        -'pdb/' :
-#|          -'full/<pdbId>.pdb' ;
-#|          -'<pdbId>.pdb' ;;
+#|          -'full/' :
+#|            -'<pdbId>.pdb' ;;
+#|          -'recs/' :
+#|            -'<pdbId>.pdb' ;;;
 #|      -'grid/' :
 #|        -'<pdbId><chain>-<resName><resId>/' ;
 #|      -'dock/' :
@@ -255,10 +258,10 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
     set pdbId [molinfo $id get name]
     if $saveDir {
       exec mkdir -p "${workPath}"
-      exec mkdir -p "${workPath}lig/pdb/"
+      exec mkdir -p "${workPath}lig/pdb/refs/"
       exec mkdir -p "${workPath}lig/pdbqt/"
       exec echo "Use genligpdbqt.sh to populate from ../*.pdb files." > "${workPath}lig/pdbqt/README.txt"
-      exec mkdir -p "${workPath}rec/pdb/"
+      exec mkdir -p "${workPath}rec/pdb/recs/"
       exec mkdir -p "${workPath}rec/pdbqt/"
       exec mkdir -p "${workPath}rec/pdb/full/"
       [atomselect $id "all"] writepdb "${workPath}rec/pdb/full/${pdbId}.pdb"
@@ -355,7 +358,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
             if $saveDir {
               set gridName "[lindex $l_ligRes 0][lindex $l_ligRes 1]-[lindex $l_ligRes 2][lindex $l_ligRes 3]"
               set ligName "[lindex $l_ligRes 2][lindex $l_ligRes 3]-[lindex $l_ligRes 0][lindex $l_ligRes 1]"
-              $tmpSel writepdb "${workPath}lig/pdb/$ligName.pdb"
+              $tmpSel writepdb "${workPath}lig/pdb/refs/$ligName.pdb"
               exec mkdir -p "${workPath}grid/$gridName"
               exec mkdir -p "${workPath}dock/$gridName"
 # storing gridcenter.txt file with coordinates for the script gengpf.sh
@@ -377,7 +380,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
       }
 # adding user specified ligand residues that are part of the receptor
     if $saveDir {
-      [atomselect $id $selTxtLigRec] writepdb "${workPath}rec/pdb/${pdbId}.pdb"
+      [atomselect $id $selTxtLigRec] writepdb "${workPath}rec/pdb/recs/${pdbId}.pdb"
       }
     if $out {puts $loSt "Receptor residues included in $pdbId: $selTxtLigRec"}
     }
