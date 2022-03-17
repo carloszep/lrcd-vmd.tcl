@@ -240,19 +240,20 @@ puts "  to test the script and learn how to set up the calculations."
 puts "  These require the directories test1, test2, and test3"
 puts "  and files within to run.\n"
 
-puts " Reading external procedures:"
-if {[file exist "lr_pdbIdsFile.tcl"]} {
-  source lr_pdbIdsFile.tcl
-  puts "  lr_pdbIdsFile.tcl script loaded."
-} elseif {[info exists tclScriptPath]} {
-  if {[file exist ${tclScriptPath}lrcd-vmd.tcl/tools/lr_pdbIdsFile.tcl]} {
-    source ${tclScriptPath}lrcd-vmd.tcl/tools/lr_pdbIdsFile.tcl
-    puts "${tclScriptPath}lrcd-vmd.tcl/tools/lr_pdbIdsFile.tcl script sourced."
-  } elseif {[file exist ${tclScriptPath}lrcd/tools/lr_pdbIdsFile.tcl]} {
-    source ${tclScriptPath}lrcd/tools/lr_pdbIdsFile.tcl
-    puts "${tclScriptPath}lrcd/tools/lr_pdbIdsFile.tcl script sourced."
-  } else {puts "  lr_pdbIdsFile.tcl script not found."}
-} else {puts "  lr_pdbIdsFile.tcl script not found."}
+
+#puts " Reading external procedures:"
+#if {[file exist "lr_pdbIdsFile.tcl"]} {
+#  source lr_pdbIdsFile.tcl
+#  puts "  lr_pdbIdsFile.tcl script loaded."
+#} elseif {[info exists tclScriptPath]} {
+#  if {[file exist ${tclScriptPath}lrcd-vmd.tcl/tools/lr_pdbIdsFile.tcl]} {
+#    source ${tclScriptPath}lrcd-vmd.tcl/tools/lr_pdbIdsFile.tcl
+#    puts "${tclScriptPath}lrcd-vmd.tcl/tools/lr_pdbIdsFile.tcl script sourced."
+#  } elseif {[file exist ${tclScriptPath}lrcd/tools/lr_pdbIdsFile.tcl]} {
+#    source ${tclScriptPath}lrcd/tools/lr_pdbIdsFile.tcl
+#    puts "${tclScriptPath}lrcd/tools/lr_pdbIdsFile.tcl script sourced."
+#  } else {puts "  lr_pdbIdsFile.tcl script not found."}
+#} else {puts "  lr_pdbIdsFile.tcl script not found."}
 
 
 #|-proc lrcd_test1 {} :
