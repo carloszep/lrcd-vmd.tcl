@@ -260,12 +260,12 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
       exec mkdir -p "${workPath}"
       exec mkdir -p "${workPath}lig/pdb/refs/"
       exec mkdir -p "${workPath}lig/pdbqt/"
-      exec echo "Use genligpdbqt.sh to populate from ../*.pdb files." > "${workPath}lig/pdbqt/README.txt"
+      exec echo "Use genligpdbqt.sh to populate from ../pdb/*.pdb files." > "${workPath}lig/pdbqt/README.txt"
       exec mkdir -p "${workPath}rec/pdb/recs/"
       exec mkdir -p "${workPath}rec/pdbqt/"
       exec mkdir -p "${workPath}rec/pdb/full/"
       [atomselect $id "all"] writepdb "${workPath}rec/pdb/full/${pdbId}.pdb"
-      exec echo "Use genrecpdbqt.sh to populate from ../*.pdb files." > "${workPath}rec/pdbqt/README.txt"
+      exec echo "Use genrecpdbqt.sh to populate from ../pdb/*.pdb files." > "${workPath}rec/pdbqt/README.txt"
       }
     set selTxtLigRec "(protein)"
     if {(${l_chain} == "all") || (${l_chain} == {})} {
