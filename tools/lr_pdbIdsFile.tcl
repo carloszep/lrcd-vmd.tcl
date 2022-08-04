@@ -258,6 +258,13 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
     set pdbId [molinfo $id get name]
     if $saveDir {
       exec mkdir -p "${workPath}"
+      catch {exec wget http://files.rcsb.org/download/${pdbId}.pdb} fid
+      if {[file exist ${pdbId}.pdb]} {
+        exec mkdir -p "${workPath}rec/pdb/rcsb.org/"
+        exec mv ${pdbId}.pdb ${workPath}rec/pdb/rcsb.org/
+      } else {
+        puts $loSt "  Could not download file ${pdbId}.pdb from rcsb.org."
+        }
       exec mkdir -p "${workPath}lig/pdb/refs/"
       exec mkdir -p "${workPath}lig/pdbqt/"
       exec echo "Use genligpdbqt.sh to populate from ../pdb/*.pdb files." > "${workPath}lig/pdbqt/README.txt"
