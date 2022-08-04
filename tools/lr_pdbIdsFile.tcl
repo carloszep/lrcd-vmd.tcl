@@ -23,9 +23,12 @@
 #|      -'rec/' :
 #|        -'pdb/' :
 #|          -'full/' :
-#|            -'<pdbId>.pdb' ;;
+#|            -'<pdbId>.pdb' ;
+#|          -'rcsb.org/' :
+#|            -'<pdbId>.pdb' ;
 #|          -'recs/' :
-#|            -'<pdbId>.pdb' ;;;
+#|            -'<pdbId>.pdb' ;
+#|          -'<pdbId>.pdb' ;;
 #|      -'grid/' :
 #|        -'<pdbId><chain>-<resName><resId>/' ;
 #|      -'dock/' :
@@ -139,6 +142,7 @@
 #|        -default value :
 #|          -stdout ;;;;
 #|  -notes :
+#|    -receptor pdb files are duplicated in the rec/pdb and rec/pdb/recs dirs .
 #|    -from version 1.0.6 the resid of a ligand is included for a total of
 #|     _ four columns in the pdbIdFile .
 #|    -water molecules are excluded by default .
@@ -258,13 +262,6 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
     set pdbId [molinfo $id get name]
     if $saveDir {
       exec mkdir -p "${workPath}"
-      catch {exec wget http://files.rcsb.org/download/${pdbId}.pdb} fid
-      if {[file exist ${pdbId}.pdb]} {
-        exec mkdir -p "${workPath}rec/pdb/rcsb.org/"
-        exec mv ${pdbId}.pdb ${workPath}rec/pdb/rcsb.org/
-      } else {
-        puts $loSt "  Could not download file ${pdbId}.pdb from rcsb.org."
-        }
       exec mkdir -p "${workPath}lig/pdb/refs/"
       exec mkdir -p "${workPath}lig/pdbqt/"
       exec echo "Use genligpdbqt.sh to populate from ../pdb/*.pdb files." > "${workPath}lig/pdbqt/README.txt"
@@ -273,6 +270,13 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
       exec mkdir -p "${workPath}rec/pdb/full/"
       [atomselect $id "all"] writepdb "${workPath}rec/pdb/full/${pdbId}.pdb"
       exec echo "Use genrecpdbqt.sh to populate from ../pdb/*.pdb files." > "${workPath}rec/pdbqt/README.txt"
+      catch {exec wget http://files.rcsb.org/download/${pdbId}.pdb} fid
+      if {[file exist ${pdbId}.pdb]} {
+        exec mkdir -p "${workPath}rec/pdb/rcsb.org/"
+        exec mv "${pdbId}.pdb" "${workPath}rec/pdb/rcsb.org/"
+      } else {
+        puts $loSt "  Could not download file ${pdbId}.pdb from rcsb.org."
+        }
       }
     set selTxtLigRec "(protein)"
     if {(${l_chain} == "all") || (${l_chain} == {})} {
@@ -388,6 +392,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
 # adding user specified ligand residues that are part of the receptor
     if $saveDir {
       [atomselect $id $selTxtLigRec] writepdb "${workPath}rec/pdb/recs/${pdbId}.pdb"
+      [atomselect $id $selTxtLigRec] writepdb "${workPath}rec/pdb/${pdbId}.pdb"
       }
     if $out {puts $loSt "Receptor residues included in $pdbId: $selTxtLigRec"}
     }
