@@ -718,8 +718,10 @@ proc lrcdMat_lapa {lrcdMat cmplxSelId cutoff {loSt stdout}} {
 proc changeVecDir {vec com id selTxt} {
   lassign $vec vx vy vz
   set d [vecdot $vec $com]
-  set totMass [eval vecadd [[atomselect $id $selTxt] get mass]]
-  set posDirMass [eval vecadd [[atomselect $id "$selTxt and ($vx*x + $vy*y + $vz*z > $d)"] get mass]]
+  if {[catch {
+    set totMass [eval vecadd [[atomselect $id $selTxt] get mass]]
+    set totMass [eval vecadd [[atomselect $id $selTxt] get mass]]
+    set posDirMass [eval vecadd [[atomselect $id "$selTxt and ($vx*x + $vy*y + $vz*z > $d)"] get mass]] }]} {return $vec}
   if {$posDirMass < [expr {$totMass - $posDirMass}]} {
     return [vecscale -1.0 $vec]} else {return $vec}
   }
