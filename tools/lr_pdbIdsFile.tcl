@@ -19,7 +19,11 @@
 #|      -'lig/' :
 #|        -'pdb/' :
 #|          -'refs/' :
-#|            -'<resName><resId>-<pdbId><chain>.pdb' ;;;
+#|            -'<resName><resId>-<pdbId><chain>.pdb' ;;
+#|        -'nopt/' :
+#|          -'noh/' :
+#|            -'pdb/' :
+#|              -'<resName><resId>-<pdbId><chain>.pdb' ;;;;
 #|      -'rec/' :
 #|        -'pdb/' :
 #|          -'full/' :
@@ -264,6 +268,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
       exec mkdir -p "${workPath}"
       exec mkdir -p "${workPath}lig/pdb/refs/"
       exec mkdir -p "${workPath}lig/pdbqt/"
+      exec mkdir -p "${workPath}lig/nopt/noh/pdb/"
       exec echo "Use genligpdbqt.sh to populate from ../pdb/*.pdb files." > "${workPath}lig/pdbqt/README.txt"
       exec mkdir -p "${workPath}rec/pdb/recs/"
       exec mkdir -p "${workPath}rec/pdbqt/"
@@ -370,6 +375,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
               set gridName "[lindex $l_ligRes 0][lindex $l_ligRes 1]-[lindex $l_ligRes 2][lindex $l_ligRes 3]"
               set ligName "[lindex $l_ligRes 2][lindex $l_ligRes 3]-[lindex $l_ligRes 0][lindex $l_ligRes 1]"
               $tmpSel writepdb "${workPath}lig/pdb/refs/$ligName.pdb"
+              $tmpSel writepdb "${workPath}lig/nopt/noh/pdb/$ligName.pdb"
               exec mkdir -p "${workPath}grid/$gridName"
               exec mkdir -p "${workPath}dock/$gridName"
 # storing gridcenter.txt file with coordinates for the script gengpf.sh
