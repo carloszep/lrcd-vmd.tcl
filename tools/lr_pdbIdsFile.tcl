@@ -146,6 +146,8 @@
 #|        -default value :
 #|          -stdout ;;;;
 #|  -notes :
+#|    -if no ligand is found in a chain, a grid is created centered
+#|     _ in the chain's COM .
 #|    -receptor pdb files are duplicated in the rec/pdb and rec/pdb/recs dirs .
 #|    -from version 1.0.6 the resid of a ligand is included for a total of
 #|     _ four columns in the pdbIdFile .
@@ -296,6 +298,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
       puts $loSt "id: $id ($pdbId): specified chains: ${l_chain}"
       }
 # processing each chain
+    set chainGrid 0
     foreach chain ${l_chain} {
       set l_resName $l_resNameUsr
       if {(${l_resName} == "all") || (${l_resName} == {})} {
@@ -344,10 +347,13 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
             if $out {puts $loSt "ligand excluded by size: $pdbId $chain $resName $resId ([$tmpSel num] atoms)"}
             }
           set testIndex [lindex [$tmpSel get index] 0]
+# selecting only one altloc identifier for the ligand if specified 
           set testAltloc [[atomselect $id "index $testIndex"] get altloc]
           if {$testAltloc != "{}"} {
             set tmpSel [atomselect $id "chain $chain and resname $resName and resid $resId and altloc $testAltloc"]
-            puts $loSt " altloc ($testAltloc) considered for: $l_ligRes"
+            if $out {
+              puts $loSt " altloc ($testAltloc) considered for: $l_ligRes"
+              }
             }
 # excluding user-specified ligands excluded
           foreach l_ligExclude $ll_ligExclude {
@@ -391,8 +397,22 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
             if $out {
               puts $loSt "ligand written: ${l_ligRes} ([$tmpSel num] atoms)"}
             puts $outIds ${l_ligRes}
+            set chainGrid 1
             }
           $tmpSel delete
+          }
+        }
+# write a grid for the specific chain if no ligand was written
+      if {!$chainGrid} {
+        set gridName "${pdbId}${chain}"
+        exec mkdir -p "${workPath}grid/$gridName"
+        exec mkdir -p "${workPath}dock/$gridName"
+# storing gridcenter.txt file with coordinates for the script gengpf.sh
+        lassign [measure center [atomselect $id "chain $chain"] weight mass] cx cy cz
+        exec echo "[format "%.2f,%.2f,%.2f" $cx $cy $cz]" > "${workPath}grid/$gridName/gridcenter.txt"
+        exec echo "$pdbId.pdbqt" > "${workPath}grid/$gridName/recname.txt"
+        if $out {
+          puts $loSt "grid for chain written (no ligands): $gridName"
           }
         }
       }
