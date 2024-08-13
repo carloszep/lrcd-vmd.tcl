@@ -297,7 +297,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
 # look for available ligand resNames
         set l_resName {}
         if {$chain == ""} {continue}
-        set ligSel [atomselect $id "not protein and chain $chain"]
+        set ligSel [atomselect $id "not (protein or nucleic) and chain $chain"]
         foreach indAt [$ligSel get index] {
           set resName [[atomselect $id "index $indAt"] get resname]
           if {[lsearch ${l_resName} $resName] == -1} {
@@ -316,7 +316,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
 # look for available ligand resIds
           set l_resId {}
           if {$resName == ""} {continue}
-          set ligSel [atomselect $id "not protein and chain $chain and resname $resName"]
+          set ligSel [atomselect $id "not (protein or nucleic) and chain $chain and resname $resName"]
           foreach indAt [$ligSel get index] {
             set resId [[atomselect $id "index $indAt"] get resid]
             if {[lsearch ${l_resId} $resId] == -1} {
