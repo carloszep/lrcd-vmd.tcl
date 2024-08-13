@@ -157,7 +157,7 @@
 #|      -to be considered when writing receptor structures for docking ;
 #|    -the vmd 'name' field for the pdbs must be the same as the PDBID .
 #|    -exclLigName stores a list residue names to be ignored :
-#|      -current list: "HOH" "WAT" "PEG" "NAG" ;
+#|      -current list: "HOH" "WAT" "PEG" "NAG" "FUC" "FUL" ;
 #|    -for the moment, no frame specification in each pdb is handled :
 #|      -after loading the molecule, the first frame is seeked ;;;
 proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
@@ -176,7 +176,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
   set loSt stdout
   set out 1
   set minLigNumAtm 7   ;#minimum num of atoms to consider a residue as a ligand
-  set exclLigName [list "HOH" "WAT" "PEG" "NAG"]
+  set exclLigName [list "HOH" "WAT" "PEG" "NAG" "FUC" "FUL"]
   set args_rest {}   ;# list of unrecognized arguments; may be reused
 # decode variable arguments
   if {[expr {[llength $args]%2}] == 0} {   ;# even or 0 optional arguments
@@ -344,6 +344,11 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
             if $out {puts $loSt "ligand excluded by size: $pdbId $chain $resName $resId ([$tmpSel num] atoms)"}
             }
           set testIndex [lindex [$tmpSel get index] 0]
+          set testAltloc [[atomselect $id "index $testIndex"] get altloc]
+          if {$testAltloc != "{}"} {
+            set tmpSel [atomselect $id "chain $chain and resname $resName and resid $resId and altloc $testAltloc"]
+            puts $loSt " altloc ($testAltloc) considered for: $l_ligRes"
+            }
 # excluding user-specified ligands excluded
           foreach l_ligExclude $ll_ligExclude {
             lassign $l_ligExclude pdbIdLig chainLig resNameLig resIdLig
