@@ -178,7 +178,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
   set loSt stdout
   set out 1
   set minLigNumAtm 7   ;#minimum num of atoms to consider a residue as a ligand
-  set exclLigName [list "HOH" "WAT" "PEG" "NAG" "FUC" "FUL"]
+  set exclLigName [list "HOH" "WAT" "PEG" "NAG" "FUC" "FUL" "MAN" "BMA" "PGE" "GLC"]
   set args_rest {}   ;# list of unrecognized arguments; may be reused
 # decode variable arguments
   if {[expr {[llength $args]%2}] == 0} {   ;# even or 0 optional arguments
