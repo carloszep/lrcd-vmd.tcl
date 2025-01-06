@@ -35,12 +35,17 @@ proc distCOMref {ref_selIds l_selId {weights mass} {loSt stdout}} {
 #|     _ interaction properties ;;
 namespace eval calc_lrcd {
 
+#|    -global variables :
+#|      -selInfo, molInfo ;
+  global selInfo, molInfo
+
 #|    -external libraries (within namespace) :
 #|      -lrcd ;
   source lrcd.tcl
 
 #|    -import :
 #|      -::logLib::* ;
+  namespace import ::logLib::*
   
 #|    -export :
 #|      - ;
@@ -52,6 +57,8 @@ namespace eval calc_lrcd {
   variable l_refSelId {}
 #|      -calc_lrcd_logFileName :- ;
   variable calc_lrcd_logFileName "log_calc_lrcd.txt"
+#|      -calc_lrcd_outFileName :- ;
+  variable calc_lrcd_outFileName "lrcd_summary.csv"
 
 #|      -calc_lrcd_cutoff :- ;
   variable calc_lrcd_cutoff 4.5
@@ -60,14 +67,12 @@ namespace eval calc_lrcd {
 
 #|    -namespace procs :
 #|      - ;
-  proc resultsTable {} {
-    }
 
   }   ;# namespace eval calc_lrcd
 
       - ;;
 #|    -proc lrcd_summary_ref {} :
-#|      -prints a summary of docking results for a set of AD4 .dlg files .
+#|      -prints out a summary of docking results for a set of AD4 .dlg files .
 #|      -considers an user-specified reference complex .
 #|      -table of results (.csv format): :
 #|        -header columns :
@@ -85,9 +90,17 @@ namespace eval calc_lrcd {
 #|          - ;;
 #|      -notes :
 #|        -requires the global array selInfo ;;;
-proc lrcd_summary {} {
+proc lrcd_summary_ref {} {
+  global selInfo
+# loop over each reference
+  foreach ref_selId $ref_selIds {
+# get complex reference information
+    set refId $selInfo($ref_selId,recSelId)
+    
+    }
   }
 
 
 #|  - ;
 #|- ;
+
