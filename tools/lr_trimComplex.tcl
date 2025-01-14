@@ -5,7 +5,7 @@
 #|  -author :-Carlos Z. Gómez Castro ;
 #|  -date :
 #|    -created :-2025-01-13.Mon ;
-#|    -modified :-2025-01-13.Mon ;;
+#|    -modified :-2025-01-14.Tue ;;
 #|  -version :
 #|    -001 :
 #|      -procedure first defined ;;
@@ -34,7 +34,7 @@
 #|          -"other" :
 #|            -*** this option is not implemented yet *** ;;;
 #|      -args (variable arguments) :
-#|        -'source', 'input', 'inputSource' :
+#|        -'src', 'source', 'input', 'inputSource' :
 #|          -type of files to be loaded .
 #|          -acceptable values :
 #|            -"download", "pdbid", "pdbload" :
@@ -52,9 +52,14 @@
 #|        -'pdbid', 'pdbidL', 'pdbidR' :
 #|          -can be interpreted as a 4-letter PDBID, a file name, or a VMD Id,
 #|           _ depending on the 'source' argument .
-#|          -specs for a common, ligand, and receptor molecules, resp. .
 #|          -see also the 'source' arg .
-#|          -acceptable values :
+#|          -'pdbid' :
+#|            -specs common for both lig, and rec molecules ;
+#|          -'pdbidL' :
+#|            -specs for the ligand molecule ;
+#|          -'pdbidR' :
+#|            -specs for the receptor molecule ;
+#|          -default value :
 #|            -'top' :-use to specify the VMD's top molecule ;;;
 #|        -'prefix', 'outPrefix', 'outputPrefix' :
 #|          -prefix used for all pdb file generated .
@@ -66,29 +71,60 @@
 #|        -'selTxtL' :
 #|          -specifies the VMD's selTxt for the ligand .
 #|          -acceptable values :
-#|            - ;
-#|          -default value :- ;;
+#|            -valid selection text for the VMD's command 'atomselect' ;
+#|          -default value :-"" ;;
 #|        -'selTxtR' :
 #|          -specifies the VMD's selTxt for the ligand .
 #|          -used optionally to restrict (exclude) receptor atoms interacting
 #|           _ with the ligand .
 #|          -acceptable values :
-#|            - ;;
+#|            -valid selection text for the VMD's command 'atomselect' ;
+#|          -default value :-"" ;;
 #|        -'atmSelL', 'atomSelLig' :
-#|          - ;
-#|        -'atmSelR', 'atmSelCAR', 'atomSelRec' :- ;
-#|        -'cutoff', 'distCutoff', 'distance', 'dist' :- ;
-#|        -'gapMax', 'resGap', 'gap', 'gaps', 'gapSize', 'allowedGaps' :- ;
-#|        -'tailsLength', 'lengthTails', 'tailsLen', 'lenTails' :- ;
-#|        -'tailN', 'NTail' :- ;
-#|        -'tailC', 'CTail' :- ;
-#|        -'mutateGaps', 'gapsMutate', 'gapsMutateAla', 'mutate' :- ;
+#|          -atom selection previously generated using the VMD's command
+#|           _'atomselect' .
+#|          -default value :-"" ;;
+#|        -'atmSelR', 'atmSelCAR', 'atomSelRec' :
+#|          -atom selection previously generated using the VMD's command
+#|           _'atomselect' .
+#|          -default value :-"" ;;
+#|        -'cutoff', 'distCutoff', 'distance', 'dist' :
+#|          -maximum distance between lig and rec atoms to be considered as
+#|           _ interaction .
+#|          -default value :-4.5 ;;
+#|        -'gapMax', 'resGap', 'gap', 'gaps', 'gapSize', 'allowedGaps' :
+#|          -max number of consecutive non-lig-interacting rec residues to
+#|           _ be included in the final rec model .
+#|          -gap residues connect more isolated rec fragments to yield bigger
+#|           _ fragments .
+#|          -acceptable values :-positive integers including zero .
+#|          -recommended range of values :-0 to 5 ;
+#|          -default value :-3 ;;
+#|        -'tails', 'tailsLength', 'lengthTails', 'tailsLen', 'lenTails' :
+#|          -max number of non-lig-interacting rec residues at the N- or
+#|           C-terminations of each chain in the rec to be considered .
+#|          -will aplly for each peptide chain in the rec .
+#|          -peptide tails help to make more robust rec models .
+#|          -acceptable values :-positive integers including zero .
+#|          -recommended range of values :-0 to 5 ;
+#|          -default value :-3 ;;
+#|        -'tailN', 'NTail' :
+#|          -same as 'tails' arg but specific for the peptide N-terminus ;
+#|        -'tailC', 'CTail' :
+#|          -same as 'tails' arg but specific for the peptide C-terminus ;
+#|        -'mutateGaps', 'gapsMutate', 'mutate' :
+#|          -specifies whether gap residues shold be mutated to Alanine .
+#|          -glycine gap-rec residues will be allways ignored (not mutated) .
+#|          -note: user-specified mutations may be considered in future
+#|           _ versions .
+#|          -acceptable values :-0 .-1 ;
+#|          -default value :-1 ;
 #|        -'keepProline', 'keepGapPro', 'proGapKeep' :- ;
 #|        -'chargeTarget', 'targetCharge', 'mutateChargeTarget' :- ;
 #|        - ;;
 #|    -notes :
 #|      - ;;
-proc lr_trimComplex {complexType  } {
+proc lr_trimComplex {complexType args} {
 # global variables
 
 # configuring logLib to manage log messages
@@ -97,10 +133,23 @@ proc lr_trimComplex {complexType  } {
   set bll1 2; set bll2 [expr {$bll1 + 1}]   ;# base log level
 
 # default value for variables
-  
+  set src "id"
+  set pdbid "top"
+  set pdbidL "top"
+  set pdbidR "top"
+  set prefix "auto"
+  set selTxtL ""
+  set selTxtR ""
+  set atmSelL ""
+  set atmSelR ""
+  set cutoff 4.5
+  set gapMax 3
 
 
   }   ;# proc lr_trimComplex
 
 #|- ;
+
+
+
 
