@@ -83,16 +83,18 @@
 #|        -'atmSelL', 'atomSelLig' :
 #|          -atom selection previously generated using the VMD's command
 #|           _'atomselect' .
+#|          -overrides the 'selTxtL' argument .
 #|          -default value :-"" ;;
 #|        -'atmSelR', 'atmSelCAR', 'atomSelRec' :
 #|          -atom selection previously generated using the VMD's command
 #|           _'atomselect' .
+#|          -overrides the 'selTxtL' argument .
 #|          -default value :-"" ;;
-#|        -'cutoff', 'distCutoff', 'distance', 'dist' :
+#|        -'cutoff', 'distCutoff', 'distance', 'dist', 'r' :
 #|          -maximum distance between lig and rec atoms to be considered as
 #|           _ interaction .
 #|          -default value :-4.5 ;;
-#|        -'gapMax', 'resGap', 'gap', 'gaps', 'gapSize', 'allowedGaps' :
+#|        -'gapMax', 'maxGap', 'resGap', 'gap', 'gaps', 'gapSize', 'gapLen' :
 #|          -max number of consecutive non-lig-interacting rec residues to
 #|           _ be included in the final rec model .
 #|          -gap residues connect more isolated rec fragments to yield bigger
@@ -115,12 +117,17 @@
 #|        -'mutateGaps', 'gapsMutate', 'mutate' :
 #|          -specifies whether gap residues shold be mutated to Alanine .
 #|          -glycine gap-rec residues will be allways ignored (not mutated) .
-#|          -note: user-specified mutations may be considered in future
+#|          -***note: user-specified mutations may be considered in future
 #|           _ versions .
 #|          -acceptable values :-0 .-1 ;
 #|          -default value :-1 ;
-#|        -'keepProline', 'keepGapPro', 'proGapKeep' :- ;
-#|        -'chargeTarget', 'targetCharge', 'mutateChargeTarget' :- ;
+#|        -'keepProline', 'keepGapPro', 'proGapKeep' :
+#|          -specifies whether proline rec-gap residues should be ignored or
+#|           _ mutated according the 'mutateGaps' arg .
+#|          -acceptable values :-0 .-1 ;
+#|          -default value :-1 ;;
+#|        -'chargeTarget', 'targetCharge', 'mutateChargeTarget' :
+#|          -***not implemented yet*** ;
 #|        - ;;
 #|    -notes :
 #|      - ;;
@@ -131,7 +138,12 @@ proc lr_trimComplex {complexType args} {
   namespace import ::logLib::*
   set procName [lindex [info level 0] 0]
   set bll1 2; set bll2 [expr {$bll1 + 1}]   ;# base log level
-
+# interpreting logLib arguments
+  set args_rest [logLib::arg_interpreter $args]
+  logMsg "+++ Trim of ligand-receptor complexes +++" $bll1
+  logMsg " command line: $procName $complexType $args" $bll1
+  logMsg " ..." $bll1
+  
 # default value for variables
   set src "id"
   set pdbid "top"
@@ -144,8 +156,125 @@ proc lr_trimComplex {complexType args} {
   set atmSelR ""
   set cutoff 4.5
   set gapMax 3
+  set tails 3
+  set tailN $tails
+  set tailC $tails
+  set mutateGaps 1
+  set keepProline 1
+  set args_last {}
 
+# read input arguments (excluding logLib arguments)
+  if {[expr {[llength $args_rest]%2}] == 0} {
+    foreach {arg val} $args_rest {
+      switch [string tolower $arg] {
+        "src" - "source" - "input" - "inputsource" {set src $val}
+        "pdbid" {set pdbid $val}
+        "pdbidl" {set pdbidL $val}
+        "pdbidr" {set pdbidR $val}
+        "prefix" - "outPrefix" - "outputPrefix" {set prefix $val}
+        "seltxtl" {set selTxtL $val}
+        "seltxtr" {set selTxtR $val}
+        "atmsell" - "atomsellig" {set atmSelL $val}
+        "atmselr" - "atmselcar" - "atomselrec" {set atmSelR $val}
+        "cutoff" - "distcutoff" - "distance" - "dist" - "r" {set cutoff $val}
+        "gapmax" - "maxgap" - "resgap" - "gap" - "gaps" - "gapsize" - \
+          "gaplen" - "lengap" - "gaplength" - "lengthgap" {set gapMax $val}
+        "tails" - "tailslength" - "lengthtails" - "tailslen" - "lentails" {set tails $val}
+        "tailn" - "ntail" {set tailN $val}
+        "tailc" - "ctail" {set tailC $val}
+        "mutategaps" - "gapsmutate" - "mutate" {set mutateGaps $val}
+        "keepproline" - "keepgappro" - "progapkeep" {set keepProline $val}
+        "chargetarget" - "targetcharge" - "mutatechargetarget" {}
+        default {
+          if $out {puts $loSt "$procName: argument unkown: $arg ($val)"}
+          set args_last [concat ${args_rest} $arg $val]
+          }
+        }
+      }
+  } else {
+    logMsg "$procName: Odd number of arguments: $args_rest" 1
+    return ""
+    }
 
+# report values for variables
+
+# process input values
+  if {$pdbid == "top"} {
+    set pdbid [molinfo top]
+    set pdbidL $pdbid
+    set pdbidR $pdbid
+    }
+  set atmSelL [atomselect $pdbidL $selTxtL]
+  set atmSelR [atomselect $pdbidR "$selTxtR and name CA"]
+  if {$prefix == "auto"} {
+    set prefix "[molinfo $pdbIdR get name]_[lindex [$atmSelL get name] 0]"
+    }
+
+# process fragments
+  set nFrag 1
+  set prevrid 0
+  set prefName $prefix
+  set nResFinal 1
+  set l_gaps {}
+  set l_rid {}
+
+foreach rid [$res get resid] {
+# search for consecutive residues to form a single fragment
+# note: will not work if $res starts in 1 or 2
+  if {$rid == [expr {$prevrid + 1}]} {
+    lappend l_rid $rid
+    incr nResFinal
+  } elseif {$rid == [expr {$prevrid + 2}]} {
+    lappend l_rid [expr {$rid - 1}]
+    lappend l_rid $rid
+    puts "residue gap added: [expr {$rid - 1}]"
+    lappend l_gaps [expr {$rid - 1}]
+    incr nResFinal 2
+  } elseif {$rid == [expr {$prevrid + 3}]} {
+    lappend l_rid [expr {$rid - 2}]
+    lappend l_rid [expr {$rid - 1}]
+    lappend l_rid $rid
+    puts "residue gap added: [expr {$rid - 2}]"
+    puts "residue gap added: [expr {$rid - 1}]"
+    lappend l_gaps [expr {$rid - 2}]
+    lappend l_gaps [expr {$rid - 1}]
+    incr nResFinal 3
+  } elseif {$rid == [expr {$prevrid + 4}]} {
+    lappend l_rid [expr {$rid - 3}]
+    lappend l_rid [expr {$rid - 2}]
+    lappend l_rid [expr {$rid - 1}]
+    lappend l_rid $rid
+    puts "residue gap added: [expr {$rid - 3}]"
+    puts "residue gap added: [expr {$rid - 2}]"
+    puts "residue gap added: [expr {$rid - 1}]"
+    lappend l_gaps [expr {$rid - 3}]
+    lappend l_gaps [expr {$rid - 2}]
+    lappend l_gaps [expr {$rid - 1}]
+    incr nResFinal 4
+  } else {
+    if {[llength $l_rid] == 0} {
+      set l_rid $rid
+      incr nResFinal
+    } else {
+      set rsel [atomselect top "resid $l_rid and chain A and not altloc B"]
+      $rsel writepdb ${prefName}_frag${nFrag}.pdb
+      puts "writing fragment $nFrag, residues $l_rid"
+      $rsel delete
+      incr nFrag
+      set l_rid $rid
+      incr nResFinal
+      }
+    }
+  set prevrid $rid
+  }
+  if {[llength $l_rid] != 0} {
+    set rsel [atomselect top "resid $l_rid and chain A and not altloc B"]
+    $rsel writepdb ${prefName}_frag${nFrag}.pdb
+    puts "writing fragment $nFrag, residues $l_rid"
+    }
+  puts "gap residues added: $l_gaps"
+  puts "Total number of residues: $nResFinal"
+  
   }   ;# proc lr_trimComplex
 
 #|- ;

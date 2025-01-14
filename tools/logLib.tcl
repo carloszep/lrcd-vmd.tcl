@@ -1,1 +1,1 @@
-../../anMD-vmd.tcl/src/logLib.tcl
+../../anMD/src/logLib.tcl
