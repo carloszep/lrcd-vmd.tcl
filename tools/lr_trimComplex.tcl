@@ -131,6 +131,8 @@
 #|        - ;;
 #|    -notes :
 #|      - ;;
+#proc logMsg {msg num} {puts $msg}
+
 proc lr_trimComplex {complexType args} {
 # global variables
 
@@ -139,7 +141,8 @@ proc lr_trimComplex {complexType args} {
   set procName [lindex [info level 0] 0]
   set bll1 2; set bll2 [expr {$bll1 + 1}]   ;# base log level
 # interpreting logLib arguments
-  set args_rest [logLib::arg_interpreter $args]
+puts "Error arg"
+  set args_rest [arg_interpreter $args]
   logMsg "+++ Trim of ligand-receptor complexes +++" $bll1
   logMsg " command line: $procName $complexType $args" $bll1
   logMsg " ..." $bll1
@@ -163,9 +166,10 @@ proc lr_trimComplex {complexType args} {
   set keepProline 1
   set args_last {}
 
+puts "arg_rest $args_rest"
 # read input arguments (excluding logLib arguments)
-  if {[expr {[llength $args_rest]%2}] == 0} {
-    foreach {arg val} $args_rest {
+  if {[expr {[llength $args]%2}] == 0} {
+    foreach {arg val} $args {
       switch [string tolower $arg] {
         "src" - "source" - "input" - "inputsource" {set src $val}
         "pdbid" {set pdbid $val}
@@ -186,8 +190,8 @@ proc lr_trimComplex {complexType args} {
         "keepproline" - "keepgappro" - "progapkeep" {set keepProline $val}
         "chargetarget" - "targetcharge" - "mutatechargetarget" {}
         default {
-          if $out {puts $loSt "$procName: argument unkown: $arg ($val)"}
-          set args_last [concat ${args_rest} $arg $val]
+          logMsg "$procName: argument unkown: $arg ($val)" 1
+          set args_last [concat ${args_last} $arg $val]
           }
         }
       }
@@ -204,12 +208,16 @@ proc lr_trimComplex {complexType args} {
     set pdbidL $pdbid
     set pdbidR $pdbid
     }
+
+puts "selTxtL: $selTxtL"
+puts "selTxtR: $selTxtR"
   set atmSelL [atomselect $pdbidL $selTxtL]
   set atmSelR [atomselect $pdbidR "$selTxtR and name CA"]
   if {$prefix == "auto"} {
     set prefix "[molinfo $pdbIdR get name]_[lindex [$atmSelL get name] 0]"
     }
 
+set res $atmSelR
 # process fragments
   set nFrag 1
   set prevrid 0
@@ -217,6 +225,7 @@ proc lr_trimComplex {complexType args} {
   set nResFinal 1
   set l_gaps {}
   set l_rid {}
+  set l_fragGaps {}
 
 foreach rid [$res get resid] {
 # search for consecutive residues to form a single fragment
@@ -229,6 +238,7 @@ foreach rid [$res get resid] {
     lappend l_rid $rid
     puts "residue gap added: [expr {$rid - 1}]"
     lappend l_gaps [expr {$rid - 1}]
+    lappend l_fragGaps [expr {$rid - 1}]
     incr nResFinal 2
   } elseif {$rid == [expr {$prevrid + 3}]} {
     lappend l_rid [expr {$rid - 2}]
@@ -238,6 +248,8 @@ foreach rid [$res get resid] {
     puts "residue gap added: [expr {$rid - 1}]"
     lappend l_gaps [expr {$rid - 2}]
     lappend l_gaps [expr {$rid - 1}]
+    lappend l_fragGaps [expr {$rid - 2}]
+    lappend l_fragGaps [expr {$rid - 1}]
     incr nResFinal 3
   } elseif {$rid == [expr {$prevrid + 4}]} {
     lappend l_rid [expr {$rid - 3}]
@@ -250,6 +262,10 @@ foreach rid [$res get resid] {
     lappend l_gaps [expr {$rid - 3}]
     lappend l_gaps [expr {$rid - 2}]
     lappend l_gaps [expr {$rid - 1}]
+    lappend l_fragGaps [expr {$rid - 3}]
+    lappend l_fragGaps [expr {$rid - 2}]
+    lappend l_fragGaps [expr {$rid - 1}]
+    incr nResFinal 4
     incr nResFinal 4
   } else {
     if {[llength $l_rid] == 0} {
@@ -260,9 +276,11 @@ foreach rid [$res get resid] {
       $rsel writepdb ${prefName}_frag${nFrag}.pdb
       puts "writing fragment $nFrag, residues $l_rid"
       $rsel delete
+      lappend ll_gaps $l_fragGaps
       incr nFrag
       set l_rid $rid
       incr nResFinal
+  set l_fragGaps {}
       }
     }
   set prevrid $rid
@@ -274,6 +292,40 @@ foreach rid [$res get resid] {
     }
   puts "gap residues added: $l_gaps"
   puts "Total number of residues: $nResFinal"
+puts "ll_gaps $ll_gaps"
+
+package require psfgen
+
+topology ../complexes/toppar/top_all36_prot.rtf
+topology ../complexes/toppar/top_all36_cgenff.rtf
+topology ../complexes/toppar/OLCprot.str
+topology ../complexes/toppar/91Qprot.str
+
+pdbalias residue HIS HSD
+pdbalias atom ILE CD1 CD
+pdbalias residue HOH TP3M
+pdbalias atom TP3M O OH2
+
+
+
+  set nfrag 0
+  foreach l_frag $ll_gaps {
+    incr nfrag
+    set ngap 0
+    
+    foreach gap $l_frag {
+      incr ngap
+      set gapSel [atomselect top "$selTxtR and resid $gap"]
+      puts "gapSelTxt [$gapSel text] "
+      if {$ngap == 1} {
+        if {[$gapSel get resname] == "GLY"} {
+        } elseif {[$gapSel get resname] == "PRO"} {
+        } else {
+          }
+        }
+      }
+    }
+
   
   }   ;# proc lr_trimComplex
 
