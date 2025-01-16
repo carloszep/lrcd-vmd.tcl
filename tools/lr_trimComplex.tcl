@@ -5,10 +5,14 @@
 #|  -author :-Carlos Z. Gómez Castro ;
 #|  -date :
 #|    -created :-2025-01-13.Mon ;
-#|    -modified :-2025-01-14.Tue ;;
+#|    -modified :-2025-01-15.Wed ;;
 #|  -version :
+#|    -002 :
+#|      -implementing new code for variable gap lengths ;
 #|    -001 :
-#|      -procedure first defined ;;
+#|      -procedure command-line interface .
+#|      -procedure first defined .
+#|      -original code tested ;;
 #|  -source (external files) :
 #|    -source logLib.tcl ;;
   source logLib.tcl
@@ -37,10 +41,10 @@
 #|        -'src', 'source', 'input', 'inputSource' :
 #|          -type of files to be loaded .
 #|          -acceptable values :
-#|            -"download", "pdbid", "pdbload" :
+#|            -"download", "pdbId", "pdbLoad", "PDB" :
 #|              -pdb file(s) downloaded using the VMD command 'pdbload' .
 #|              -arg 'pdbid' will be interpreted as a 4-letter PDBID ;
-#|            -"file", "loadFile" :
+#|            -"file", "loadFile", "localFile", "localPDB" :
 #|              -file names to locally load the files are assumed .
 #|              -can contain absolute or relative file paths ;
 #|            -"id", "ids", "molId", "molIds", "loaded", "vmdId" :
@@ -54,11 +58,14 @@
 #|           _ depending on the 'source' argument .
 #|          -see also the 'source' arg .
 #|          -'pdbid' :
-#|            -specs common for both lig, and rec molecules ;
+#|            -specs common for both lig, and rec molecules .
+#|            -default value :-"top" ;;
 #|          -'pdbidL' :
-#|            -specs for the ligand molecule ;
+#|            -specs for the ligand molecule .
+#|            -default value :-"" ;;
 #|          -'pdbidR' :
-#|            -specs for the receptor molecule ;
+#|            -specs for the receptor molecule .
+#|            -default value :-"" ;;
 #|          -default value :
 #|            -'top' :-use to specify the VMD's top molecule ;;;
 #|        -'prefix', 'outPrefix', 'outputPrefix' :
@@ -72,14 +79,14 @@
 #|          -specifies the VMD's selTxt for the ligand .
 #|          -acceptable values :
 #|            -valid selection text for the VMD's command 'atomselect' ;
-#|          -default value :-"" ;;
+#|          -default value :-"all" ;;
 #|        -'selTxtR' :
 #|          -specifies the VMD's selTxt for the ligand .
 #|          -used optionally to restrict (exclude) receptor atoms interacting
 #|           _ with the ligand .
 #|          -acceptable values :
 #|            -valid selection text for the VMD's command 'atomselect' ;
-#|          -default value :-"" ;;
+#|          -default value :-"protein" ;;
 #|        -'atmSelL', 'atomSelLig' :
 #|          -atom selection previously generated using the VMD's command
 #|           _'atomselect' .
@@ -128,10 +135,13 @@
 #|          -default value :-1 ;;
 #|        -'chargeTarget', 'targetCharge', 'mutateChargeTarget' :
 #|          -***not implemented yet*** ;
+#|        -'bll', 'baseLogLevel', 'baseLogLvl' :
+#|          -base log level used for log messages in the proc .
+#|          -see library logLib .
+#|          -defaul value :-1 ;;
 #|        - ;;
 #|    -notes :
 #|      - ;;
-#proc logMsg {msg num} {puts $msg}
 
 proc lr_trimComplex {complexType args} {
 # global variables
@@ -139,22 +149,20 @@ proc lr_trimComplex {complexType args} {
 # configuring logLib to manage log messages
   namespace import ::logLib::*
   set procName [lindex [info level 0] 0]
-  set bll1 2; set bll2 [expr {$bll1 + 1}]   ;# base log level
+  set bll 1   ;# base log level
 # interpreting logLib arguments
-puts "Error arg"
-  set args_rest [arg_interpreter $args]
-  logMsg "+++ Trim of ligand-receptor complexes +++" $bll1
-  logMsg " command line: $procName $complexType $args" $bll1
-  logMsg " ..." $bll1
-  
+  set args_rest [eval arg_interpreter $args]
+  logMsg "+++ Trim of ligand-receptor complexes +++" $bll
+  logMsg " command line: $procName $complexType $args" $bll
+
 # default value for variables
   set src "id"
-  set pdbid "top"
-  set pdbidL "top"
-  set pdbidR "top"
+  set pdbId "top"
+  set pdbIdL ""
+  set pdbIdR ""
   set prefix "auto"
-  set selTxtL ""
-  set selTxtR ""
+  set selTxtL "all"
+  set selTxtR "protein"
   set atmSelL ""
   set atmSelR ""
   set cutoff 4.5
@@ -166,15 +174,14 @@ puts "Error arg"
   set keepProline 1
   set args_last {}
 
-puts "arg_rest $args_rest"
 # read input arguments (excluding logLib arguments)
   if {[expr {[llength $args]%2}] == 0} {
     foreach {arg val} $args {
       switch [string tolower $arg] {
         "src" - "source" - "input" - "inputsource" {set src $val}
-        "pdbid" {set pdbid $val}
-        "pdbidl" {set pdbidL $val}
-        "pdbidr" {set pdbidR $val}
+        "pdbid" {set pdbId $val}
+        "pdbidl" {set pdbIdL $val}
+        "pdbidr" {set pdbIdR $val}
         "prefix" - "outPrefix" - "outputPrefix" {set prefix $val}
         "seltxtl" {set selTxtL $val}
         "seltxtr" {set selTxtR $val}
@@ -189,15 +196,77 @@ puts "arg_rest $args_rest"
         "mutategaps" - "gapsmutate" - "mutate" {set mutateGaps $val}
         "keepproline" - "keepgappro" - "progapkeep" {set keepProline $val}
         "chargetarget" - "targetcharge" - "mutatechargetarget" {}
+        "bll" - "baseloglevel" - "baseloglvl" {set bll $val}
         default {
-          logMsg "$procName: argument unkown: $arg ($val)" 1
+          logMsg "$procName: argument unkown: $arg ($val)" $bll
           set args_last [concat ${args_last} $arg $val]
           }
         }
       }
   } else {
-    logMsg "$procName: Odd number of arguments: $args_rest" 1
+    logMsg "$procName: Odd number of arguments: $args_rest" $bll
     return ""
+    }
+
+# updating log levels
+  set ll1 $bll; set ll2 [expr {$bll+1}]; set ll3 [expr {$bll+2}]
+
+# check complexType, src, pdbId* options and load molecules
+  switch [string tolower $complexType] {
+    "pdb" {   ;# single PDB file with both the lig and the rec
+      switch [string tolower $src] {
+        "download" - "pdbid" - "pdbload" - "pdb" {
+          set id [mol pdbload $pdbId]
+          logMsg " PDB model downloaded into id $id: $pdbId" $ll2
+          }
+        "file" - "loadfile" - "localfile" - "localpdb" {
+          set id [mol new $pdbId type pdb waitfor all]
+          logMsg " loaded local file into id $id: $pdbId" $ll2
+          animate goto start
+          set name [string range $pdbFile \
+            [expr {[string last / $pdbFile] + 1}] \
+            [expr {[string last ".pdb" $pdbFile] - 1}]]
+          mol rename $id $name
+          }
+        "id" - "ids" - "molid" - "molids" - "loaded" - "vmdid" {
+          set id $pdbId
+          logMsg " using molecule ([molinfo $id get name]) VMD Id: $id" $ll2
+          }
+        default {
+          logMsg "Unknown option for 'src' arg: $src" $ll1
+          return ""
+          }
+        }
+      }
+    "dlg" {   ;# lig and rec from different mols including a .dlg file
+      ;# not implemented yet
+      }
+    "-h" - "--help" {}   ;# print help
+    default {
+      logMsg "Unknown option for 'complexType' arg: $src" $ll1
+      return ""
+      }
+    }
+
+  switch [string tolower $src] {
+    "download" - "pdbid" - "pdbload" - "pdb" {
+      switch [string tolower $complexType] {
+        "pdb" {   ;# pdbid is a 4-letter PDBID
+          set id [mol pdbload $pdbId]}
+          logMsg "PDB model downloaded: $pdbId" $ll2
+        "dlg" {}   ;# ***pending to implement***
+        default {}
+        }
+      }
+    "file" - "loadfile" - "localfile" - "localpdb" {
+      switch [string tolower $complexType] {
+        "pdb" {
+          set pdbId [mol new $pdbId type pdb waitfor all]}
+        "dlg" {}
+        default {}   ;# not implemented yet
+        }
+      }
+    default {}
     }
 
 # report values for variables
