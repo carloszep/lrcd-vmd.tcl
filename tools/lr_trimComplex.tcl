@@ -68,6 +68,15 @@
 #|            -default value :-"" ;;
 #|          -default value :
 #|            -'top' :-use to specify the VMD's top molecule ;;;
+#|        -'workPath', 'workFolder', 'workDir',
+#|         _ 'outDir', 'outPath', 'outFolder' :
+#|          -directory path to be prepended to output files (before prefix) .
+#|          -the path will be created in case it is not found ;
+#|          -acceptable values :
+#|            -a valid either relative or absolute directory path .
+#|            -"", ".", "./" :
+#|              -the current folder is used as workPath ;;
+#|          -defautl value :-"" ;
 #|        -'prefix', 'outPrefix', 'outputPrefix' :
 #|          -prefix used for all pdb file generated .
 #|          -the specified name may include abs or rel file paths .
@@ -75,6 +84,18 @@
 #|            -any string acceptable as part of a file name .
 #|            -"auto" :- ;;
 #|          -default value :-"auto" ;;
+#|        -'selId', 'selInfo', 'selInfoId', 'selInfoKey' :
+#|          -selId key to use the information stored in the selInfo array .
+#|          -implies that the lig and rec molecules were
+#|           _ already loaded into VMD .
+#|          -selInfo array keys considered: '<selId>,ligId', '<selId>,recId',
+#|           _ '<selId>,ligSelTxt', and '<selId>,recSelTxt' .
+#|          -variables to be assigned (respectively): pdbIdL, pdbIdR,
+#|           _ selTxtL, and selTxtR .
+#|          -acceptable values :
+#|            -an already registered selId for the global selInfo array .
+#|            -"" :-the 'selId' arg will be ignored ;;
+#|          -default value :-"" ;;
 #|        -'selTxtL' :
 #|          -specifies the VMD's selTxt for the ligand .
 #|          -acceptable values :
@@ -145,7 +166,7 @@
 
 proc lr_trimComplex {complexType args} {
 # global variables
-
+  global selInfo
 # configuring logLib to manage log messages
   namespace import ::logLib::*
   set procName [lindex [info level 0] 0]
@@ -154,13 +175,14 @@ proc lr_trimComplex {complexType args} {
   set args_rest [eval arg_interpreter $args]
   logMsg "+++ Trim of ligand-receptor complexes +++" $bll
   logMsg " command line: $procName $complexType $args" $bll
-
 # default value for variables
   set src "id"
   set pdbId "top"
   set pdbIdL ""
   set pdbIdR ""
+  set workPath ""
   set prefix "auto"
+  set selId ""
   set selTxtL "all"
   set selTxtR "protein"
   set atmSelL ""
@@ -173,16 +195,18 @@ proc lr_trimComplex {complexType args} {
   set mutateGaps 1
   set keepProline 1
   set args_last {}
-
 # read input arguments (excluding logLib arguments)
-  if {[expr {[llength $args]%2}] == 0} {
-    foreach {arg val} $args {
+  if {[expr {[llength $args_rest]%2}] == 0} {
+    foreach {arg val} $args_rest {
       switch [string tolower $arg] {
         "src" - "source" - "input" - "inputsource" {set src $val}
         "pdbid" {set pdbId $val}
         "pdbidl" {set pdbIdL $val}
         "pdbidr" {set pdbIdR $val}
+        "workPath" - "workFolder" - "workDir" - "outDir" - "outPath" \
+          - "outFolder" {set workPath $val}
         "prefix" - "outPrefix" - "outputPrefix" {set prefix $val}
+        "selid" - "selinfo" - "selinfoid" - "selinfokey" {set selId $val}
         "seltxtl" {set selTxtL $val}
         "seltxtr" {set selTxtR $val}
         "atmsell" - "atomsellig" {set atmSelL $val}
@@ -203,14 +227,14 @@ proc lr_trimComplex {complexType args} {
           }
         }
       }
+    logMsg "$procName: unused arguments: $args_last"
   } else {
     logMsg "$procName: Odd number of arguments: $args_rest" $bll
     return ""
     }
-
 # updating log levels
   set ll1 $bll; set ll2 [expr {$bll+1}]; set ll3 [expr {$bll+2}]
-
+# process input variable values
 # check complexType, src, pdbId* options and load molecules
   switch [string tolower $complexType] {
     "pdb" {   ;# single PDB file with both the lig and the rec
@@ -241,37 +265,34 @@ proc lr_trimComplex {complexType args} {
     "dlg" {   ;# lig and rec from different mols including a .dlg file
       ;# not implemented yet
       }
-    "-h" - "--help" {}   ;# print help
+    "-h" - "--help" {   ;# print help
+      lr_trimComplex_help [lindex $args 1]
+      return ""
+      }
     default {
       logMsg "Unknown option for 'complexType' arg: $src" $ll1
       return ""
       }
     }
-
-  switch [string tolower $src] {
-    "download" - "pdbid" - "pdbload" - "pdb" {
-      switch [string tolower $complexType] {
-        "pdb" {   ;# pdbid is a 4-letter PDBID
-          set id [mol pdbload $pdbId]}
-          logMsg "PDB model downloaded: $pdbId" $ll2
-        "dlg" {}   ;# ***pending to implement***
-        default {}
+# check workPath and prefix arguments
+  switch [string tolower $workPath] {
+    "" - "." - "./" {
+      set workPath "./"
+      loMsg "using current directory as working path: [pwd]" $ll2
+      }
+    default {
+      if {[string index $workPath end] != "/"} {
+        set workPath "$workPath/"
+        logMsg "character appended to the workPath '/'" $ll3
+        }
+      if {![file exist $workPath]} {
+        exec mkdir -p $workPath
+        logMsg "working path no found; now created: $workpath" $ll2
         }
       }
-    "file" - "loadfile" - "localfile" - "localpdb" {
-      switch [string tolower $complexType] {
-        "pdb" {
-          set pdbId [mol new $pdbId type pdb waitfor all]}
-        "dlg" {}
-        default {}   ;# not implemented yet
-        }
-      }
-    default {}
     }
+  if
 
-# report values for variables
-
-# process input values
   if {$pdbid == "top"} {
     set pdbid [molinfo top]
     set pdbidL $pdbid
@@ -285,6 +306,9 @@ puts "selTxtR: $selTxtR"
   if {$prefix == "auto"} {
     set prefix "[molinfo $pdbIdR get name]_[lindex [$atmSelL get name] 0]"
     }
+
+
+# report working values for variables
 
 set res $atmSelR
 # process fragments
@@ -398,7 +422,37 @@ pdbalias atom TP3M O OH2
   
   }   ;# proc lr_trimComplex
 
+proc lr_trimComplex_help {{opt ""}} {
+  puts "+++ Trim of ligand-receptor complexes +++"
+  puts "  usage: lr_trimComplex <complexType> \[<opt-arg value> ...\]"
+  puts "  help option: $opt"
+  switch [string tolower $opt] {
+    "complextype" {
+      puts "  complexType options: pdb"
+      }
+    "loglib" - "loglib.tcl" {
+      ::logLib::logLib_help $opt
+      }
+    default {
+      puts "  complexType options: pdb"
+      puts "  optional args: src "
+      puts "                 pdbId pdbIdL pdbIdR"
+      puts "                 workPath prefix"
+      puts "                 selTxtL selTxtR"
+      puts "                 atmSelL atmSelR"
+      puts "                 cutoff"
+      puts "                 gapMax tails tailN tailC"
+      puts "                 mutateGaps keepProline"
+      puts "                 bll"
+      puts "  required libraries: logLib.tcl regVar.tcl"
+      puts "  logLib::logLib_help:"
+      ::logLib::logLib_help $opt
+      }
+    }
+  }   ;# proc lr_trimComplex_help 
+
 #|- ;
+
 
 
 
