@@ -5,7 +5,7 @@
 #|  -author :-Carlos Z. Gómez Castro ;
 #|  -date :
 #|    -created :-2025-01-13.Mon ;
-#|    -modified :-2025-01-15.Wed ;;
+#|    -modified :-2025-01-17.Thu ;;
 #|  -version :
 #|    -002 :
 #|      -implementing new code for variable gap lengths ;
@@ -31,6 +31,11 @@
 #|            -both the ligand and the receptor are parts of a PDB model .
 #|            -the 'source', 'pdbid' arguments must be specified .
 #|            -args 'pdbidL' and 'pdbidR' will be ignored ;
+#|          -"selInfo" :
+#|            -the selection text and ids for lig and rec molecules are taken
+#|             _ form the global selInfo array .
+#|            -the 'selId' arg must be specified .
+#|            -the complex may come from a single molecule or from two ;
 #|          -"dlg" :
 #|            -the ligand is an AD4 .dlg file .
 #|            -the receptor is in a different molecule .
@@ -51,25 +56,34 @@
 #|              -the molecules are already loaded into VMD .
 #|              -the VMD id(s) should be specified in args 'pdbid', 'pdbidl',
 #|               _ or 'pdbidr' ;;
-#|          -default value :
-#|            -"id" ;;
-#|        -'pdbid', 'pdbidL', 'pdbidR' :
+#|          -default value :-"id" ;;
+#|        -'selId', 'selInfo', 'selInfoId', 'selInfoKey' :
+#|          -selId key to use the information stored in the selInfo array .
+#|          -implies that the lig and rec molecules were
+#|           _ already loaded into VMD .
+#|          -selInfo array keys considered: '<selId>,ligId', '<selId>,recId',
+#|           _ '<selId>,ligSelTxt', and '<selId>,recSelTxt' .
+#|          -variables to be assigned (respectively): pdbIdL, pdbIdR,
+#|           _ selTxtL, and selTxtR .
+#|          -acceptable values :
+#|            -an already registered selId for the global selInfo array .
+#|            -"" :-the 'selId' arg will be ignored ;;
+#|          -default value :-"" ;;
+#|        -'pdbId', 'pdbFile', 'id', 'vmdId', 'molId' :
+#|          -specs common for both lig and rec molecules .
 #|          -can be interpreted as a 4-letter PDBID, a file name, or a VMD Id,
 #|           _ depending on the 'source' argument .
-#|          -see also the 'source' arg .
-#|          -'pdbid' :
-#|            -specs common for both lig, and rec molecules .
-#|            -default value :-"top" ;;
-#|          -'pdbidL' :
-#|            -specs for the ligand molecule .
-#|            -default value :-"" ;;
-#|          -'pdbidR' :
-#|            -specs for the receptor molecule .
-#|            -default value :-"" ;;
-#|          -default value :
-#|            -'top' :-use to specify the VMD's top molecule ;;;
+#|          -this arg along with 'pdbIdL' and 'pdbIdR' may override the
+#|           _ specs gotten from the selInfo array .
+#|          -default value :-"top" ;;
+#|        -'pdbIdL', 'pdbFileL', 'idL', 'vmdIdL', 'molIdL' :
+#|          -same as arg 'pdbId' but only applies for the ligand molecule .
+#|          -default value :-"" ;;
+#|        -'pdbIdR', 'pdbFileR', 'idR', 'vmdIdR', 'molIdR' :
+#|          -same as arg 'pdbId' but only applies for the receptor molecule .
+#|          -default value :-"" ;;
 #|        -'workPath', 'workFolder', 'workDir',
-#|         _ 'outDir', 'outPath', 'outFolder' :
+#|         _ 'outPath', 'outFolder', 'outDir' :
 #|          -directory path to be prepended to output files (before prefix) .
 #|          -the path will be created in case it is not found ;
 #|          -acceptable values :
@@ -84,18 +98,6 @@
 #|            -any string acceptable as part of a file name .
 #|            -"auto" :- ;;
 #|          -default value :-"auto" ;;
-#|        -'selId', 'selInfo', 'selInfoId', 'selInfoKey' :
-#|          -selId key to use the information stored in the selInfo array .
-#|          -implies that the lig and rec molecules were
-#|           _ already loaded into VMD .
-#|          -selInfo array keys considered: '<selId>,ligId', '<selId>,recId',
-#|           _ '<selId>,ligSelTxt', and '<selId>,recSelTxt' .
-#|          -variables to be assigned (respectively): pdbIdL, pdbIdR,
-#|           _ selTxtL, and selTxtR .
-#|          -acceptable values :
-#|            -an already registered selId for the global selInfo array .
-#|            -"" :-the 'selId' arg will be ignored ;;
-#|          -default value :-"" ;;
 #|        -'selTxtL' :
 #|          -specifies the VMD's selTxt for the ligand .
 #|          -acceptable values :
@@ -195,17 +197,17 @@ proc lr_trimComplex {complexType args} {
   set mutateGaps 1
   set keepProline 1
   set args_last {}
-# read input arguments (excluding logLib arguments)
+# read input command-line arguments (excluding logLib arguments)
   if {[expr {[llength $args_rest]%2}] == 0} {
     foreach {arg val} $args_rest {
       switch [string tolower $arg] {
         "src" - "source" - "input" - "inputsource" {set src $val}
-        "pdbid" {set pdbId $val}
-        "pdbidl" {set pdbIdL $val}
-        "pdbidr" {set pdbIdR $val}
-        "workPath" - "workFolder" - "workDir" - "outDir" - "outPath" \
-          - "outFolder" {set workPath $val}
-        "prefix" - "outPrefix" - "outputPrefix" {set prefix $val}
+        "pdbid" - "pdbfile" - "id" - "vmdid" - "molid" {set pdbId $val}
+        "pdbidl" - "pdbfilel" - "idl" - "vmdidl" - "molidl" {set pdbIdL $val}
+        "pdbidr" - "pdbfiler" - "idr" - "vmdidr" - "molidr" {set pdbIdR $val}
+        "workpath" - "workfolder" - "workdir" - "outpath" - "outfolder" \
+          - "outdir" {set workPath $val}
+        "prefix" - "outprefix" - "outputprefix" {set prefix $val}
         "selid" - "selinfo" - "selinfoid" - "selinfokey" {set selId $val}
         "seltxtl" {set selTxtL $val}
         "seltxtr" {set selTxtR $val}
@@ -222,7 +224,7 @@ proc lr_trimComplex {complexType args} {
         "chargetarget" - "targetcharge" - "mutatechargetarget" {}
         "bll" - "baseloglevel" - "baseloglvl" {set bll $val}
         default {
-          logMsg "$procName: argument unkown: $arg ($val)" $bll
+          logMsg "$procName: argument (value) unkown: $arg ($val)" $bll
           set args_last [concat ${args_last} $arg $val]
           }
         }
@@ -233,7 +235,10 @@ proc lr_trimComplex {complexType args} {
     return ""
     }
 # updating log levels
-  set ll1 $bll; set ll2 [expr {$bll+1}]; set ll3 [expr {$bll+2}]
+  set ll1 $bll
+  set ll2 [expr {$bll+1}]
+  set ll3 [expr {$bll+2}]
+  logMsg " using base log level: $bll" $ll2
 # process input variable values
 # check complexType, src, pdbId* options and load molecules
   switch [string tolower $complexType] {
@@ -262,8 +267,25 @@ proc lr_trimComplex {complexType args} {
           }
         }
       }
+    "selinfo" {
+      if {$selId != ""} {
+        if {([info exists selInfo($selId,ligId)]) && \
+            ([info exists selInfo($selId,recId)]) && \
+            ([info exists selInfo($selId,ligSelTxt)]) && \
+            ([info exists selInfo($selId,recSelTxt)]) && \
+            ([info exists selInfo($selId,title)])} {
+          
+        } else {
+          logMsg "$procName: selInfo missing data for selId: $selId"
+          logMsg ", required array keys ($selId,<key>): ligId, recId, ligSelTxt, recSelTxt, and title" $ll1
+          return ""
+          }
+      } else {
+        logMsg "$procName: the 'selInfo' option requires the 'selId' arg." $ll1
+        return ""
+        }
     "dlg" {   ;# lig and rec from different mols including a .dlg file
-      ;# not implemented yet
+      # not implemented yet
       }
     "-h" - "--help" {   ;# print help
       lr_trimComplex_help [lindex $args 1]
