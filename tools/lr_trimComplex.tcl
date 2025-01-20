@@ -10,7 +10,7 @@
 #|    -002 :
 #|      -implementing new code for variable gap lengths ;
 #|    -001 :
-#|      -procedure command-line interface .
+#|      -procedure's command-line interface .
 #|      -procedure first defined .
 #|      -original code tested ;;
 #|  -source (external files) :
@@ -60,11 +60,14 @@
 #|        -'selId', 'selInfo', 'selInfoId', 'selInfoKey' :
 #|          -selId key to use the information stored in the selInfo array .
 #|          -implies that the lig and rec molecules were
-#|           _ already loaded into VMD .
-#|          -selInfo array keys considered: '<selId>,ligId', '<selId>,recId',
+#|           _ already loaded into VMD (maybe through a molInfo file) .
+#|          -selInfo array keys considered :-'<selId>,ligId', '<selId>,recId',
 #|           _ '<selId>,ligSelTxt', and '<selId>,recSelTxt' .
+#|            -'<selId>,frame' (optionally) ;
 #|          -variables to be assigned (respectively): pdbIdL, pdbIdR,
 #|           _ selTxtL, and selTxtR .
+#|          -arguments that could override selInfo-stored values: 'pdbId*',
+#|           _ 'frame', 'selTxt*' .
 #|          -acceptable values :
 #|            -an already registered selId for the global selInfo array .
 #|            -"" :-the 'selId' arg will be ignored ;;
@@ -82,22 +85,9 @@
 #|        -'pdbIdR', 'pdbFileR', 'idR', 'vmdIdR', 'molIdR' :
 #|          -same as arg 'pdbId' but only applies for the receptor molecule .
 #|          -default value :-"" ;;
-#|        -'workPath', 'workFolder', 'workDir',
-#|         _ 'outPath', 'outFolder', 'outDir' :
-#|          -directory path to be prepended to output files (before prefix) .
-#|          -the path will be created in case it is not found ;
-#|          -acceptable values :
-#|            -a valid either relative or absolute directory path .
-#|            -"", ".", "./" :
-#|              -the current folder is used as workPath ;;
-#|          -defautl value :-"" ;
-#|        -'prefix', 'outPrefix', 'outputPrefix' :
-#|          -prefix used for all pdb file generated .
-#|          -the specified name may include abs or rel file paths .
-#|          -acceptable values :
-#|            -any string acceptable as part of a file name .
-#|            -"auto" :- ;;
-#|          -default value :-"auto" ;;
+#|        -'frame', 'frm', 'index' :
+#|          -for .dlg files, it allows to specify the desired conformation .
+#|          -defaukt value ;-0 ;;
 #|        -'selTxtL' :
 #|          -specifies the VMD's selTxt for the ligand .
 #|          -acceptable values :
@@ -120,6 +110,22 @@
 #|           _'atomselect' .
 #|          -overrides the 'selTxtL' argument .
 #|          -default value :-"" ;;
+#|        -'workPath', 'workFolder', 'workDir',
+#|         _ 'outPath', 'outFolder', 'outDir' :
+#|          -directory path to be prepended to output files (before prefix) .
+#|          -the path will be created in case it is not found ;
+#|          -acceptable values :
+#|            -a valid either relative or absolute directory path .
+#|            -"", ".", "./" :
+#|              -the current folder is used as workPath ;;
+#|          -defautl value :-"" ;
+#|        -'prefix', 'outPrefix', 'outputPrefix' :
+#|          -prefix used for all pdb file generated .
+#|          -the specified name may include abs or rel file paths .
+#|          -acceptable values :
+#|            -any string acceptable as part of a file name .
+#|            -"auto" :- ;;
+#|          -default value :-"auto" ;;
 #|        -'cutoff', 'distCutoff', 'distance', 'dist', 'r' :
 #|          -maximum distance between lig and rec atoms to be considered as
 #|           _ interaction .
@@ -182,13 +188,14 @@ proc lr_trimComplex {complexType args} {
   set pdbId "top"
   set pdbIdL ""
   set pdbIdR ""
-  set workPath ""
-  set prefix "auto"
+  set frame 0
   set selId ""
   set selTxtL "all"
   set selTxtR "protein"
   set atmSelL ""
   set atmSelR ""
+  set workPath ""
+  set prefix "auto"
   set cutoff 4.5
   set gapMax 3
   set tails 3
@@ -243,6 +250,7 @@ proc lr_trimComplex {complexType args} {
 # check complexType, src, pdbId* options and load molecules
   switch [string tolower $complexType] {
     "pdb" {   ;# single PDB file with both the lig and the rec
+      set singleMol 1
       switch [string tolower $src] {
         "download" - "pdbid" - "pdbload" - "pdb" {
           set id [mol pdbload $pdbId]
@@ -274,7 +282,11 @@ proc lr_trimComplex {complexType args} {
             ([info exists selInfo($selId,ligSelTxt)]) && \
             ([info exists selInfo($selId,recSelTxt)]) && \
             ([info exists selInfo($selId,title)])} {
-          
+          if {$selInfo($selId,ligId) == $selInfo($selId,recId)} {
+            set singleMol 1
+            set 
+          } else {
+            }
         } else {
           logMsg "$procName: selInfo missing data for selId: $selId"
           logMsg ", required array keys ($selId,<key>): ligId, recId, ligSelTxt, recSelTxt, and title" $ll1
