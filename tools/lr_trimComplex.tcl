@@ -108,7 +108,7 @@
 #|        -'atmSelR', 'atmSelCAR', 'atomSelRec' :
 #|          -atom selection previously generated using the VMD's command
 #|           _'atomselect' .
-#|          -overrides the 'selTxtL' argument .
+#|          -overrides the 'selTxtR' argument .
 #|          -default value :-"" ;;
 #|        -'workPath', 'workFolder', 'workDir',
 #|         _ 'outPath', 'outFolder', 'outDir' :
@@ -212,6 +212,7 @@ proc lr_trimComplex {complexType args} {
         "pdbid" - "pdbfile" - "id" - "vmdid" - "molid" {set pdbId $val}
         "pdbidl" - "pdbfilel" - "idl" - "vmdidl" - "molidl" {set pdbIdL $val}
         "pdbidr" - "pdbfiler" - "idr" - "vmdidr" - "molidr" {set pdbIdR $val}
+        "frame" - "frm" - "index" {set frame $val}
         "workpath" - "workfolder" - "workdir" - "outpath" - "outfolder" \
           - "outdir" {set workPath $val}
         "prefix" - "outprefix" - "outputprefix" {set prefix $val}
@@ -223,7 +224,8 @@ proc lr_trimComplex {complexType args} {
         "cutoff" - "distcutoff" - "distance" - "dist" - "r" {set cutoff $val}
         "gapmax" - "maxgap" - "resgap" - "gap" - "gaps" - "gapsize" - \
           "gaplen" - "lengap" - "gaplength" - "lengthgap" {set gapMax $val}
-        "tails" - "tailslength" - "lengthtails" - "tailslen" - "lentails" {set tails $val}
+        "tails" - "tailslength" - "lengthtails" - "tailslen" - "lentails" \
+          {set tails $val}
         "tailn" - "ntail" {set tailN $val}
         "tailc" - "ctail" {set tailC $val}
         "mutategaps" - "gapsmutate" - "mutate" {set mutateGaps $val}
@@ -277,15 +279,30 @@ proc lr_trimComplex {complexType args} {
       }
     "selinfo" {
       if {$selId != ""} {
+        logMsg " reading input info from selInfo's selId: $selId" $ll2
         if {([info exists selInfo($selId,ligId)]) && \
             ([info exists selInfo($selId,recId)]) && \
             ([info exists selInfo($selId,ligSelTxt)]) && \
             ([info exists selInfo($selId,recSelTxt)]) && \
             ([info exists selInfo($selId,title)])} {
+          set selTxtL $selInfo($selId,ligSelTxt)
+          set selTxtR $selInfo($selId,recSelTxt)
+          logMsg " setting selTxtL: $selTxtL" $ll3
+          logMsg " setting selTxtR: $selTxtR" $ll3
+          if {[info exists selInfo($selId,frame)]} {
+            set frame $selInfo($selId,frame)
+            logMsg " setting frame: $frame" $ll3
+            }
           if {$selInfo($selId,ligId) == $selInfo($selId,recId)} {
             set singleMol 1
-            set 
+            set id $selInfo($selId,ligId)
+            logMsg " setting id (same for both lig and rec): $id" $ll3
           } else {
+            set singleMol 0
+            set idL $selInfo($selId,ligId)
+            set idR $selInfo($selId,recId)
+            logMsg " setting idL: $idL" $ll3
+            logMsg " setting idR: $idR" $ll3
             }
         } else {
           logMsg "$procName: selInfo missing data for selId: $selId"
@@ -300,7 +317,7 @@ proc lr_trimComplex {complexType args} {
       # not implemented yet
       }
     "-h" - "--help" {   ;# print help
-      lr_trimComplex_help [lindex $args 1]
+      lr_trimComplex_help [lindex $args 0]
       return ""
       }
     default {
@@ -325,7 +342,9 @@ proc lr_trimComplex {complexType args} {
         }
       }
     }
-  if
+  if {$prefix == "auto"} {
+    
+    }
 
   if {$pdbid == "top"} {
     set pdbid [molinfo top]
