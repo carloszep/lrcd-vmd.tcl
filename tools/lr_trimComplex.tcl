@@ -52,7 +52,7 @@
 #|            -"file", "loadFile", "localFile", "localPDB" :
 #|              -file names to locally load the files are assumed .
 #|              -can contain absolute or relative file paths ;
-#|            -"id", "ids", "molId", "molIds", "loaded", "vmdId" :
+#|            -"id", "ids", "molId", "molIds", "loaded", "vmdId", "vmd" :
 #|              -the molecules are already loaded into VMD .
 #|              -the VMD id(s) should be specified in args 'pdbid', 'pdbidl',
 #|               _ or 'pdbidr' ;;
@@ -61,6 +61,7 @@
 #|          -selId key to use the information stored in the selInfo array .
 #|          -implies that the lig and rec molecules were
 #|           _ already loaded into VMD (maybe through a molInfo file) .
+#|          - .
 #|          -selInfo array keys considered :-'<selId>,ligId', '<selId>,recId',
 #|           _ '<selId>,ligSelTxt', and '<selId>,recSelTxt' .
 #|            -'<selId>,frame' (optionally) ;
@@ -103,12 +104,16 @@
 #|        -'atmSelL', 'atomSelLig' :
 #|          -atom selection previously generated using the VMD's command
 #|           _'atomselect' .
-#|          -overrides the 'selTxtL' argument .
+#|          -if specified atmSelL and atmSelR, will override other args
+#|           _ specifying atom selection text such as selInfo or selTxt* .
 #|          -default value :-"" ;;
 #|        -'atmSelR', 'atmSelCAR', 'atomSelRec' :
 #|          -atom selection previously generated using the VMD's command
 #|           _'atomselect' .
-#|          -overrides the 'selTxtR' argument .
+#|          -if specified atmSelL and atmSelR, will override other args
+#|           _ specifying atom selection text such as selInfo or selTxt* .
+#|          -it is expected that this selection only contains alpha carbons
+#|           _ of residues in direct contact with the ligand(s) .
 #|          -default value :-"" ;;
 #|        -'workPath', 'workFolder', 'workDir',
 #|         _ 'outPath', 'outFolder', 'outDir' :
@@ -267,7 +272,7 @@ proc lr_trimComplex {complexType args} {
             [expr {[string last ".pdb" $pdbFile] - 1}]]
           mol rename $id $name
           }
-        "id" - "ids" - "molid" - "molids" - "loaded" - "vmdid" {
+        "id" - "ids" - "molid" - "molids" - "loaded" - "vmdid" - "vmd" {
           set id $pdbId
           logMsg " using molecule ([molinfo $id get name]) VMD Id: $id" $ll2
           }
@@ -325,6 +330,9 @@ proc lr_trimComplex {complexType args} {
       return ""
       }
     }
+# create atom selections
+  if 
+
 # check workPath and prefix arguments
   switch [string tolower $workPath] {
     "" - "." - "./" {
@@ -343,23 +351,12 @@ proc lr_trimComplex {complexType args} {
       }
     }
   if {$prefix == "auto"} {
-    
+    set prefix "[molifo $idL]"
     }
 
-  if {$pdbid == "top"} {
-    set pdbid [molinfo top]
-    set pdbidL $pdbid
-    set pdbidR $pdbid
-    }
 
-puts "selTxtL: $selTxtL"
-puts "selTxtR: $selTxtR"
-  set atmSelL [atomselect $pdbidL $selTxtL]
-  set atmSelR [atomselect $pdbidR "$selTxtR and name CA"]
-  if {$prefix == "auto"} {
-    set prefix "[molinfo $pdbIdR get name]_[lindex [$atmSelL get name] 0]"
-    }
 
+return ""
 
 # report working values for variables
 
@@ -475,6 +472,7 @@ pdbalias atom TP3M O OH2
   
   }   ;# proc lr_trimComplex
 
+#|  -proc lr_trimComplex_help {{opt ""}} :- ;
 proc lr_trimComplex_help {{opt ""}} {
   puts "+++ Trim of ligand-receptor complexes +++"
   puts "  usage: lr_trimComplex <complexType> \[<opt-arg value> ...\]"
@@ -503,6 +501,49 @@ proc lr_trimComplex_help {{opt ""}} {
       }
     }
   }   ;# proc lr_trimComplex_help 
+
+
+#|  -proc readTop {} :- ;
+proc readTop {} {
+  }   ;# proc readTop
+
+proc set_contactSelCAs {} {
+  }   ;# proc set_contactSelCAs {}
+
+#|  -proc genFragments {res } :
+#|    -arguments :
+#|      -res :
+#|        -atomselectios with receptor alpha carbons for residues in
+#|         _ direct contact with the ligand .
+#|        -the selection may include several chains ;;;
+proc genChainFragments {res} {
+
+# classify resid by chain
+  foreach chain rid [$res get {chain resid}] {
+    if {[info exists resids($chain)]} {
+      lappend resids($chain) $rid
+    } else {
+      set resids($chain) $rid
+      }
+    }
+  foreach chain [array names resids] {
+    foreach rid $resids($chain) {
+      puts "chain: $chain   resid: $resid"
+      }
+    }
+
+
+  set res $atmSelR
+# process fragments
+  set prefName $prefix
+  set nResFinal 1
+  set l_gaps {}
+  set l_rid {}
+  set l_fragGaps {}
+
+  }   ;# proc genChainFragments
+
+
 
 #|- ;
 
