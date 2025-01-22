@@ -175,6 +175,9 @@
 #|          -base log level used for log messages in the proc .
 #|          -see library logLib .
 #|          -defaul value :-1 ;;
+#|        -'resAtm', 'pivotTxt', 'pivotSelTxt', 'uniqueResAtom' :
+#|          -selection text specifying one atom appearing once on each residue .
+#|          -default value :-"name CA" ;;
 #|        - ;;
 #|    -notes :
 #|      - ;;
@@ -210,6 +213,7 @@ proc lr_trimComplex {complexType args} {
   set tailC $tails
   set mutateGaps 1
   set keepProline 1
+  set resAtm "name CA"
   set args_last {}
 # read input command-line arguments (excluding logLib arguments)
   if {[expr {[llength $args_rest]%2}] == 0} {
@@ -240,6 +244,8 @@ proc lr_trimComplex {complexType args} {
         "keepproline" - "keepgappro" - "progapkeep" {set keepProline $val}
         "chargetarget" - "targetcharge" - "mutatechargetarget" {}
         "bll" - "baseloglevel" - "baseloglvl" {set bll $val}
+        "resatm" - "pivottxt" -  "pivotseltxt" - "uniqueresatom" \
+          {set resAtm $val}
         default {
           logMsg "$procName: argument (value) unkown: $arg ($val)" $bll
           set args_last [concat ${args_last} $arg $val]
@@ -357,7 +363,7 @@ proc lr_trimComplex {complexType args} {
       logMsg " using selTxtL: $selTxtL" $ll2
       logMsg " using selTxtL: $selTxtR" $ll2
       set ligSel [atomselect $id "$selTxtL" frame $frame]
-      set interactCASel [atomselect $id "(same residue as protein within $cutoff of ($selTxtL)) and ($selTxtR) and (name CA)"]
+      set interactCASel [atomselect $id "(same residue as protein within $cutoff of $selTxtL) and $selTxtR and $resAtm"]
     } else {
       logMsg " atom selections previously defined:" $ill2
       logMsg "  lig: [$ligSel text] " $ill2
@@ -392,7 +398,48 @@ proc lr_trimComplex {complexType args} {
     logMsg " generated prefix: $prefix" $ll2
     }
   logMsg " setting prefix for output files: $prefix" $ll2
-
+# detect chain fragments
+# classify resids by chain
+  if {$singleMol} {
+    foreach chain [$res get chain] rid [$res get resid] {
+      if {[info exists resids($chain)]} {
+        lappend resids($chain) $rid
+      } else {
+        set resids($chain) $rid
+        }
+      }
+    logMsg "chains in contact with the ligand(s): [array names resids]" $ll2
+  # process each chain
+    set ll_frag_rid {}
+    foreach chain [array names resids] {
+      set prevrid 0   ;# last resid assigned to a fragment
+      set l_rid {}   ;# list of resids for the current fragment
+      foreach rid $resids($chain) {
+        # filling a gap or adding an N-tail
+        if {[llength $l_rid] == 0} {   ;# first interacting resid
+          # adds a N-tail if there are residues available
+          for {set i [expr {$rid-$tailN}]} {$i <= [expr {$rid-1}]} {incr i} {
+            set gapId [atomselect $idR "chain $chain and resid $i and $resAtm"]
+            if {[$gapId num] == 1} {
+              lappend l_rid $i
+              logMsg "added resid $i as N-tail" $ll3
+              # mutate residue?
+              
+            } else {
+              logMsg "unable to add resid $i as N-tail" $ll3
+              }
+            $gapId delete
+            }
+        } else {   ;# subsequent interacting resid
+          set prevrid [lindex l_rid end]
+          if {$prevrid <= [expr {$rid-$gapMax-1}]} {} else {}
+          }
+        }
+      }
+    } else {
+      logMsg "chain fragment detection not yet implemented for two molecs " $ll1
+      return ""
+      }
 
 
 return ""
@@ -549,16 +596,16 @@ proc readTop {} {
 proc set_contactSelCAs {} {
   }   ;# proc set_contactSelCAs {}
 
-#|  -proc genFragments {res } :
+#|  -proc genFrags {res } :
 #|    -arguments :
 #|      -res :
 #|        -atomselectios with receptor alpha carbons for residues in
 #|         _ direct contact with the ligand .
 #|        -the selection may include several chains ;;;
-proc genChainFragments {res} {
+proc genChainFrags {res} {
 
 # classify resid by chain
-  foreach chain rid [$res get {chain resid}] {
+  foreach chain [$res get chain] rid [$res get resid] {
     if {[info exists resids($chain)]} {
       lappend resids($chain) $rid
     } else {
@@ -567,14 +614,12 @@ proc genChainFragments {res} {
     }
   foreach chain [array names resids] {
     foreach rid $resids($chain) {
-      puts "chain: $chain   resid: $resid"
+      puts "chain: $chain   resid: $rid"
       }
     }
 
 
-  set res $atmSelR
 # process fragments
-  set prefName $prefix
   set nResFinal 1
   set l_gaps {}
   set l_rid {}
