@@ -61,7 +61,9 @@
 #|          -selId key to use the information stored in the selInfo array .
 #|          -implies that the lig and rec molecules were
 #|           _ already loaded into VMD (maybe through a molInfo file) .
-#|          - .
+#|          -the atom selections registered in the selInfo array are expected
+#|           _ to be more general (i.e., "protein and chain A", "not protein") .
+#|          -the atomselections are processed to detect interacting residues .
 #|          -selInfo array keys considered :-'<selId>,ligId', '<selId>,recId',
 #|           _ '<selId>,ligSelTxt', and '<selId>,recSelTxt' .
 #|            -'<selId>,frame' (optionally) ;
@@ -90,30 +92,30 @@
 #|          -for .dlg files, it allows to specify the desired conformation .
 #|          -defaukt value ;-0 ;;
 #|        -'selTxtL' :
-#|          -specifies the VMD's selTxt for the ligand .
+#|          -specifies the VMD's atom selection text for the ligand .
 #|          -acceptable values :
 #|            -valid selection text for the VMD's command 'atomselect' ;
 #|          -default value :-"all" ;;
 #|        -'selTxtR' :
-#|          -specifies the VMD's selTxt for the ligand .
-#|          -used optionally to restrict (exclude) receptor atoms interacting
-#|           _ with the ligand .
+#|          -specifies the VMD's atom selection text for the receptor atoms
+#|          -overrides the atom selection text from the 'selInfo' array .
 #|          -acceptable values :
 #|            -valid selection text for the VMD's command 'atomselect' ;
 #|          -default value :-"protein" ;;
-#|        -'atmSelL', 'atomSelLig' :
+#|        -'ligSel', 'atmSelL', 'atomSelLig' :
 #|          -atom selection previously generated using the VMD's command
 #|           _'atomselect' .
 #|          -if specified atmSelL and atmSelR, will override other args
 #|           _ specifying atom selection text such as selInfo or selTxt* .
 #|          -default value :-"" ;;
-#|        -'atmSelR', 'atmSelCAR', 'atomSelRec' :
+#|        -'interactCAsel', 'iteractingCA', 'atmSelR', 'recSel',
+#|         _ 'atomSelRec', 'atmSelCA' :
 #|          -atom selection previously generated using the VMD's command
 #|           _'atomselect' .
+#|          -it must include only the alpha carbon atoms from the residues
+#|           _ in the receptor in direct contact with the ligand .
 #|          -if specified atmSelL and atmSelR, will override other args
 #|           _ specifying atom selection text such as selInfo or selTxt* .
-#|          -it is expected that this selection only contains alpha carbons
-#|           _ of residues in direct contact with the ligand(s) .
 #|          -default value :-"" ;;
 #|        -'workPath', 'workFolder', 'workDir',
 #|         _ 'outPath', 'outFolder', 'outDir' :
@@ -197,8 +199,8 @@ proc lr_trimComplex {complexType args} {
   set selId ""
   set selTxtL "all"
   set selTxtR "protein"
-  set atmSelL ""
-  set atmSelR ""
+  set ligSel ""
+  set interactCASel ""
   set workPath ""
   set prefix "auto"
   set cutoff 4.5
@@ -224,8 +226,9 @@ proc lr_trimComplex {complexType args} {
         "selid" - "selinfo" - "selinfoid" - "selinfokey" {set selId $val}
         "seltxtl" {set selTxtL $val}
         "seltxtr" {set selTxtR $val}
-        "atmsell" - "atomsellig" {set atmSelL $val}
-        "atmselr" - "atmselcar" - "atomselrec" {set atmSelR $val}
+        "ligsel" - "atmsell" - "atomsellig" {set ligSel $val}
+        "interactcasel" - "atmselr" - "interactingca" - "recsel" \
+          - "atomselrec" - "atmselca" {set interactCASel $val}
         "cutoff" - "distcutoff" - "distance" - "dist" - "r" {set cutoff $val}
         "gapmax" - "maxgap" - "resgap" - "gap" - "gaps" - "gapsize" - \
           "gaplen" - "lengap" - "gaplength" - "lengthgap" {set gapMax $val}
@@ -261,20 +264,30 @@ proc lr_trimComplex {complexType args} {
       switch [string tolower $src] {
         "download" - "pdbid" - "pdbload" - "pdb" {
           set id [mol pdbload $pdbId]
+          set idL $id; set idR $id
           logMsg " PDB model downloaded into id $id: $pdbId" $ll2
           }
         "file" - "loadfile" - "localfile" - "localpdb" {
           set id [mol new $pdbId type pdb waitfor all]
+          set idL $id; set idR $id
           logMsg " loaded local file into id $id: $pdbId" $ll2
           animate goto start
-          set name [string range $pdbFile \
-            [expr {[string last / $pdbFile] + 1}] \
-            [expr {[string last ".pdb" $pdbFile] - 1}]]
+          set name [string range $pdbId \
+            [expr {[string last / $pdbId] + 1}] \
+            [expr {[string last ".pdb" $pdbId] - 1}]]
           mol rename $id $name
+          logMsg " mol renamed to: $name" $ll3
           }
         "id" - "ids" - "molid" - "molids" - "loaded" - "vmdid" - "vmd" {
           set id $pdbId
+          set idL $id; set idR $id
           logMsg " using molecule ([molinfo $id get name]) VMD Id: $id" $ll2
+          if {[string last ".pdb" [molinfo $id get name]] >= 0} {
+            set name [string range [molinfo $id get name] 0 \
+              [expr {[string last ".pdb" [molinfo $id get name]] - 1}]]
+            mol rename $id $name
+            logMsg " mol renamed to: $name" $ll3
+            }
           }
         default {
           logMsg "Unknown option for 'src' arg: $src" $ll1
@@ -290,8 +303,13 @@ proc lr_trimComplex {complexType args} {
             ([info exists selInfo($selId,ligSelTxt)]) && \
             ([info exists selInfo($selId,recSelTxt)]) && \
             ([info exists selInfo($selId,title)])} {
-          set selTxtL $selInfo($selId,ligSelTxt)
-          set selTxtR $selInfo($selId,recSelTxt)
+          # updating default selTxt* values
+          if {$selTxtL == "all"} {
+            set selTxtL $selInfo($selId,ligSelTxt)
+            }
+          if {$selTxtR == "protein"} {
+            set selTxtR $selInfo($selId,recSelTxt)
+            }
           logMsg " setting selTxtL: $selTxtL" $ll3
           logMsg " setting selTxtR: $selTxtR" $ll3
           if {[info exists selInfo($selId,frame)]} {
@@ -301,6 +319,7 @@ proc lr_trimComplex {complexType args} {
           if {$selInfo($selId,ligId) == $selInfo($selId,recId)} {
             set singleMol 1
             set id $selInfo($selId,ligId)
+            set idL $id; set idR $id
             logMsg " setting id (same for both lig and rec): $id" $ll3
           } else {
             set singleMol 0
@@ -315,9 +334,10 @@ proc lr_trimComplex {complexType args} {
           return ""
           }
       } else {
-        logMsg "$procName: the 'selInfo' option requires the 'selId' arg." $ll1
+        logMsg "the 'selInfo' option requires the 'selId' arg." $ll1
         return ""
         }
+      }
     "dlg" {   ;# lig and rec from different mols including a .dlg file
       # not implemented yet
       }
@@ -331,13 +351,30 @@ proc lr_trimComplex {complexType args} {
       }
     }
 # create atom selections
-  if 
-
+  if {$singleMol} {
+    if {($ligSel == "") || ($interactCASel == "")} {
+      logMsg " using interaction cutoff value: $cutoff" $ll2
+      logMsg " using selTxtL: $selTxtL" $ll2
+      logMsg " using selTxtL: $selTxtR" $ll2
+      set ligSel [atomselect $id "$selTxtL" frame $frame]
+      set interactCASel [atomselect $id "(same residue as protein within $cutoff of ($selTxtL)) and ($selTxtR) and (name CA)"]
+    } else {
+      logMsg " atom selections previously defined:" $ill2
+      logMsg "  lig: [$ligSel text] " $ill2
+      logMsg "  rec: [$interactCASel text]" $ll2  
+      }
+    logMsg "rec residues selected: \
+            [$interactCASel get {chain resname resid}]" $ll2
+  } else {
+    # not implemented yet
+    logMsg "lig and rec from different molecules not yet implemeted" $ll1
+    return ""
+    }
 # check workPath and prefix arguments
   switch [string tolower $workPath] {
     "" - "." - "./" {
       set workPath "./"
-      loMsg "using current directory as working path: [pwd]" $ll2
+      logMsg "using current directory as working path: [pwd]" $ll2
       }
     default {
       if {[string index $workPath end] != "/"} {
@@ -351,8 +388,10 @@ proc lr_trimComplex {complexType args} {
       }
     }
   if {$prefix == "auto"} {
-    set prefix "[molifo $idL]"
+    set prefix "[molinfo $idR get name]-[lindex [$interactCASel get resname] 0]_${cutoff}_"
+    logMsg " generated prefix: $prefix" $ll2
     }
+  logMsg " setting prefix for output files: $prefix" $ll2
 
 
 
