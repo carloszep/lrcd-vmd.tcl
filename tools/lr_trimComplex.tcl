@@ -5,14 +5,16 @@
 #|  -author :-Carlos Z. Gómez Castro ;
 #|  -date :
 #|    -created :-2025-01-13.Mon ;
-#|    -modified :-2025-01-17.Thu ;;
+#|    -modified :-2025-01-22.Wed ;;
 #|  -version :
 #|    -002 :
 #|      -implementing new code for variable gap lengths ;
 #|    -001 :
 #|      -procedure's command-line interface .
 #|      -procedure first defined .
-#|      -original code tested ;;
+#|      -original code tested ;
+#|    -to do :
+#|      -manage crystallographic water ;;
 #|  -source (external files) :
 #|    -source logLib.tcl ;;
   source logLib.tcl
@@ -126,6 +128,22 @@
 #|            -"", ".", "./" :
 #|              -the current folder is used as workPath ;;
 #|          -defautl value :-"" ;
+#|        -'l_topFile', 'l_topFiles', 'topFiles',
+#|         _ 'l_topologyFile', 'topologyFiles' :
+#|          -list of topology files to be used by psfgen .
+#|          -the file names may include either relative or absolute paths .
+#|          -this list will be read before the top files found in the 'topDir' .
+#|          -default value :-{} ;;
+#|        -'topDir', 'topPath', 'topologyDir', 'topologyPath' :
+#|          -path to the directory where topology files can be found .
+#|          -acceptable values :
+#|            -an absolute or relative dir path (ending with "/") .
+#|            -a list of dir paths is also acceptable .
+#|            -"" :-no directory is considered to search topology paths ;;
+#|          -default value :-"" ;;
+#|        -'l_topExt', 'l_topFileExt' :
+#|          -list of known file extensions for CHARMM topology .
+#|          -default value :-{top rtf str} ;;
 #|        -'prefix', 'outPrefix', 'outputPrefix' :
 #|          -prefix used for all pdb file generated .
 #|          -the specified name may include abs or rel file paths .
@@ -133,6 +151,16 @@
 #|            -any string acceptable as part of a file name .
 #|            -"auto" :- ;;
 #|          -default value :-"auto" ;;
+#|        -'pgnWrite', 'pgnScript', 'pgnFile', 'psfgenFile', 'psfgenScript' :
+#|          -controls whether a psfgen is generated 'on-the-fly' or a psfgen
+#|           _ config pgn file is written for later processing .
+#|          -acceptable values :
+#|            -0 :-the psfgen structures are created within this proc ;
+#|            -1 :-a psfgen config pgn file is created instead ;;
+#|          -default value :-1 ;;
+#|        -'segPrefix', 'segmentPrefix', 'segLetter' :
+#|          -one-to-three-letter name prefix for the created segments .
+#|          -default value :-"F" ;;
 #|        -'cutoff', 'distCutoff', 'distance', 'dist', 'r' :
 #|          -maximum distance between lig and rec atoms to be considered as
 #|           _ interaction .
@@ -152,7 +180,7 @@
 #|          -peptide tails help to make more robust rec models .
 #|          -acceptable values :-positive integers including zero .
 #|          -recommended range of values :-0 to 5 ;
-#|          -default value :-3 ;;
+#|          -default value :-2 ;;
 #|        -'tailN', 'NTail' :
 #|          -same as 'tails' arg but specific for the peptide N-terminus ;
 #|        -'tailC', 'CTail' :
@@ -170,7 +198,13 @@
 #|          -acceptable values :-0 .-1 ;
 #|          -default value :-1 ;;
 #|        -'chargeTarget', 'targetCharge', 'mutateChargeTarget' :
-#|          -***not implemented yet*** ;
+#|          -***incomplete implementation*** .
+#|          -acceptable values :
+#|            -"0", "zero", "neutral" :
+#|              -a neutral charge for the whole system is sought .
+#|              -two options will be implemented in future versions :
+#|                -all residues neutral .
+#|                -other strategies ;;;
 #|        -'bll', 'baseLogLevel', 'baseLogLvl' :
 #|          -base log level used for log messages in the proc .
 #|          -see library logLib .
@@ -178,9 +212,22 @@
 #|        -'resAtm', 'pivotTxt', 'pivotSelTxt', 'uniqueResAtom' :
 #|          -selection text specifying one atom appearing once on each residue .
 #|          -default value :-"name CA" ;;
+#|        -'nTerPatch', 'firstPatch' :
+#|          -N-terminal patch (PRES) name (psfgen keyword 'first') .
+#|          -default value :-"NNEU" ;;
+#|        -'cTerPatch' 'lastPatch' :
+#|          -C-terminal patch (PRES) name (psfgen keyword 'last') .
+#|          -default value :-"CNEU" ;;
+#|        -'nTerGlyPatch', 'nTerPatchGly', 'firstPatchGly', 'firstGlyPatch' :
+#|          -N-terminal patch (PRES) name for Gly (psfgen keyword 'first') .
+#|          -default value :-"NGNE" ;;
+#|        -'nTerProPatch', 'nTerPatchPro' 'firstPatchPro', 'firstProPatch' :
+#|          -N-terminal patch (PRES) name for Gly (psfgen keyword 'first') .
+#|          -default value :-"ACP" ;;
 #|        - ;;
 #|    -notes :
-#|      - ;;
+#|      -'pdbAliasCad' fixed .
+#|      -topology file/dir specification mandatory (no default values) ;;
 
 proc lr_trimComplex {complexType args} {
 # global variables
@@ -188,6 +235,8 @@ proc lr_trimComplex {complexType args} {
 # configuring logLib to manage log messages
   namespace import ::logLib::*
   set procName [lindex [info level 0] 0]
+  set_logName $procName
+  set_logVersion "002"
   set bll 1   ;# base log level
 # interpreting logLib arguments
   set args_rest [eval arg_interpreter $args]
@@ -205,15 +254,25 @@ proc lr_trimComplex {complexType args} {
   set ligSel ""
   set interactCASel ""
   set workPath ""
+  set l_topFile {}
+  set topDir ""
+  set l_topExt {top rtf str}
   set prefix "auto"
+  set pgnWrite 1
+  set segPrefix "F"
   set cutoff 4.5
   set gapMax 3
-  set tails 3
+  set tails 2
   set tailN $tails
   set tailC $tails
   set mutateGaps 1
   set keepProline 1
   set resAtm "name CA"
+  set nTerPatch "NNEU"
+  set cTerPatch "CNEU"
+  set nterGlyPatch "NGNE"
+  set nTerProPatch "ACP"   ;# acetylated N-ter proline (neutral)
+  set pdbAliasCad "pdbalias residue HIS HSD\npdbalias atom ILE CD1 CD\npdbalias residue HOH TP3M\npdbalias atom TP3M O OH2\n"
   set args_last {}
 # read input command-line arguments (excluding logLib arguments)
   if {[expr {[llength $args_rest]%2}] == 0} {
@@ -224,15 +283,22 @@ proc lr_trimComplex {complexType args} {
         "pdbidl" - "pdbfilel" - "idl" - "vmdidl" - "molidl" {set pdbIdL $val}
         "pdbidr" - "pdbfiler" - "idr" - "vmdidr" - "molidr" {set pdbIdR $val}
         "frame" - "frm" - "index" {set frame $val}
-        "workpath" - "workfolder" - "workdir" - "outpath" - "outfolder" \
-          - "outdir" {set workPath $val}
-        "prefix" - "outprefix" - "outputprefix" {set prefix $val}
         "selid" - "selinfo" - "selinfoid" - "selinfokey" {set selId $val}
         "seltxtl" {set selTxtL $val}
         "seltxtr" {set selTxtR $val}
         "ligsel" - "atmsell" - "atomsellig" {set ligSel $val}
         "interactcasel" - "atmselr" - "interactingca" - "recsel" \
           - "atomselrec" - "atmselca" {set interactCASel $val}
+        "workpath" - "workfolder" - "workdir" - "outpath" - "outfolder" \
+          - "outdir" {set workPath $val}
+        "l_topfile" - "l_topFiles" - "topFiles" - "l_topologyFile" \
+          - "topologyFiles" {set l_topFile $val}
+        "topdir" - "toppar" - "topologydir" - "topologypath" {set topDir $val}
+        "l_topExt" - "l_topFileExt" {set l_topExt $val}
+        "prefix" - "outprefix" - "outputprefix" {set prefix $val}
+        "pgnwrite" - "pgnscript" - "pgnfile" - "psfgenfile" - "psfgenscript" \
+          {set pgnWrite $val}
+        "segprefix" - "segmentprefix" - "segletter" {set segPrefix $val}
         "cutoff" - "distcutoff" - "distance" - "dist" - "r" {set cutoff $val}
         "gapmax" - "maxgap" - "resgap" - "gap" - "gaps" - "gapsize" - \
           "gaplen" - "lengap" - "gaplength" - "lengthgap" {set gapMax $val}
@@ -246,6 +312,10 @@ proc lr_trimComplex {complexType args} {
         "bll" - "baseloglevel" - "baseloglvl" {set bll $val}
         "resatm" - "pivottxt" -  "pivotseltxt" - "uniqueresatom" \
           {set resAtm $val}
+        "nterpatch" - "firstpatch" {set nTerPatch $val}
+        "cterpatch" - "lastpatch" {set cTerPatch $val}
+        "nterglypatch" - "firstpatchgly" {set nTerGlyPatch $val}
+        "nterpropatch" - "firstpatchpro" {set nTerProPatch $val}
         default {
           logMsg "$procName: argument (value) unkown: $arg ($val)" $bll
           set args_last [concat ${args_last} $arg $val]
@@ -361,7 +431,8 @@ proc lr_trimComplex {complexType args} {
     if {($ligSel == "") || ($interactCASel == "")} {
       logMsg " using interaction cutoff value: $cutoff" $ll2
       logMsg " using selTxtL: $selTxtL" $ll2
-      logMsg " using selTxtL: $selTxtR" $ll2
+      logMsg " using selTxtR: $selTxtR" $ll2
+      logMsg " using resAtm: $resAtm" $ll2
       set ligSel [atomselect $id "$selTxtL" frame $frame]
       set interactCASel [atomselect $id "(same residue as protein within $cutoff of $selTxtL) and $selTxtR and $resAtm"]
     } else {
@@ -376,7 +447,7 @@ proc lr_trimComplex {complexType args} {
     logMsg "lig and rec from different molecules not yet implemeted" $ll1
     return ""
     }
-# check workPath and prefix arguments
+# check workPath, prefix, and pgnWrite arguments
   switch [string tolower $workPath] {
     "" - "." - "./" {
       set workPath "./"
@@ -395,10 +466,55 @@ proc lr_trimComplex {complexType args} {
     }
   if {$prefix == "auto"} {
     set prefix "[molinfo $idR get name]-[lindex [$interactCASel get resname] 0]_${cutoff}_"
-    logMsg " generated prefix: $prefix" $ll2
+    logMsg " generated prefix: $prefix" $ll3
     }
   logMsg " setting prefix for output files: $prefix" $ll2
+  if {$pgnWrite} {
+    set pgnOut [open "${workPath}${prefix}.pgn.tcl" w]
+    logMsg "" $ll2
+  } else {
+    logMsg " pgn script for psfgen will not be written" $ll2
+    }
+# read topology files
+  if {($l_topFile == {}) && ($topDir == "")} {
+    logMsg "'l_topFile' and/or 'topDir' arguments must be specified" $ll1
+    return ""
+    }
+  set topCad ""
+  if {[llength $l_topFile] >= 1} {
+    logMsg "reading topology files from l_topFile: $l_topFile" $ll2
+    foreach topFile $l_topFile {
+      if {[info exists $topFile]} {
+        logMsg "topology file found: $topFile" $ll3
+        set topCad "${topCad}topology $topFile\n"
+      } else {
+        logMsg "topology file not found: $topFile" $ll2
+        }
+      }
+    }
+  if {$topDir != ""} {
+    foreach dir $topDir {
+      logMsg "searching for topology files (ext: $l_topExt) in dir: $dir" $ll2
+      foreach ext $l_topExt {
+        set topDirFiles [lsort [eval glob "${dir}*.${ext}"]]
+        foreach topFile $topDirFiles {
+          logMsg "topology file found: $topFile" $ll3
+          set topCad "${topCad}topology $topFile\n"
+          }
+        }
+      }
+    }
+  if {$topCad == ""} {
+    logMsg "no topology files were found" $ll1
+    return ""
+    }
 # detect chain fragments
+  logMsg " using parameters for fragment building:" $ll2
+  logMsg "  gapMax: $gapMax  tailN: $tailN  tailC: $tailC" $ll2
+  logMsg "  mutateGaps: $mutateGaps  keepProline: $keepProline" $ll2
+  logMsg "  chargeTarget: $chargeTarget" $ll3
+  logMsg "  NTerPatch: $nTerPatch  CTerPatch: $cTerPatch" $ll2
+  logMsg "  NTerGlyPatch: $nTerGlyPatch  NTerProPatch: $nTerProPatch" $ll3
 # classify resids by chain
   if {$singleMol} {
     foreach chain [$res get chain] rid [$res get resid] {
@@ -409,11 +525,28 @@ proc lr_trimComplex {complexType args} {
         }
       }
     logMsg "chains in contact with the ligand(s): [array names resids]" $ll2
+# header for pgn file
+    if {$pgnWrite} {
+      puts $pgnOut "# psfgen config pgn file created by: [get_logName_version]"
+      puts $pgnOut ""
+      puts $pgnOut $topCad
+      puts $pgnOut $pdbAliasCad
+    } else {
+      package require psfgen
+      eval $topCad
+      eval $pdbAliasCad
+      }
+    logMsg " psfgen header: topCad:" $ll2
+    logMsg $topCad $ll2
+    logMsg " psfgen header: pdbAliasCad:" $ll2
+    logMsg $pdbAliasCad $ll2
   # process each chain
     set ll_frag_rid {}
+    set nFrag 1
     foreach chain [array names resids] {
       set prevrid 0   ;# last resid assigned to a fragment
       set l_rid {}   ;# list of resids for the current fragment
+      set l_gapTail {}
       foreach rid $resids($chain) {
         # filling a gap or adding an N-tail
         if {[llength $l_rid] == 0} {   ;# first interacting resid
@@ -436,11 +569,11 @@ proc lr_trimComplex {complexType args} {
           }
         }
       }
-    } else {
-      logMsg "chain fragment detection not yet implemented for two molecs " $ll1
-      return ""
-      }
-
+  } else {
+    logMsg "chain fragment detection not yet implemented for two molecs " $ll1
+    return ""
+    }
+  close $pgnOut
 
 return ""
 
