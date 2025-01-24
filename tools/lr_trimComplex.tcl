@@ -5,7 +5,7 @@
 #|  -author :-Carlos Z. Gómez Castro ;
 #|  -date :
 #|    -created :-2025-01-13.Mon ;
-#|    -modified :-2025-01-22.Wed ;;
+#|    -modified :-2025-01-23.Thu ;;
 #|  -version :
 #|    -002 :
 #|      -implementing new code for variable gap lengths ;
@@ -128,7 +128,7 @@
 #|            -"", ".", "./" :
 #|              -the current folder is used as workPath ;;
 #|          -defautl value :-"" ;
-#|        -'l_topFile', 'l_topFiles', 'topFiles',
+#|        -'l_topFile', 'l_topFiles', 'topFile', 'topFiles',
 #|         _ 'l_topologyFile', 'topologyFiles' :
 #|          -list of topology files to be used by psfgen .
 #|          -the file names may include either relative or absolute paths .
@@ -204,7 +204,9 @@
 #|              -a neutral charge for the whole system is sought .
 #|              -two options will be implemented in future versions :
 #|                -all residues neutral .
-#|                -other strategies ;;;
+#|                -other strategies ;;
+#|            -"" :-the chargeTarget arg will be ignored ;;
+#|          -default value :-"" ;;
 #|        -'bll', 'baseLogLevel', 'baseLogLvl' :
 #|          -base log level used for log messages in the proc .
 #|          -see library logLib .
@@ -267,10 +269,11 @@ proc lr_trimComplex {complexType args} {
   set tailC $tails
   set mutateGaps 1
   set keepProline 1
+  set chargeTarget ""
   set resAtm "name CA"
   set nTerPatch "NNEU"
   set cTerPatch "CNEU"
-  set nterGlyPatch "NGNE"
+  set nTerGlyPatch "NGNE"
   set nTerProPatch "ACP"   ;# acetylated N-ter proline (neutral)
   set pdbAliasCad "pdbalias residue HIS HSD\npdbalias atom ILE CD1 CD\npdbalias residue HOH TP3M\npdbalias atom TP3M O OH2\n"
   set args_last {}
@@ -291,8 +294,8 @@ proc lr_trimComplex {complexType args} {
           - "atomselrec" - "atmselca" {set interactCASel $val}
         "workpath" - "workfolder" - "workdir" - "outpath" - "outfolder" \
           - "outdir" {set workPath $val}
-        "l_topfile" - "l_topFiles" - "topFiles" - "l_topologyFile" \
-          - "topologyFiles" {set l_topFile $val}
+        "l_topfile" - "l_topfiles" - "topfile" - "topfiles" \
+          - "l_topologyfile" - "topologyfiles" {set l_topFile $val}
         "topdir" - "toppar" - "topologydir" - "topologypath" {set topDir $val}
         "l_topExt" - "l_topFileExt" {set l_topExt $val}
         "prefix" - "outprefix" - "outputprefix" {set prefix $val}
@@ -317,7 +320,7 @@ proc lr_trimComplex {complexType args} {
         "nterglypatch" - "firstpatchgly" {set nTerGlyPatch $val}
         "nterpropatch" - "firstpatchpro" {set nTerProPatch $val}
         default {
-          logMsg "$procName: argument (value) unkown: $arg ($val)" $bll
+          logMsg "$procName: argument (value) unknown: $arg ($val)" $bll
           set args_last [concat ${args_last} $arg $val]
           }
         }
@@ -484,7 +487,7 @@ proc lr_trimComplex {complexType args} {
   if {[llength $l_topFile] >= 1} {
     logMsg "reading topology files from l_topFile: $l_topFile" $ll2
     foreach topFile $l_topFile {
-      if {[info exists $topFile]} {
+      if {[file exists $topFile]} {
         logMsg "topology file found: $topFile" $ll3
         set topCad "${topCad}topology $topFile\n"
       } else {
@@ -496,7 +499,10 @@ proc lr_trimComplex {complexType args} {
     foreach dir $topDir {
       logMsg "searching for topology files (ext: $l_topExt) in dir: $dir" $ll2
       foreach ext $l_topExt {
-        set topDirFiles [lsort [eval glob "${dir}*.${ext}"]]
+        if {[catch {lsort [eval glob "${dir}*.${ext}"]} topDirFiles]} {
+          set topDirFiles ""
+          logMsg "no .${ext} files found in dir ${dir}" $ll3
+          }
         foreach topFile $topDirFiles {
           logMsg "topology file found: $topFile" $ll3
           set topCad "${topCad}topology $topFile\n"
@@ -517,7 +523,7 @@ proc lr_trimComplex {complexType args} {
   logMsg "  NTerGlyPatch: $nTerGlyPatch  NTerProPatch: $nTerProPatch" $ll3
 # classify resids by chain
   if {$singleMol} {
-    foreach chain [$res get chain] rid [$res get resid] {
+    foreach chain [$interactCASel get chain] rid [$interactCASel get resid] {
       if {[info exists resids($chain)]} {
         lappend resids($chain) $rid
       } else {
@@ -540,7 +546,7 @@ proc lr_trimComplex {complexType args} {
     logMsg $topCad $ll2
     logMsg " psfgen header: pdbAliasCad:" $ll2
     logMsg $pdbAliasCad $ll2
-  # process each chain
+    # process each chain
     set ll_frag_rid {}
     set nFrag 1
     foreach chain [array names resids] {
