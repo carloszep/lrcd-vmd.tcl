@@ -568,22 +568,38 @@ proc lr_trimComplex {complexType args} {
           for {set i [expr {$rid-$tailN}]} {$i <= [expr {$rid-1}]} {incr i} {
             set gapId [atomselect $idR "chain $chain and resid $i and $resAtm"]
             if {[$gapId num] == 1} {
-              # start psfgen segment
-              logMsg "starting segment C${chain}${nFrag}" $ll3
-              if {$pgnwrite} {
-                puts $pgnOut "segment C${chain}${nFrag} \{"
-              } else {
-                eval "segment C${chain}${nFrag} \{"}
-              # adding first residue
+              # start psfgen segment and add first residue
+              logMsg "starting segment ${chain}${nFrag}" $ll3
               logMsg "added resid $i as N-tail" $ll3
+              if {$pgnwrite} {
+                puts $pgnOut "segment ${chain}${nFrag} \{"
+                puts $pgnOut "  residue $i [$gapId get resname]"
+              } else {
+                eval "segment ${chain}${nFrag} \{"
+                eval "  residue $i [$gapId get resname]"
+                }
               lappend l_rid $i
               # mutate fist residue?
-              switch [$gapId gen name] {
+              switch [$gapId get name] {
                 "GLY" {
-                  if {$mutateGaps} {} else {}
+                  logMsg " first patch for segment ${chain}${nFrag}: $nTerGlyPatch" $ll3
+                  if {$pgnwrite} {puts $pgnOut "  first $nTerGlyPatch"} else {eval "first $nTerGlyPatch"}
                   }
-                "PRO"
-                default {}
+                "PRO" {
+                  logMsg " first patch for segment ${chain}${nFrag}: $nTerProPatch" $ll3
+                  if {$pgnwrite} {puts $pgnOut "  first $nTerProPatch"} else {eval "first $nTerProPatch"}
+                  }
+                default {
+                  logMsg " first patch for segment ${chain}${nFrag}: $nTerPatch" $ll3
+                  if {$mutateGaps} {logMsg " residue $i mutated to ALA" $ll3}
+                  if {$pgnwrite} {
+                    puts $pgnOut "  first $nTerPatch"
+                    if {$mutateGaps} {puts $pgnOut "  mutate $i ALA"}
+                  } else {
+                    eval "  first $nTerPatch"
+                    if {$mutateGaps} {eval "  mutate $i ALA"}
+                    }
+                  }
                 }
             } else {
               logMsg "unable to add resid $i as N-tail" $ll3
