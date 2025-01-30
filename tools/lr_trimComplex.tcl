@@ -14,7 +14,8 @@
 #|      -procedure first defined .
 #|      -original code tested ;
 #|    -to do :
-#|      -manage crystallographic water ;;
+#|      -manage crystallographic water .
+#|      -move to a namespace scheme ;;
 #|  -source (external files) :
 #|    -source logLib.tcl ;;
   source logLib.tcl
@@ -186,12 +187,16 @@
 #|        -'tailC', 'CTail' :
 #|          -same as 'tails' arg but specific for the peptide C-terminus ;
 #|        -'mutateGaps', 'gapsMutate', 'mutate' :
-#|          -specifies whether gap residues shold be mutated to Alanine .
-#|          -glycine gap-rec residues will be allways ignored (not mutated) .
+#|          -specifies whether gap residues should be mutated to Alanine .
 #|          -***note: user-specified mutations may be considered in future
 #|           _ versions .
 #|          -acceptable values :-0 .-1 ;
 #|          -default value :-1 ;
+#|        -'keepGlycine', 'keepGapGly', 'glyGapKeep' :
+#|          -specifies whether glycine rec-gap residues should be ignored or
+#|           _ mutated according the 'mutateGaps' arg .
+#|          -acceptable values :-0 .-1 ;
+#|          -default value :-1 ;;
 #|        -'keepProline', 'keepGapPro', 'proGapKeep' :
 #|          -specifies whether proline rec-gap residues should be ignored or
 #|           _ mutated according the 'mutateGaps' arg .
@@ -201,7 +206,7 @@
 #|          -specifies whether cysteine rec-gap residues should be ignored or
 #|           _ mutated according the 'mutateGaps' arg .
 #|          -acceptable values :-0 .-1 ;
-#|          -default value :-1 ;;
+#|          -default value :-0 ;;
 #|        -'chargeTarget', 'targetCharge', 'mutateChargeTarget' :
 #|          -***incomplete implementation*** .
 #|          -acceptable values :
@@ -273,8 +278,9 @@ proc lr_trimComplex {complexType args} {
   set tailN $tails
   set tailC $tails
   set mutateGaps 1
+  set keepGlycine 1
   set keepProline 1
-  set keepCysteine 1
+  set keepCysteine 0
   set chargeTarget ""
   set resAtm "name CA"
   set nTerPatch "NNEU"
@@ -316,6 +322,7 @@ proc lr_trimComplex {complexType args} {
         "tailn" - "ntail" {set tailN $val}
         "tailc" - "ctail" {set tailC $val}
         "mutategaps" - "gapsmutate" - "mutate" {set mutateGaps $val}
+        "keepglycine" - "keepgapgly" - "glygapkeep" {set keepGlycine $val}
         "keepproline" - "keepgappro" - "progapkeep" {set keepProline $val}
         "keepcysteine" - "keepgapcys" - "cysgapkeep" {set keepCysteine $val}
         "chargetarget" - "targetcharge" - "mutatechargetarget" {}
@@ -475,7 +482,7 @@ proc lr_trimComplex {complexType args} {
       }
     }
   if {$prefix == "auto"} {
-    set prefix "[molinfo $idR get name]-[lindex [$interactCASel get resname] 0]_${cutoff}_"
+    set prefix "[molinfo $idR get name]-[lindex [$ligSel get resname] 0]_${cutoff}"
     logMsg " generated prefix: $prefix" $ll3
     }
   logMsg " setting prefix for output files: $prefix" $ll2
@@ -561,17 +568,19 @@ proc lr_trimComplex {complexType args} {
       set prevrid 0   ;# last resid assigned to a fragment (within a chain)
       set l_rid {}   ;# list of resids for the current fragment
       set l_gapTail {}   ;# list of resids added to the current gap
-      foreach rid $resids($chain) {
+      set r 0
+      while {r < [llength $resids($chain)]} {
+        set rid [lindex $resids($chain) $r]
         # filling a gap or adding an N-tail
         if {[llength $l_rid] == 0} {   ;# first interacting resid
           # adds an N-tail if there are residues available
-          for {set i [expr {$rid-$tailN}]} {$i <= [expr {$rid-1}]} {incr i} {
+          for {set i [expr {$rid-$tailN}]} {$i < $rid} {incr i} {
             set gapId [atomselect $idR "chain $chain and resid $i and $resAtm"]
             if {[$gapId num] == 1} {
               # start psfgen segment and add first residue
               logMsg "starting segment ${chain}${nFrag}" $ll3
               logMsg "added resid $i as N-tail" $ll3
-              if {$pgnwrite} {
+              if {$pgnWrite} {
                 puts $pgnOut "segment ${chain}${nFrag} \{"
                 puts $pgnOut "  residue $i [$gapId get resname]"
               } else {
@@ -583,16 +592,16 @@ proc lr_trimComplex {complexType args} {
               switch [$gapId get name] {
                 "GLY" {
                   logMsg " first patch for segment ${chain}${nFrag}: $nTerGlyPatch" $ll3
-                  if {$pgnwrite} {puts $pgnOut "  first $nTerGlyPatch"} else {eval "first $nTerGlyPatch"}
+                  if {$pgnWrite} {puts $pgnOut "  first $nTerGlyPatch"} else {eval "first $nTerGlyPatch"}
                   }
                 "PRO" {
                   logMsg " first patch for segment ${chain}${nFrag}: $nTerProPatch" $ll3
-                  if {$pgnwrite} {puts $pgnOut "  first $nTerProPatch"} else {eval "first $nTerProPatch"}
+                  if {$pgnWrite} {puts $pgnOut "  first $nTerProPatch"} else {eval "first $nTerProPatch"}
                   }
                 default {
                   logMsg " first patch for segment ${chain}${nFrag}: $nTerPatch" $ll3
                   if {$mutateGaps} {logMsg " residue $i mutated to ALA" $ll3}
-                  if {$pgnwrite} {
+                  if {$pgnWrite} {
                     puts $pgnOut "  first $nTerPatch"
                     if {$mutateGaps} {puts $pgnOut "  mutate $i ALA"}
                   } else {
@@ -601,15 +610,46 @@ proc lr_trimComplex {complexType args} {
                     }
                   }
                 }
-            } else {
-              logMsg "unable to add resid $i as N-tail" $ll3
-              }
+              $gapId delete
+              break
+            } else {logMsg "unable to add resid $i as N-tail" $ll3}
             $gapId delete
             }
-        } else {   ;# subsequent interacting resid within a chain/fragment
+          incr r
+        } else {   ;# next interacting resid within a chain/fragment
           set prevrid [lindex l_rid end]
-          if {$prevrid <= [expr {$rid-$gapMax-1}]} {} else {}
-
+          if {$prevrid >= [expr {$rid-$gapMax-1}]} {   ;# add gap resid 
+            for {set i [expr {$prevrid+1}]} {$i < $rid} {incr i} {
+              set gapId [atomselect $idR "chain $chain and resid $i and $resAtm"]
+              if {[$gapId num] == 1} {
+                logMsg "adding residue [$gapId get resname] $i to segment ${chain}${nFrag}" $ll3
+                if {$pgnWrite} {puts $pgnOut "  residue $i [$gapId get resname]"} else {eval "residue $i [$gapId get resname]"}
+                switch [$gapId get resname] {
+                  "GLY" {
+                    if {!$keepGlycine} {
+                      logMsg "GLY $i mutated to ALA in seg ${chain}${nFrag}" $ll3
+                      if {$pgnWrite} {puts $pgnOut "  mutate $i ALA"} else {eval "  mutate $i ALA"}}}
+                  "PRO" {
+                    if {!$keepProline} {
+                      logMsg "PRO $i mutated to ALA in seg ${chain}${nFrag}" $ll3
+                      if {$pgnWrite} {puts $pgnOut "  mutate $i ALA"} else {eval "  mutate $i ALA"}}}
+                  "CYS" {
+                    if {!$keepCysteine} {
+                      logMsg "CYS $i mutated to ALA in seg ${chain}${nFrag}" $ll3
+                      if {$pgnWrite} {puts $pgnOut "  mutate $i ALA"} else {eval "  mutate $i ALA"}}}
+                  default {
+                    logMsg "[$gapId get resname] $i mutated to ALA in seg ${chain}${nFrag}" $ll3
+                    
+                    if {$pgnWrite} {puts $pgnOut "  mutate $i ALA"} else {eval "  mutate $i ALA"}
+                    }
+                  }
+              } else {
+                logMsg "missing residue in chain $chain: $i" $ll1
+                return ""
+                }
+              }
+          } else {   ;# new fragment should be added
+            }
           }
         }
       }
