@@ -595,7 +595,7 @@ proc lr_trimComplex {complexType args} {
                 }
               lappend l_rid $i
               # mutate fist residue?
-              switch [$gapId get name] {
+              switch [$gapId get resname] {
                 "GLY" {
                   if {$keepGlycine} {
                     logMsg " first patch for segment ${seg}: $nTerGlyPatch" $ll3
@@ -613,6 +613,10 @@ proc lr_trimComplex {complexType args} {
                     logMsg " first patch for segment ${seg}: $nTerPatch" $ll3
                     if {$pgnWrite} {puts $pgnOut "  first $nTerPatch"} else {eval "first $nTerPatch"}
                     }
+                  }
+                "ALA" {
+                  logMsg " first patch for segment ${seg}: $nTerPatch" $ll3
+                  puts $pgnOut "  first $nTerPatch"
                   }
                 default {
                   logMsg " first patch for segment ${seg}: $nTerPatch" $ll3
@@ -685,7 +689,7 @@ proc lr_trimComplex {complexType args} {
                 }
             } else {   ;# new fragment should be added
               logMsg " added last (cTer) patch: $cTerPatch" $ll2
-              logMsg " closing segment: ${chain}${nFrag}" $ll2
+              logMsg " closing segment: ${seg}" $ll2
               if {$pgnWrite} {
                 puts $pgnOut "  last $cTerPatch"
                 puts $pgnOut "  \}"
@@ -703,8 +707,60 @@ proc lr_trimComplex {complexType args} {
           }
         }   ;# while
       # adding tailC
-      
-      }
+      logMsg " adding C-tail to segment $seg of: $Ntail" $ll2
+      for {set i [expr {$prevrid+1}]} {$i <= [expr {$prevrid+$tailN}]} {incr i} {
+        set tailId [atomselect $idR "chain $chain and resid $i and $resAtm"]
+        if {[$tailId num] == 1} {
+          logMsg "added resid $i as C-tail" $ll3
+          if {$pgnWrite} {
+            puts $pgnOut "  residue $i [$gapId get resname] $chain"
+          } else {
+            eval "  residue $i [$gapId get resname] $chain"
+            }
+          lappend l_rid $i
+          # mutate -tail residue
+          switch [$tailId get resname] {
+            "GLY" {
+              if {$mutateGaps && !$keepGlycine} {
+                logMsg " C-tail residue $i mutated to ALA" $ll3
+                if {$pgnWrite} {puts $pgnOut "  mutate $i ALA"} else {eval "  mutate $i ALA"}
+                }
+              }
+            "PRO" {
+              if {$mutateGaps && !$keepProline} {
+                logMsg " C-tail residue $i mutated to ALA" $ll3
+                if {$pgnWrite} {puts $pgnOut "  mutate $i ALA"} else {eval "  mutate $i ALA"}
+                }
+              }
+            "CYS" {
+              if {$mutateGaps && !$keepCysteine} {
+                logMsg " C-tail residue $i mutated to ALA" $ll3
+                if {$pgnWrite} {puts $pgnOut "  mutate $i ALA"} else {eval "  mutate $i ALA"}
+                }
+              }
+            default {
+              if {$mutateGaps} {
+                logMsg " C-tail residue $i mutated to ALA" $ll3
+                if {$pgnWrite} {puts $pgnOut "  mutate $i ALA"} else {eval "  mutate $i ALA"}
+                }
+              }
+            }
+        } else {
+          logMsg "unable to add tail to segnment; $seg" $ll1
+          break
+          }
+        }   ;# for
+      # end segment
+      logMsg " added last (cTer) patch: $cTerPatch" $ll2
+      logMsg " closing segment: ${seg}" $ll2
+      if {$pgnWrite} {
+        puts $pgnOut "  last $cTerPatch"
+        puts $pgnOut "  \}"
+      } else {
+        eval "last $cTerPatch"
+        eval "\}"
+        }
+      }   ;# foreach chain
   } else {
     logMsg "chain fragment detection not yet implemented for two molecs " $ll1
     return ""
