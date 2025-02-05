@@ -5,11 +5,14 @@
 #|  -author :-Carlos Z. Gómez Castro ;
 #|  -date :
 #|    -created :-2025-01-13.Mon ;
-#|    -modified :-2025-02-03.Mon ;;
+#|    -modified :-2025-02-04.Tue ;;
 #|  -version :
-set lr_trimComplex_version 003
+set lr_trimComplex_version 004
+#|    -004 :
+#|      -implementing writing of pdb fragments ;
 #|    -003 :
-#|      -rewriting as namespace ;
+#|      -first working version to define segments .
+#|      -rewritten as namespace ;
 #|    -002 :
 #|      -version almost completed but missing tails .
 #|      -implementing new code for variable gap lengths ;
@@ -19,7 +22,7 @@ set lr_trimComplex_version 003
 #|      -original code tested ;
 #|    -to do :
 #|      -manage crystallographic water .
-#|      -move to a namespace scheme ;;
+#|      -refine the namespace procedures ;;
 #|  -source (external files) :
 #|    -logLib.tcl :
 #|      -the loadLib proc is defined in the .vmdrc file ;;;
@@ -30,7 +33,7 @@ loadLib logLib
 #|  -detects protein fragments that interacts with ligands .
 #|  -modifies the resulted "trimed" complex by adding gaps, tails,
 #|   _ and/or mutations  .
-namesapce eval lr_trimComplex {
+namespace eval lr_trimComplex {
 
 #|  -import :
 #|    -logLib::* ;
@@ -224,7 +227,7 @@ namesapce eval lr_trimComplex {
 #|      -acceptable values :-CHARMM resname ;
 #|      -default value :-"ALA" ;;
   variable gapMax 3
-  variable mutatueGaps 1
+  variable mutateGaps 1
   variable gapMut "ALA"
 
 #|    -'tails', 'tailsLength', 'lengthTails', 'tailsLen', 'lenTails' :
@@ -355,7 +358,7 @@ namesapce eval lr_trimComplex {
     variable segPrefix
     variable cutoff
     variable gapMax
-    variable mutatueGaps
+    variable mutateGaps
     variable gapMut
     variable tail
     variable tailN
@@ -370,11 +373,12 @@ namesapce eval lr_trimComplex {
     variable nTerGlyPatch
     variable nTerProPatch
     variable chargeTarget
+    variable procN
 # internal variables
     set args_last {}
 # read input command-line arguments (excluding logLib arguments)
-    if {[expr {[llength $args_rest]%2}] == 0} {
-      foreach {arg val} $args_rest {
+    if {[expr {[llength $args]%2}] == 0} {
+      foreach {arg val} $args {
         switch [string tolower $arg] {
           "src" - "source" - "input" - "inputsource" {set src $val}
           "selid" - "selinfo" - "selinfoid" - "selinfokey" {set selId $val}
@@ -428,7 +432,7 @@ namesapce eval lr_trimComplex {
         }
       logMsg "$procN: unused arguments: $args_last"
     } else {
-      logMsg "$procN: Odd number of arguments: $args_rest" $bll
+      logMsg "$procN: Odd number of arguments: $args" $bll
       return ""
       }
     return $args_last
@@ -452,6 +456,7 @@ namesapce eval lr_trimComplex {
     variable pdbId; variable pdbIdL; variable pdbIdR
     variable singleMol; variable idL; variable idR
     variable selId; variable selTxtL; variable selTxtR
+    variable src
     switch [string tolower $complexType] {
       "pdb" {   ;# single PDB file with both the lig and the rec
         set singleMol 1
@@ -537,7 +542,7 @@ namesapce eval lr_trimComplex {
         # not implemented yet
         }
       "-h" - "--help" {   ;# print help
-        lr_trimComplex_help [lindex $args 0]
+        lr_trimComplex_help
         return ""
         }
       default {
@@ -550,20 +555,24 @@ namesapce eval lr_trimComplex {
 #|    -proc atomSel {} :
 #|      -create atom selections ;
     proc atomSel {} {
-      variable ll1; variable ll2; variable ll3; variable id
+      variable ll1; variable ll2; variable ll3
       variable singleMol; variable ligSel; variable interactCASel
       variable selTxtL; variable selTxtR; variable frame; variable resAtm
+      variable cutoff; variable selTxtL; variable selTxtR
+      variable idL; variable idR
       if {$singleMol} {
         if {($ligSel == "") || ($interactCASel == "")} {
           logMsg " using interaction cutoff value: $cutoff" $ll2
           logMsg " using selTxtL: $selTxtL" $ll2
           logMsg " using selTxtR: $selTxtR" $ll2
           logMsg " using resAtm: $resAtm" $ll2
-          set ligSel [atomselect $id "$selTxtL" frame $frame]
-          set interactCASel [atomselect $id "(same residue as protein within $cutoff of $selTxtL) and $selTxtR and $resAtm"]
+          set ligSel [atomselect $idR "$selTxtL" frame $frame]
+          set selTxtR "(same residue as protein within $cutoff of $selTxtL) and ($selTxtR) and ($resAtm)"
+          logMsg " using interactCASel selTxt: $selTxtR" $ll2
+          set interactCASel [atomselect $idR "$selTxtR"]
         } else {
-          logMsg " atom selections previously defined:" $ill2
-          logMsg "  lig: [$ligSel text] " $ill2
+          logMsg " atom selections previously defined:" $ll2
+          logMsg "  lig: [$ligSel text] " $ll2
           logMsg "  rec: [$interactCASel text]" $ll2  
           }
         logMsg "rec residues selected: \
@@ -573,14 +582,20 @@ namesapce eval lr_trimComplex {
         logMsg "lig and rec from different molecules not yet implemeted" $ll1
         return ""
         }
+      $ligSel delete
+      $interactCASel delete
       }   ;# proc atomSel
 
-#|    -proc outpuConfig {} :
+#|    -proc outputConfig {} :
 #|      -check workPath, prefix, and pgnWrite arguments ;
-    proc outpuConfig {} {
+    proc outputConfig {} {
       variable ll1; variable ll2; variable ll3
       variable workPath; variable prefix; variable idL; variable idR
-      variable pgnOut
+      variable pgnOut; variable pgnWrite; variable selTxtL; variable selTxtR
+      variable frame; variable cutoff
+# 
+      set ligSel [atomselect $idL $selTxtL]
+      set interactCASel [atomselect $idR $selTxtR]
       switch [string tolower $workPath] {
         "" - "." - "./" {
           set workPath "./"
@@ -597,7 +612,7 @@ namesapce eval lr_trimComplex {
             }
           }
         }
-      if {$prefix == "auto"} {
+      if {($prefix == "") || ($prefix == "auto")} {
         set prefix "[molinfo $idR get name]-[lindex [$ligSel get resname] 0]_${cutoff}"
         logMsg " generated prefix: $prefix" $ll3
         }
@@ -608,11 +623,15 @@ namesapce eval lr_trimComplex {
       } else {
         logMsg " pgn script for psfgen will not be written" $ll2
         }
-      }   ;# proc outpuConfig
+      $ligSel delete
+      $interactCASel delete
+      set ligSel ""
+      set interactCASel ""
+      }   ;# proc outputConfig
 
-#|    -proc readTop {} :
+#|    -proc readTopology {} :
 #|      -read topology files ;
-    proc readTop {} {
+    proc readTopology {} {
       variable ll1; variable ll2; variable ll3
       variable l_topFile; variable topDir; variable topCad
       if {($l_topFile == {}) && ($topDir == "")} {
@@ -656,27 +675,20 @@ namesapce eval lr_trimComplex {
 #|      -classify resids by chain ;
     proc detectChains {} {
       variable ll1; variable ll2; variable ll3
-      variable singleMol; variable interactCASel; variable resids
+      variable singleMol; variable resids; variable selTxtR; variable idR
+ 
       if {$singleMol} {
-        foreach chain [$interactCASel get chain] rid [$interactCASel get resid] {
-          if {[info exists resids($chain)]} {
-            lappend resids($chain) $rid
-          } else {
-            set resids($chain) $rid
-            }
-          }
-        logMsg " chains in contact with the ligand(s): [array names resids]" $ll2
-      } else {
+     } else {
         infoMsg "chain detection not implemented yet for multiple mols" $ll1
         return ""
         }
       }   ;# proc detectChains
 
-#|    -proc pngWriteHeader {} :
+#|    -proc pgnWriteHeader {} :
 #|      -header for pgn file ;
-    proc pngWriteHeader {} {
+    proc pgnWriteHeader {} {
       variable ll1; variable ll2; variable ll3
-      variable topCad; variable pdbAliasCad; variable pngWrite
+      variable topCad; variable pdbAliasCad; variable pgnWrite; variable pgnOut
       if {($topCad == "") || ($pdbAliasCad == "")} {
         logMsg "both topCad and pdbAliadCad must be defined" $ll1
         return ""
@@ -696,7 +708,7 @@ namesapce eval lr_trimComplex {
           logMsg " psfgen header: pdbAliasCad:" $ll2
           logMsg $pdbAliasCad $ll2
           }
-      }   ;# proc pngWriteHeader
+      }   ;# proc pgnWriteHeader
 
 #|    -proc addRes_firstTail :
 #|      -defines a new segment .
@@ -706,7 +718,7 @@ namesapce eval lr_trimComplex {
       variable ll1; variable ll2; variable ll3
       variable pgnWrite; variable pgnOut
       variable mutateGaps; variable gapMut;
-      variable nTerPach; variable nTerGlyPatch; variable nTerProPatch
+      variable nTerPatch; variable nTerGlyPatch; variable nTerProPatch
       variable keepGlycine; variable keepProline; variable keepCysteine
 
       set i $resId
@@ -816,6 +828,8 @@ namesapce eval lr_trimComplex {
       variable mutateGaps; variable gapMut;
       variable keepGlycine; variable keepProline; variable keepCysteine
       set i $resId
+      set seg $segName
+      logMsg " adding residue $resName $i to segment $seg" $ll3
       if {$pgnWrite} {
         puts $pgnOut "  residue $i $resName $chain"
       } else {
@@ -856,7 +870,7 @@ namesapce eval lr_trimComplex {
         "ALA" {logMsg "gap ALA $i left intact" $ll3}
         default {
           if {$mutateGaps} {
-            logMsg "[$gapId get resname] $i mutated to $gapMut in seg $seg" $ll3
+            logMsg "$resName $i mutated to $gapMut in seg $seg" $ll3
             if {$pgnWrite} {
               puts $pgnOut "  mutate $i $gapMut"
             } else {
@@ -866,6 +880,66 @@ namesapce eval lr_trimComplex {
           }
         }
       }   ;# proc addRes_gap
+
+
+#|    -proc addRes_lastTail {resId resName chain segName tailRes} :
+#|      -ends a segment .
+#|      -adds a residue and last patch .
+#|      -tries to mutate it ;
+    proc addRes_lastTail {resId resName chain segName tailRes} {
+      variable ll1; variable ll2; variable ll3
+      variable pgnWrite; variable pgnOut
+      variable mutateGaps; variable gapMut;
+      variable cTerPach
+      variable keepGlycine; variable keepProline; variable keepCysteine
+
+      set i $resId
+      logMsg " added resid $resName $i as C-tail" $ll3
+      if {$pgnWrite} {
+        puts $pgnOut "  residue $i $resName $chain"
+      } else {
+        eval "  residue $i $resName $chain"
+        }
+      # mutate tail residue?
+      switch $resName {
+        "GLY" {
+          if {$mutateGaps && !$keepGlycine && $tailRes} {
+            logMsg " C-tail residue GLY $i mutated to $gapMut" $ll3
+            if {$pgnWrite} {
+              puts $pgnOut "  mutate $i $gapMut"
+            } else {
+              eval "  mutate $i $gapMut"}
+            }
+          }
+        "PRO" {
+          if {$mutateGaps && !$keepProline && $tailRes} {
+            logMsg " C-tail residue PRO $i mutated to $gapMut" $ll3
+            if {$pgnWrite} {
+              puts $pgnOut "  mutate $i $gapMut"
+            } else {
+              eval "  mutate $i $gapMut"}
+            }
+          }
+        "CYS" {
+          if {$mutateGaps && !$keepCysteine && $tailRes} {
+            logMsg " C-tail residue CYS $i mutated to $gapMut" $ll3
+            if {$pgnWrite} {
+              puts $pgnOut "  mutate $i $gapMut"
+            } else {
+              eval "  mutate $i $gapMut"}
+            }
+          }
+        default {
+          if {$mutateGaps && ($resName != $gapMut)} {
+            logMsg " C-tail residue $resName $i mutated to $gapMut" $ll3
+            if {$pgnWrite} {
+              puts $pgnOut "  mutate $i $gapMut"
+            } else {
+              eval "  mutate $i $gapMut"}
+            }
+          }
+        }
+      }   ;# proc addRes_lastTail
 
 #|    - ;
 
@@ -881,8 +955,18 @@ proc lr_trimComplex {complexType args} {
 
 # namespace variables
   variable ll1; variable ll2; variable ll3
-  variable procN
-
+  variable procN; variable src; variable selId; variable frame; variable pdbId
+  variable pdbIdL; variable pdbIdR; variable selTxtL; variable selTxtR
+  variable ligSel; variable interactCASel; variable l_topFile; variable topDir
+  variable l_topExt; variable pdbAliasCad; variable prefix; variable workPath
+  variable pgnWrite; variable segPrefix; variable cutoff; variable gapMax
+  variable mutateGaps; variable gapMut; variable tail; variable tailN
+  variable tailC; variable internalTails; variable keepGlycine
+  variable keepProline; variable keepCysteine; variable resAtm
+  variable nTerPatch; variable cTerPatch; variable nTerGlyPatch
+  variable nTerProPatch; variable chargeTarget; variable pgnOut
+  variable singleMol; variable idL; variable idR
+ 
 # proc name
   set procN [lindex [info level 0] 0]
 
@@ -902,13 +986,25 @@ proc lr_trimComplex {complexType args} {
   atomSel
 
 # configure output
-  outpuConfig
+  outputConfig
 
 # read toplogy files
-  readTop
+  readTopology
 
 # detect chain fragments
-  detectChains
+
+        set interactCASel [atomselect $idR $selTxtR]
+        foreach chain [$interactCASel get chain] rid [$interactCASel get resid] {
+          if {[info exists resids($chain)]} {
+            lappend resids($chain) $rid
+          } else {
+            set resids($chain) $rid
+            }
+          }
+        logMsg " chains in contact with the ligand(s): [array names resids]" $ll2
+        $interactCASel delete
+        set interactCASel ""
+ 
 
   logMsg " using parameters for fragment building:" $ll2
   logMsg "  gapMax: $gapMax  tailN: $tailN  tailC: $tailC" $ll2
@@ -927,9 +1023,12 @@ proc lr_trimComplex {complexType args} {
     }
 
 # header for pgn file
-  pngWriteHeader
+  pgnWriteHeader
 
   if {$singleMol} {
+    
+    
+
     # process each chain
     set ll_frag_rid {}
     foreach chain [array names resids] {
@@ -957,7 +1056,7 @@ proc lr_trimComplex {complexType args} {
             if {[$tailId num] == 1} {
               # start psfgen segment and add first residue
               logMsg " starting segment ${seg}" $ll3
-              logMsg " added resid $i ([$tailId get resname]) as N-tail" $ll3
+              logMsg " added resid [$tailId get resname] $i as N-tail" $ll3
               addRes_firstTail $i [$tailId get resname] $chain $seg [expr {$i != $rid}]
               lappend l_rid $i
               $tailId delete
@@ -972,8 +1071,7 @@ proc lr_trimComplex {complexType args} {
 # *** check adding first interaction sphere resids***
           set prevrid [lindex $l_rid end]
           if {$rid == [expr {$prevrid+1}]} {  ;# consecutive resid
-            set seqId \
-              [atomselect $idR "chain $chain and resid $rid and $resAtm"]
+            set seqId [atomselect $idR "chain $chain and resid $rid and $resAtm"]
             logMsg " adding residue to segment ${seg}: [$seqId get resname] $rid" $ll3
             if {$pgnWrite} {
               puts $pgnOut "  residue $rid [$seqId get resname] $chain"
@@ -984,12 +1082,11 @@ proc lr_trimComplex {complexType args} {
             lappend l_rid $rid
             incr r
           } else {   ;# non-consecutive resid
-            if {$prevrid >= [expr {$rid-$gapMax-1}]} {   ;# add gap resid 
+            if {$prevrid >= [expr {$rid-$gapMax-1}]} {   ;# add gap resids
               for {set i [expr {$prevrid+1}]} {$i < $rid} {incr i} {
                 set gapId [atomselect $idR "chain $chain and resid $i and $resAtm"]
                 if {[$gapId num] == 1} {
-                  logMsg "adding residue [$gapId get resname] $i to segment ${chain}${nFrag}" $ll3
-                  addRes_gap
+                  addRes_gap $i [$gapId get resname] $chain $seg
                   lappend l_rid $i
                 } else {
                   logMsg "missing residue in chain $chain: $i" $ll1
@@ -998,96 +1095,23 @@ proc lr_trimComplex {complexType args} {
                 $gapId delete
                 }
             } else {   ;# new segment needed
-
-              }
-            }  ;# else (non-consecutive resid)
-            # checks whether a C-tail should be added
-            if {} {} else {}
-
-
-            if {($rid != [lindex $resids($chain) end]) && \
-                ([lindex $resids($chain) $r] > [expr {$rid+$gapMax+1}])} {
+              # adding segment C-tail
               logMsg " adding a new segment..." $ll2
-              logMsg " added last (cTer) patch: $cTerPatch" $ll2
-              logMsg " closing segment: ${seg}" $ll2
-              if {$pgnWrite} {
-                puts $pgnOut "  last $cTerPatch"
-                puts $pgnOut "  \}\n"
-              } else {
-                eval "last $cTerPatch"
-                eval "\}\n"
-                }
-              logMsg " resids for complete segment ${seg}: $l_rid" $ll3
-              lappend ll_frag_rid $l_rid
-              logMsg " current ll_frag_rid: ${ll_frag_rid}" $ll3
-              set l_rid {}
-              incr nFrag
-              break
-            } else {
-                # adding segment C-tail
-                logMsg " adding C-tail of $tailC residues to segment $seg" $ll2
+              if {$internalTails} {
+                logMsg "  adding internal C-tail for segment $seg"
                 for {set i [expr {$prevrid+1}]} {$i <= [expr {$prevrid+$tailC}]} {incr i} {
-                  set tailId \
-                    [atomselect $idR "chain $chain and resid $i and $resAtm"]
+                  set tailId [atomselect $idR "chain $chain and resid $i and $resAtm"]
                   if {[$tailId num] == 1} {
-                    logMsg " added resid [$tailId get resname] $i as C-tail" $ll3
-                    if {$pgnWrite} {
-                      puts $pgnOut "  residue $i [$tailId get resname] $chain"
-                    } else {
-                      eval "  residue $i [$tailId get resname] $chain"
-                      }
+                    addRes_lastTail $i [$tailId get resname] $chain $seg [expr {$i != $rid}]
                     lappend l_rid $i
-                    # mutate C-tail residue
-                    switch [$tailId get resname] {
-                      "GLY" {
-                        if {$mutateGaps && !$keepGlycine} {
-                          logMsg " C-tail residue GLY $i mutated to $gapMut" $ll3
-                          if {$pgnWrite} {
-                            puts $pgnOut "  mutate $i $gapMut"
-                          } else {
-                            eval "  mutate $i $gapMut"}
-                          }
-                        }
-                      "PRO" {
-                        if {$mutateGaps && !$keepProline} {
-                          logMsg " C-tail residue PRO $i mutated to $gapMut" $ll3
-                          if {$pgnWrite} {
-                            puts $pgnOut "  mutate $i $gapMut"
-                          } else {
-                            eval "  mutate $i $gapMut"}
-                          }
-                        }
-                      "CYS" {
-                        if {$mutateGaps && !$keepCysteine} {
-                          logMsg " C-tail residue CYS $i mutated to $gapMut" $ll3
-                          if {$pgnWrite} {
-                            puts $pgnOut "  mutate $i $gapMut"
-                          } else {
-                            eval "  mutate $i $gapMut"}
-                          }
-                        }
-                      default {
-                        if {$mutateGaps && ([$tailId get resname] != $gapMut)} {
-                          logMsg " C-tail residue [$tailId get resname] $i mutated to $gapMut" $ll3
-                          if {$pgnWrite} {
-                            puts $pgnOut "  mutate $i $gapMut"
-                          } else {
-                            eval "  mutate $i $gapMut"}
-                          }
-                        }
-                      }
                   } else {
                     logMsg " unable to add residue $i tail of segnment; $seg" $ll1
                     break
                     }
-                  }   ;# for
-              } else {
-                logMsg " gap should be added" $ll2
-                
+                  $tailId delete
+                  }
                 }
-              # adding 'last' patch
-              logMsg " added last (cTer) patch: $cTerPatch" $ll2
-              logMsg " closing segment: ${seg}" $ll2
+              # adding 'last' patch and ending segment
               if {$pgnWrite} {
                 puts $pgnOut "  last $cTerPatch"
                 puts $pgnOut "  \}\n"
@@ -1095,16 +1119,39 @@ proc lr_trimComplex {complexType args} {
                 eval "last $cTerPatch"
                 eval "\}\n"
                 }
-              logMsg " resids for complete segment ${seg}: $l_rid" $ll3
+              logMsg " resids for complete segment ${seg}: $l_rid" $ll2
               lappend ll_frag_rid $l_rid
-              logMsg " current ll_frag_rid: ${ll_frag_rid}" $ll3
+              logMsg " current ll_frag_rid: ${ll_frag_rid}" $ll2
               set l_rid {}
               incr nFrag
-            } else {   ;# still more resids (new segment?)
-              incr r
               }
+            }
           }   ;# if (next interacting) 
         }   ;# while
+        logMsg "  adding chain C-tail for segment $seg"
+        set prevrid [lindex $l_rid end]
+        for {set i [expr {$prevrid+1}]} {$i <= [expr {$prevrid+$tailC}]} {incr i} {
+          set tailId [atomselect $idR "chain $chain and resid $i and $resAtm"]
+          if {[$tailId num] == 1} {
+            addRes_lastTail $i [$tailId get resname] $chain $seg [expr {$i != $rid}]
+            lappend l_rid $i
+          } else {
+            logMsg " unable to add residue $i tail of segnment; $seg" $ll1
+            break
+            }
+          $tailId delete
+          }
+          # adding 'last' patch and ending segment
+          if {$pgnWrite} {
+            puts $pgnOut "  last $cTerPatch"
+            puts $pgnOut "  \}\n"
+          } else {
+            eval "last $cTerPatch"
+            eval "\}\n"
+            }
+          logMsg " resids for complete segment ${seg}: $l_rid" $ll2
+          lappend ll_frag_rid $l_rid
+          logMsg " current ll_frag_rid: ${ll_frag_rid}" $ll2
       }   ;# foreach chain
   } else {
     logMsg "chain fragment detection not yet implemented for two molecs " $ll1
@@ -1183,6 +1230,8 @@ proc genChainFrags {res} {
   }   ;# proc genChainFragments
 
   }   ;# namespace eval lr_trimComplex
+
+::lr_trimComplex::ini_lr_trimComplex
 
 #|  - ;
 #|- ;
