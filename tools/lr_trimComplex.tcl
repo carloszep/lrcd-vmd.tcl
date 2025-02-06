@@ -5,11 +5,16 @@
 #|  -author :-Carlos Z. Gómez Castro ;
 #|  -date :
 #|    -created :-2025-01-13.Mon ;
-#|    -modified :-2025-02-04.Tue ;;
+#|    -modified :-2025-02-05.Wed ;;
+set lr_trimComplex_version 005
 #|  -version :
-set lr_trimComplex_version 004
+#|    -005 :
+#|      - ;
 #|    -004 :
-#|      -implementing writing of pdb fragments ;
+#|      -bugfix for the first segment's tail .
+#|      -multiple ligand selections are acceptable as a list .
+#|      -definition of ligand segments implemented .
+#|      -implementing writing of pdb fragments including ligand(s) ;
 #|    -003 :
 #|      -first working version to define segments .
 #|      -rewritten as namespace ;
@@ -21,8 +26,12 @@ set lr_trimComplex_version 004
 #|      -procedure first defined .
 #|      -original code tested ;
 #|    -to do :
+#|      -to fix accumulation of string variables on repeated use
+#|       _ (reinitialization) .
+#|      -to implement the chargeTarget function .
+#|      -to implement managing lig and rec molecules from different files .
 #|      -manage crystallographic water .
-#|      -refine the namespace procedures ;;
+#|      -refine namespace procedures ;;
 #|  -source (external files) :
 #|    -logLib.tcl :
 #|      -the loadLib proc is defined in the .vmdrc file ;;;
@@ -118,18 +127,21 @@ namespace eval lr_trimComplex {
   variable pdbIdL ""
   variable pdbIdR ""
 
-#|    -'selTxtL' :
-#|      -specifies the VMD's atom selection text for the ligand .
+#|    -'selTxtL', 'l_selTxtL', 'selTxtLs' :
+#|      -specifies a list of VMD's atom selection text for the ligand(s) .
+#|      -each sel text must correspond to a single ligand .
+#|      -for a single sel text ues always quotes and curly braces, i.e.
+#|       _ '{"resname LIG"}' .
 #|      -acceptable values :
-#|        -valid selection text for the VMD's command 'atomselect' ;
-#|      -default value :-"not (protein or nucleic or water)" ;;
+#|        -a list of valid selection text for the VMD's command 'atomselect' ;
+#|      -default value :-{"not (protein or nucleic or water)"} ;;
 #|    -'selTxtR' :
 #|      -specifies the VMD's atom selection text for the receptor atoms
 #|      -overrides the atom selection text from the 'selInfo' array .
 #|      -acceptable values :
 #|        -valid selection text for the VMD's command 'atomselect' ;
 #|      -default value :-"protein" ;;
-  variable selTxtL "not (protein or nucleic or water)"
+  variable selTxtL {"not (protein or nucleic or water)"}
   variable selTxtR "protein or nucleic"
 
 #|    -'ligSel', 'atmSelL', 'atomSelLig' :
@@ -288,11 +300,19 @@ namespace eval lr_trimComplex {
 #|    -'nTerProPatch', 'nTerPatchPro' 'firstPatchPro', 'firstProPatch' :
 #|      -N-terminal patch (PRES) name for Pro (psfgen keyword 'first') .
 #|      -default value :-"ACP" ;;
+#|    -'regenerateCad', 'regCad', 'autoRegCad' :
+#|      -string for the psfgen regenerate weyword .
+#|      -required when applying some patches .
+#|      -acceptable values :
+#|        -"regenerate ANGELS DIHEDRALS" .
+#|        -"" ;
+#|      -default value :-"" ;;;
   variable resAtm "name CA"
   variable nTerPatch "NNEU"
   variable cTerPatch "CNEU"
   variable nTerGlyPatch "NGNE"
   variable nTerProPatch "ACP"
+  variable regenerateCad ""
 
 #|    -'chargeTarget', 'targetCharge', 'mutateChargeTarget' :
 #|      -***incomplete implementation*** .
@@ -325,14 +345,18 @@ namespace eval lr_trimComplex {
   variable topCad ""
   variable resids
   variable pgnOut
+  variable l_segR {}
+  variable l_segL {}
+  variable l_ligFAtInd {}
 
 #|  -procedures (namespace lr_trimComplex) :
 #|    -proc ini_lr_trimComplex {} :
 #|      -initializes internal namespace variables ;
-  proc ini_lr_trimComplex {} {
+  proc init_lr_trimComplex {} {
+    global lr_trimComplex_version
     set_logName "lr_trimComplex"
-    set_logVersion "003"
-    }   ;# proc ini_lr_trimComplex
+    set_logVersion "$lr_trimComplex_version"
+    }   ;# proc init_lr_trimComplex
 
 #|    -proc setCLOptions {args} :
 #|      -reads user options from command-line ;
@@ -372,13 +396,17 @@ namespace eval lr_trimComplex {
     variable cTerPatch
     variable nTerGlyPatch
     variable nTerProPatch
+    variable regenerateCad
     variable chargeTarget
     variable procN
+    variable ll3
 # internal variables
     set args_last {}
 # read input command-line arguments (excluding logLib arguments)
     if {[expr {[llength $args]%2}] == 0} {
+      logMsg "[get_logName_version]: processing list of arguments: $args" $ll3
       foreach {arg val} $args {
+        logMsg "processing arg-val: $arg $val" $ll3
         switch [string tolower $arg] {
           "src" - "source" - "input" - "inputsource" {set src $val}
           "selid" - "selinfo" - "selinfoid" - "selinfokey" {set selId $val}
@@ -386,7 +414,7 @@ namespace eval lr_trimComplex {
           "pdbid" - "pdbfile" - "id" - "vmdid" - "molid" {set pdbId $val}
           "pdbidl" - "pdbfilel" - "idl" - "vmdidl" - "molidl" {set pdbIdL $val}
           "pdbidr" - "pdbfiler" - "idr" - "vmdidr" - "molidr" {set pdbIdR $val}
-          "seltxtl" {set selTxtL $val}
+          "seltxtl" - "l_seltxtl" - "seltxtls" {set selTxtL $val}
           "seltxtr" {set selTxtR $val}
           "ligsel" - "atmsell" - "atomsellig" {set ligSel $val}
           "interactcasel" - "atmselr" - "interactingca" - "recsel" \
@@ -409,7 +437,7 @@ namespace eval lr_trimComplex {
           "gapmut" - "gapmutation" - "gapres" - "gapresidue" - "gapresname" \
             {set gapMut $val}
           "tails" - "tailslength" - "lengthtails" - "tailslen" - "lentails" \
-            {set tails $val}
+            {set_tails $val}
           "tailn" - "ntail" - "tail-n" - "n-tail" {set tailN $val}
           "tailc" - "ctail" - "tail-c" - "c-tail" {set tailC $val}
           "internaltails" - "tailsinternal" - "intTails" {set internalTails $val}
@@ -422,6 +450,7 @@ namespace eval lr_trimComplex {
           "cterpatch" - "lastpatch" {set cTerPatch $val}
           "nterglypatch" - "firstpatchgly" {set nTerGlyPatch $val}
           "nterpropatch" - "firstpatchpro" {set nTerProPatch $val}
+          "regeneratecad" - "regcad" - "autoregcad" {set regenerateCad $val}
           "chargetarget" - "targetcharge" - "mutatechargetarget" {}
           "bll" - "baseloglevel" - "baseloglvl" {set_bll $val}
           default {
@@ -446,7 +475,17 @@ namespace eval lr_trimComplex {
     set ll2 [expr {$bll + 1}]; set ll3 [expr {$bll + 2}]
     logMsg " using base log level: $bll" $ll2
     logMsg " ll1, ll2, and ll3 set to: $ll1, $ll2, and $ll3, resp." $ll3
-    }
+    }   ;# proc setBaseLogLevel
+
+#|    -proc set_tails :
+#|      -sets the values of tails, tailN, and tailC ;
+  proc set_tails {val} {
+    variable tails; variable tailN; variable tailC; variable ll3
+    set tails $val
+    set tailN $tails
+    set tailC $tails
+    logMsg " tails, tailN, and tailC values set to: $tails" $ll3
+    }   ;# proc set_tails
 
 #|    -proc loadMol {} :
 #|      -load required molecules and configures them ;
@@ -456,7 +495,7 @@ namespace eval lr_trimComplex {
     variable pdbId; variable pdbIdL; variable pdbIdR
     variable singleMol; variable idL; variable idR
     variable selId; variable selTxtL; variable selTxtR
-    variable src
+    variable src; variable frame
     switch [string tolower $complexType] {
       "pdb" {   ;# single PDB file with both the lig and the rec
         set singleMol 1
@@ -465,18 +504,22 @@ namespace eval lr_trimComplex {
             set id [mol pdbload $pdbId]
             set idL $id; set idR $id
             logMsg " PDB model downloaded into id $id: $pdbId" $ll2
-            animate goto start
+            animate goto $frame
+            [atomselect $id "all" frame $frame] writepdb "baseLR.tmp"
+            logMsg "  written baseLR.tmp file" $ll3
             }
           "file" - "loadfile" - "localfile" - "localpdb" {
             set id [mol new $pdbId type pdb waitfor all]
             set idL $id; set idR $id
             logMsg " loaded local file into id $id: $pdbId" $ll2
-            animate goto start
+            animate goto $frame
             set name [string range $pdbId \
               [expr {[string last / $pdbId] + 1}] \
               [expr {[string last ".pdb" $pdbId] - 1}]]
             mol rename $id $name
             logMsg " mol renamed to: $name" $ll3
+            [atomselect $id "all" frame $frame] writepdb "baseLR.tmp"
+            logMsg "  written baseLR.tmp file" $ll3
             }
           "id" - "ids" - "molid" - "molids" - "loaded" - "vmdid" - "vmd" {
             set id $pdbId
@@ -488,6 +531,8 @@ namespace eval lr_trimComplex {
               mol rename $id $name
               logMsg " mol renamed to: $name" $ll3
               }
+            [atomselect $id "all" frame $frame] writepdb "baseLR.tmp"
+            logMsg "  written baseLR.tmp file" $ll3
             }
           default {
             logMsg "Unknown option for 'src' arg: $src" $ll1
@@ -504,10 +549,10 @@ namespace eval lr_trimComplex {
               ([info exists selInfo($selId,recSelTxt)]) && \
               ([info exists selInfo($selId,title)])} {
             # updating default selTxt* values
-            if {$selTxtL == "all"} {
+            if {$selTxtL == "not (protein or nucleic or water)"} {
               set selTxtL $selInfo($selId,ligSelTxt)
               }
-            if {$selTxtR == "protein"} {
+            if {$selTxtR == "protein or nucleic"} {
               set selTxtR $selInfo($selId,recSelTxt)
               }
             logMsg " setting selTxtL: $selTxtL" $ll3
@@ -521,16 +566,22 @@ namespace eval lr_trimComplex {
               set id $selInfo($selId,ligId)
               set idL $id; set idR $id
               logMsg " setting id (same for both lig and rec): $id" $ll3
+              [atomselect $id "all" frame $frame] writepdb "baseLR.tmp"
+              logMsg "  written baseLR.tmp file" $ll3
             } else {
               set singleMol 0
               set idL $selInfo($selId,ligId)
               set idR $selInfo($selId,recId)
               logMsg " setting idL: $idL" $ll3
               logMsg " setting idR: $idR" $ll3
+              [atomselect $idL "all" frame $frame] writepdb "baseL.tmp"
+              logMsg "  written baseL.tmp file" $ll3
+              [atomselect $idR "all" frame $frame] writepdb "baseR.tmp"
+              logMsg "  written baseR.tmp file" $ll3
               }
           } else {
             logMsg "$procN: selInfo missing data for selId: $selId"
-            logMsg ", required array keys ($selId,<key>): ligId, recId, ligSelTxt, recSelTxt, and title" $ll1
+            logMsg ", required array keys selInfo($selId,<key>): ligId, recId, ligSelTxt, recSelTxt, and title" $ll1
             return ""
             }
         } else {
@@ -559,15 +610,29 @@ namespace eval lr_trimComplex {
       variable singleMol; variable ligSel; variable interactCASel
       variable selTxtL; variable selTxtR; variable frame; variable resAtm
       variable cutoff; variable selTxtL; variable selTxtR
-      variable idL; variable idR
+      variable idL; variable idR; variable l_segL; variable l_ligFAtInd
       if {$singleMol} {
         if {($ligSel == "") || ($interactCASel == "")} {
           logMsg " using interaction cutoff value: $cutoff" $ll2
-          logMsg " using selTxtL: $selTxtL" $ll2
+          logMsg " using selTxtLs: $selTxtL" $ll2
           logMsg " using selTxtR: $selTxtR" $ll2
           logMsg " using resAtm: $resAtm" $ll2
-          set ligSel [atomselect $idR "$selTxtL" frame $frame]
-          set selTxtR "(same residue as protein within $cutoff of $selTxtL) and ($selTxtR) and ($resAtm)"
+          set l_ligFAtInd {}
+          set l_segL {}
+          set i 1
+          set l_selTxtL_prov $selTxtL
+          set selTxtL ""
+          foreach sTxt ${l_selTxtL_prov} frm $frame {
+            set ligSel [atomselect $idR "$sTxt" frame $frm]
+            if {$selTxtL == ""} {set selTxtL "($sTxt)"
+              } else {set selTxtL "$selTxtL or ($sTxt)" }
+            lappend l_segL "L${i}"
+            lappend l_ligFAtInd [lindex [$ligSel get index] 0]
+            incr i
+            $ligSel delete
+            }
+          logMsg "list of ligands segNames: $l_segL" $ll3
+          set selTxtR "(same residue as protein within $cutoff of ($selTxtL)) and ($selTxtR) and ($resAtm)"
           logMsg " using interactCASel selTxt: $selTxtR" $ll2
           set interactCASel [atomselect $idR "$selTxtR"]
         } else {
@@ -582,7 +647,7 @@ namespace eval lr_trimComplex {
         logMsg "lig and rec from different molecules not yet implemeted" $ll1
         return ""
         }
-      $ligSel delete
+#      $ligSel delete
       $interactCASel delete
       }   ;# proc atomSel
 
@@ -672,12 +737,14 @@ namespace eval lr_trimComplex {
       }   ;# proc readTop
 
 #|    -proc detectChains :
-#|      -classify resids by chain ;
+#|      -unused in version 004 .
+#|      -pending to be fixed ;
     proc detectChains {} {
       variable ll1; variable ll2; variable ll3
       variable singleMol; variable resids; variable selTxtR; variable idR
  
       if {$singleMol} {
+
      } else {
         infoMsg "chain detection not implemented yet for multiple mols" $ll1
         return ""
@@ -694,7 +761,7 @@ namespace eval lr_trimComplex {
         return ""
         } else {
           if {$pgnWrite} {
-            puts $pgnOut "# psfgen pgn file created by: [get_logName_version]"
+            puts $pgnOut "# psfgen pgn file created by: [get_logName_version] on [clock format [clock seconds]]"
             puts $pgnOut ""
             puts $pgnOut $topCad
             puts $pgnOut $pdbAliasCad
@@ -941,6 +1008,87 @@ namespace eval lr_trimComplex {
         }
       }   ;# proc addRes_lastTail
 
+#|    -proc addRes_lig {} :
+#|      -adding segments for ligand residues ;
+    proc addRes_lig {} {
+      variable ll1; variable ll2; variable ll3
+      variable l_segR; variable pgnWrite; variable pgnOut; variable singleMol
+      variable workPath; variable prefix; variable l_segL; variable selTxtL
+      variable idL; variable l_ligFAtInd
+
+      logMsg " adding ligand segments" $ll3
+      if {$singleMol} {set suf "LR"} else {set suf "R"}
+      if {$pgnWrite} {
+        set i 0
+        foreach segL $l_segL {
+          set ligSel [atomselect $idL "index [lindex $l_ligFAtInd $i]"]
+          set resLCad [$ligSel get {resid resname chain}]
+          logMsg "ligand residue added to seg $segL: [lindex $resLCad 0]" $ll2
+          puts $pgnOut "segment $segL \{"
+          puts $pgnOut "  first NONE"
+          puts $pgnOut "  last NONE"
+          puts $pgnOut "  residue [lindex $resLCad 0]"
+          puts $pgnOut "  \}\n"
+          incr i
+          $ligSel delete
+          }
+      } else {
+        set i 0
+        foreach segL $l_segL {
+          set ligSel [atomselect $idL "index [lindex $l_ligFAtInd $i]"]
+          set resLCad [$ligSel get {resid resname chain}]
+          logMsg "ligand residue added to seg $segL: $resLCad" $ll2
+          eval "segment $segL \{"
+          eval "  first NONE"
+          eval "  last NONE"
+          eval "  residue $resLCad"
+          eval "  \}"
+          incr i
+          $ligSel delete
+          }
+        }
+      }   ;# proc addRes_lig
+
+
+#|    -proc pgnWriteTail {} :
+#|      -adding ligands and final keywords in the pgn file ;
+    proc pgnWriteTail {} {
+      variable ll1; variable ll2; variable ll3
+      variable l_segL; variable l_segR; variable pgnWrite; variable pgnOut
+      variable singleMol; variable workPath; variable prefix
+      variable regenerateCad
+
+      if {$singleMol} {set suf "LR"} else {set suf "R"}
+      if {$pgnWrite} {
+        # add coordpdb keywords
+        foreach seg $l_segR {
+          puts $pgnOut "coordpdb base${suf}.tmp $seg"
+          }
+        foreach seg $l_segL {
+          puts $pgnOut "coordpdb base${suf}.tmp $seg"
+          }
+        # add last keywords
+        if {$regenerateCad == ""} {puts $pgnOut ""
+          } else {puts $pgnOut "$regenerateCad\n"}
+        puts $pgnOut "guesscoord\n"
+        puts $pgnOut "writepsf ${workPath}${prefix}.psf"
+        puts $pgnOut "writepdb ${workPath}${prefix}.pdb\n"
+      } else {
+        # add coordpdb keywords
+        foreach seg $l_segR {
+          eval "coordpdb base${suf}.tmp $seg"
+          }
+        foreach seg $l_segL {
+          eval "coordpdb base${suf}.tmp $seg"
+          }
+        # add last keywords
+        eval "$regenerateCad\n"
+        eval "guesscoord\n"
+        eval "writepsf ${workPath}${prefix}.psf"
+        eval "writepdb ${workPath}${prefix}.pdb\n"
+        }
+      }   ;# proc pgnWriteTail
+
 #|    - ;
 
 #|  -proc lr_trimComplex { } :
@@ -965,13 +1113,14 @@ proc lr_trimComplex {complexType args} {
   variable keepProline; variable keepCysteine; variable resAtm
   variable nTerPatch; variable cTerPatch; variable nTerGlyPatch
   variable nTerProPatch; variable chargeTarget; variable pgnOut
-  variable singleMol; variable idL; variable idR
+  variable singleMol; variable idL; variable idR; variable l_segR
  
 # proc name
   set procN [lindex [info level 0] 0]
 
 # interpreting logLib and namespace arguments 
   set args_rest [eval arg_interpreter $args]
+  logMsg " arg_rest after logLib arg_interp: $args_rest" $ll3
   set args_rest [eval setCLOptions $args_rest]
 
 # initial info messages
@@ -1026,11 +1175,9 @@ proc lr_trimComplex {complexType args} {
   pgnWriteHeader
 
   if {$singleMol} {
-    
-    
-
     # process each chain
     set ll_frag_rid {}
+    set l_segR {}
     foreach chain [array names resids] {
       logMsg " processing chain: $chain" $ll2
       set prevrid 0   ;# last resid assigned to a fragment (within a chain)
@@ -1046,10 +1193,9 @@ proc lr_trimComplex {complexType args} {
         if {[llength $l_rid] == 0} {   ;# first interacting resid
           # adds an N-tail if there are residues available
           set i [expr {$rid-$tailN}]
-          while {$i < $rid} {   ;#
+          while {$i <= $rid} {   ;#
             if {!$internalTails && ($nFrag > 1)} {   ;# no N-tail in segment
               set i $rid   ;# makes this loop run only once
-              incr r
               logMsg " avoided adding N-tail to segment: $seg" $ll3
               }
             set tailId [atomselect $idR "chain $chain and resid $i and $resAtm"]
@@ -1058,7 +1204,9 @@ proc lr_trimComplex {complexType args} {
               logMsg " starting segment ${seg}" $ll3
               logMsg " added resid [$tailId get resname] $i as N-tail" $ll3
               addRes_firstTail $i [$tailId get resname] $chain $seg [expr {$i != $rid}]
+              if {$i == $rid} {incr r}
               lappend l_rid $i
+              lappend l_segR $seg
               $tailId delete
               break
             } else {
@@ -1157,6 +1305,11 @@ proc lr_trimComplex {complexType args} {
     logMsg "chain fragment detection not yet implemented for two molecs " $ll1
     return ""
     }
+  # add ligand segment(s)
+  addRes_lig
+  # end pgn file
+  pgnWriteTail
+
   close $pgnOut
   }   ;# proc lr_trimComplex
 
@@ -1231,7 +1384,7 @@ proc genChainFrags {res} {
 
   }   ;# namespace eval lr_trimComplex
 
-::lr_trimComplex::ini_lr_trimComplex
+::lr_trimComplex::init_lr_trimComplex
 
 #|  - ;
 #|- ;
