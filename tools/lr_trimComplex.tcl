@@ -10,6 +10,7 @@
 set lr_trimComplex_version 005
 #|  -version :
 #|    -005 :
+#|      -calling command reported in the header of the pgn script .
 #|      -incorporated selTxtL_noInt argument .
 #|      -non-interacting ligands can be added to the complex without growing-up
 #|       _ receptor model residues due to interacting ligands .
@@ -371,6 +372,7 @@ namespace eval lr_trimComplex {
   variable l_segR {}
   variable l_segL {}
   variable l_ligFAtInd {}
+  variable comLine ""
 
 #|  -procedures (namespace lr_trimComplex) :
 #|    -proc ini_lr_trimComplex {} :
@@ -785,7 +787,7 @@ namespace eval lr_trimComplex {
 #|    -proc pgnWriteHeader {} :
 #|      -header for pgn file ;
     proc pgnWriteHeader {} {
-      variable ll1; variable ll2; variable ll3
+      variable ll1; variable ll2; variable ll3; variable comLine
       variable topCad; variable pdbAliasCad; variable pgnWrite; variable pgnOut
       if {($topCad == "") || ($pdbAliasCad == "")} {
         logMsg "both topCad and pdbAliadCad must be defined" $ll1
@@ -793,6 +795,7 @@ namespace eval lr_trimComplex {
         } else {
           if {$pgnWrite} {
             puts $pgnOut "# psfgen pgn file created by: [get_logName_version] on [clock format [clock seconds]]"
+            puts $pgnOut "# vmd command: $comLine"
             puts $pgnOut ""
             puts $pgnOut $topCad
             puts $pgnOut $pdbAliasCad
@@ -1136,7 +1139,7 @@ proc lr_trimComplex {complexType args} {
   variable ll1; variable ll2; variable ll3
   variable procN; variable src; variable selId; variable frame; variable pdbId
   variable pdbIdL; variable pdbIdR; variable selTxtL; variable selTxtR
-  variable l_topFile; variable topDir
+  variable l_topFile; variable topDir; variable comLine
   variable l_topExt; variable pdbAliasCad; variable prefix; variable workPath
   variable pgnWrite; variable segPrefix; variable cutoff; variable gapMax
   variable mutateGaps; variable gapMut; variable tail; variable tailN
@@ -1156,7 +1159,8 @@ proc lr_trimComplex {complexType args} {
 
 # initial info messages
   logMsg "+++ Trim of ligand-receptor complexes +++" $ll1
-  logMsg " command line: $procN $complexType $args" $ll1
+  set comLine "$procN $complexType $args"
+  logMsg " command line: $comLine" $ll1
   logMsg " unused arguments: $args_rest" $ll1
 
 # loadMolecule(s)
