@@ -1,20 +1,24 @@
 #|-lr_trimComplex.tcl :
 #|  -generate simplified versions of ligand-protein complexes .
-#|  -generates inputs for psfgen and namd .
+#|  -generates inputs for psfgen .
 #|  -based on the old script extAChEFrag.tcl .
 #|  -author :-Carlos Z. Gómez Castro ;
+#|  -public repository :-https://github.com/carloszep/lrcd-vmd.tcl ;
 #|  -date :
 #|    -created :-2025-01-13.Mon ;
-#|    -modified :-2025-02-05.Wed ;;
+#|    -modified :-2025-02-11.Tue ;;
 set lr_trimComplex_version 005
 #|  -version :
 #|    -005 :
-#|      - ;
+#|      -incorporated selTxtL_noInt argument .
+#|      -non-interacting ligands can be added to the complex without growing-up
+#|       _ receptor model residues due to interacting ligands .
+#|      -ligSel and interactCASel eliminated as arguments  ;
 #|    -004 :
 #|      -bugfix for the first segment's tail .
 #|      -multiple ligand selections are acceptable as a list .
 #|      -definition of ligand segments implemented .
-#|      -implementing writing of pdb fragments including ligand(s) ;
+#|      -writting pdb model in file baseLR.tmp for psfgen to read coordinates ;
 #|    -003 :
 #|      -first working version to define segments .
 #|      -rewritten as namespace ;
@@ -26,11 +30,14 @@ set lr_trimComplex_version 005
 #|      -procedure first defined .
 #|      -original code tested ;
 #|    -to do :
+#|      -to join segments contiguous or overlapping due to tails .
 #|      -to fix accumulation of string variables on repeated use
 #|       _ (reinitialization) .
 #|      -to implement the chargeTarget function .
 #|      -to implement managing lig and rec molecules from different files .
 #|      -manage crystallographic water .
+#|      -to fix direct use of psfgen package (option pgnWrite 0) .
+#|      -add namespace procs to optionally pre-process input arguments .
 #|      -refine namespace procedures ;;
 #|  -source (external files) :
 #|    -logLib.tcl :
@@ -50,9 +57,9 @@ namespace eval lr_trimComplex {
 
 #|  -export :
 #|    -trimComplex ;
-  namespace export trimComplex 
+  namespace export lr_trimComplex 
 
-#|  -arguments :
+#|  -arguments (lr_trimComplex proc) :
 #|    -'complexType' :
 #|      -specifies the type of structure to be processed .
 #|      -acceptable values :
@@ -93,8 +100,9 @@ namespace eval lr_trimComplex {
 #|      -the atom selections registered in the selInfo array are expected
 #|       _ to be more general (i.e., "protein and chain A", "not protein") .
 #|      -the atomselections are processed to detect interacting residues .
-#|      -selInfo array keys considered :-'<selId>,ligId', '<selId>,recId',
-#|       _ '<selId>,ligSelTxt', and '<selId>,recSelTxt' .
+#|      -selInfo array keys considered :
+#|        -'<selId>,ligId', '<selId>,recId',
+#|         _ '<selId>,ligSelTxt', and '<selId>,recSelTxt' .
 #|        -'<selId>,frame' (optionally) ;
 #|      -variables to be assigned (respectively): pdbIdL, pdbIdR,
 #|       _ selTxtL, and selTxtR .
@@ -130,7 +138,7 @@ namespace eval lr_trimComplex {
 #|    -'selTxtL', 'l_selTxtL', 'selTxtLs' :
 #|      -specifies a list of VMD's atom selection text for the ligand(s) .
 #|      -each sel text must correspond to a single ligand .
-#|      -for a single sel text ues always quotes and curly braces, i.e.
+#|      -for a single sel text use always quotes and curly braces, i.e.
 #|       _ '{"resname LIG"}' .
 #|      -acceptable values :
 #|        -a list of valid selection text for the VMD's command 'atomselect' ;
@@ -141,22 +149,37 @@ namespace eval lr_trimComplex {
 #|      -acceptable values :
 #|        -valid selection text for the VMD's command 'atomselect' ;
 #|      -default value :-"protein" ;;
+#|    -'selTxtL_noInt', 'l_selTxtL_noInt', 'selTxtL_nonInteract',
+#|     _ 'selTxt_nonInteractL', 'extraLig', 'extraLigands' :
+#|      -list of VMD's atom selection texts for non-interacting ligands .
+#|      -these ligands are not considered to detect receptor's
+#|       _ ligand-interacting residues .
+#|      -A segment is added for each ligand .
+#|      -for a single sel text use always quotes and curly braces, i.e.
+#|       _ '{"resname LIG"}' .
+#|      -accepatable values :
+#|        -"" :-no non-interacting ligands are added ;
+#|        -a list of valid selection text for the VMD's command 'atomselect' ;
+#|      -default value :-"" ;;
   variable selTxtL {"not (protein or nucleic or water)"}
   variable selTxtR "protein or nucleic"
+  variable selTxtL_noInt ""
 
 #|    -'ligSel', 'atmSelL', 'atomSelLig' :
 #|      -atom selection pregenerated using 'atomselect' VMD's command .
 #|      -overrides 'selInfo(<selId>,ligSelTxt)' or 'selTxtL' .
-#|      -default value :-"" ;;
+#|      -default value :-"" ;
+#|      -note: discontinuing variable  ;
 #|    -'interactCASel', 'iteractingCA', 'atmSelR', 'recSel',
 #|     _ 'atomSelRec', 'atmSelCA' :
 #|      -atom selection pregenerated using 'atomselect' VMD's command .
 #|      -it must include only the alpha carbon atoms from the residues
 #|       _ in the receptor in direct contact with the ligand .
 #|      -overrides 'selInfo(<selId>,recSelTxt)' and 'selTxtR' .
-#|      -default value :-"" ;;
-  variable ligSel ""
-  variable interactCASel ""
+#|      -default value :-"" ;
+#|      -note: discontinuing variable  ;
+#  variable ligSel ""
+#  variable interactCASel ""
 
 #|    -'l_topFile', 'l_topFiles', 'topFile', 'topFiles',
 #|     _ 'l_topologyFile', 'topologyFiles' :
@@ -370,8 +393,7 @@ namespace eval lr_trimComplex {
     variable pdbIdR
     variable selTxtL
     variable selTxtR
-    variable ligSel
-    variable interactCASel
+    variable selTxtL_noInt
     variable l_topFile
     variable topDir
     variable l_topExt
@@ -404,9 +426,9 @@ namespace eval lr_trimComplex {
     set args_last {}
 # read input command-line arguments (excluding logLib arguments)
     if {[expr {[llength $args]%2}] == 0} {
-      logMsg "[get_logName_version]: processing list of arguments: $args" $ll3
+      logMsg " [get_logName_version]: processing list of arguments: $args" $ll3
       foreach {arg val} $args {
-        logMsg "processing arg-val: $arg $val" $ll3
+        logMsg " reading arg-val: $arg $val" $ll3
         switch [string tolower $arg] {
           "src" - "source" - "input" - "inputsource" {set src $val}
           "selid" - "selinfo" - "selinfoid" - "selinfokey" {set selId $val}
@@ -416,9 +438,9 @@ namespace eval lr_trimComplex {
           "pdbidr" - "pdbfiler" - "idr" - "vmdidr" - "molidr" {set pdbIdR $val}
           "seltxtl" - "l_seltxtl" - "seltxtls" {set selTxtL $val}
           "seltxtr" {set selTxtR $val}
-          "ligsel" - "atmsell" - "atomsellig" {set ligSel $val}
-          "interactcasel" - "atmselr" - "interactingca" - "recsel" \
-            - "atomselrec" - "atmselca" {set interactCASel $val}
+          "seltxtl_noint" - "l_seltxtl_noint" - "seltxtl_noninteract" \
+            - "seltxt_noninteractl" - "extralig" - "extraligands" \
+            {set selTxtL_noInt $val}
           "l_topfile" - "l_topfiles" - "topfile" - "topfiles" \
             - "l_topologyfile" - "topologyfiles" {set l_topFile $val}
           "topdir" - "toppar" - "topologydir" - "topologypath" {set topDir $val}
@@ -607,15 +629,17 @@ namespace eval lr_trimComplex {
 #|      -create atom selections ;
     proc atomSel {} {
       variable ll1; variable ll2; variable ll3
-      variable singleMol; variable ligSel; variable interactCASel
+      variable singleMol; variable selTxtL_noInt
       variable selTxtL; variable selTxtR; variable frame; variable resAtm
       variable cutoff; variable selTxtL; variable selTxtR
       variable idL; variable idR; variable l_segL; variable l_ligFAtInd
       if {$singleMol} {
+        set ligSel ""; set interactCASel ""   ;# provisional
         if {($ligSel == "") || ($interactCASel == "")} {
           logMsg " using interaction cutoff value: $cutoff" $ll2
           logMsg " using selTxtLs: $selTxtL" $ll2
           logMsg " using selTxtR: $selTxtR" $ll2
+          logMsg " using selTxtL_noInt: $selTxtL" $ll2
           logMsg " using resAtm: $resAtm" $ll2
           set l_ligFAtInd {}
           set l_segL {}
@@ -631,7 +655,16 @@ namespace eval lr_trimComplex {
             incr i
             $ligSel delete
             }
-          logMsg "list of ligands segNames: $l_segL" $ll3
+          logMsg " list of rec-interacting ligands segNames: $l_segL" $ll3
+          foreach sTxt ${selTxtL_noInt} {
+            set ligSel [atomselect $idR "$sTxt"]   ;# note: no frm considered
+            lappend l_segL "L${i}"
+            lappend l_ligFAtInd [lindex [$ligSel get index] 0]
+            incr i
+            $ligSel delete
+            }
+          if {${selTxtL_noInt} != ""} {
+            logMsg " amended list of ligands segNames: $l_segL" $ll3}
           set selTxtR "(same residue as protein within $cutoff of ($selTxtL)) and ($selTxtR) and ($resAtm)"
           logMsg " using interactCASel selTxt: $selTxtR" $ll2
           set interactCASel [atomselect $idR "$selTxtR"]
@@ -640,11 +673,11 @@ namespace eval lr_trimComplex {
           logMsg "  lig: [$ligSel text] " $ll2
           logMsg "  rec: [$interactCASel text]" $ll2  
           }
-        logMsg "rec residues selected: \
+        logMsg " rec residues selected: \
                 [$interactCASel get {chain resname resid}]" $ll2
       } else {
         # not implemented yet
-        logMsg "lig and rec from different molecules not yet implemeted" $ll1
+        logMsg " lig and rec from different molecules not yet implemeted" $ll1
         return ""
         }
 #      $ligSel delete
@@ -690,8 +723,6 @@ namespace eval lr_trimComplex {
         }
       $ligSel delete
       $interactCASel delete
-      set ligSel ""
-      set interactCASel ""
       }   ;# proc outputConfig
 
 #|    -proc readTopology {} :
@@ -1105,7 +1136,7 @@ proc lr_trimComplex {complexType args} {
   variable ll1; variable ll2; variable ll3
   variable procN; variable src; variable selId; variable frame; variable pdbId
   variable pdbIdL; variable pdbIdR; variable selTxtL; variable selTxtR
-  variable ligSel; variable interactCASel; variable l_topFile; variable topDir
+  variable l_topFile; variable topDir
   variable l_topExt; variable pdbAliasCad; variable prefix; variable workPath
   variable pgnWrite; variable segPrefix; variable cutoff; variable gapMax
   variable mutateGaps; variable gapMut; variable tail; variable tailN
