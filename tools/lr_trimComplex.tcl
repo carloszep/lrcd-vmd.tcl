@@ -9,6 +9,9 @@
 #|    -modified :-2025-02-11.Tue ;;
 set lr_trimComplex_version 005
 #|  -version :
+#|    -006 :
+#|      -routine for loading the created structure (after psfgen) to: :
+#|        -write structures with restrictions for equil, MD sims, and QM/MM ;;
 #|    -005 :
 #|      -calling command reported in the header of the pgn script .
 #|      -incorporated selTxtL_noInt argument .
@@ -800,9 +803,9 @@ namespace eval lr_trimComplex {
             puts $pgnOut $topCad
             puts $pgnOut $pdbAliasCad
           } else {
-            package require psfgen
-            eval $topCad
-            eval $pdbAliasCad
+#            package require psfgen
+#            eval $topCad
+#            eval $pdbAliasCad
             }
           logMsg " psfgen header: topCad:" $ll2
           logMsg $topCad $ll2
@@ -841,15 +844,16 @@ namespace eval lr_trimComplex {
               puts $pgnOut "  first $nTerPatch"
               puts $pgnOut "  mutate $i $gapMut"
             } else {
-              eval "first $nTerPatch"
-              eval "mutate $i $gapMut"
+#              eval "first $nTerPatch"
+#              eval "mutate $i $gapMut"
               }
           } else {
             logMsg " first patch for segment ${seg}: $nTerGlyPatch" $ll3
             if {$pgnWrite} {
               puts $pgnOut "  first $nTerGlyPatch"
             } else {
-              eval "first $nTerGlyPatch"}
+#              eval "first $nTerGlyPatch"
+              }
             }
           }
         "PRO" {
@@ -860,15 +864,16 @@ namespace eval lr_trimComplex {
               puts $pgnOut "  first $nTerPatch"
               puts $pgnOut "  mutate $i $gapMut"
             } else {
-              eval "first $nTerPatch"
-              eval "mutate $i $gapMut"
+#              eval "first $nTerPatch"
+#              eval "mutate $i $gapMut"
               }
           } else {
             logMsg " first patch for segment ${seg}: $nTerProPatch" $ll3 
             if {$pgnWrite} {
               puts $pgnOut "  first $nTerProPatch"
             } else {
-              eval "first $nTerProPatch"}
+#              eval "first $nTerProPatch"
+              }
             }
           }
         "CYS" {
@@ -879,15 +884,16 @@ namespace eval lr_trimComplex {
               puts $pgnOut "  first $nTerPatch"
               puts $pgnOut "  mutate $i $gapMut"
             } else {
-              eval "first $nTerPatch"
-              eval "mutate $i $gapMut"
+#              eval "first $nTerPatch"
+#              eval "mutate $i $gapMut"
               }
           } else {
             logMsg " first patch for segment $seg: $nTerPatch" $ll3 
             if {$pgnWrite} {
               puts $pgnOut "  first $nTerPatch"
             } else {
-              eval "first $nTerPatch"}
+#              eval "first $nTerPatch"
+              }
             }
           }
         "ALA" {
@@ -895,7 +901,8 @@ namespace eval lr_trimComplex {
           if {$pgnWrite} {
             puts $pgnOut "  first $nTerPatch"
           } else {
-            eval "first $nTerPatch"}
+#            eval "first $nTerPatch"
+            }
           }
         default {
           if {$mutateGaps && $tailRes} {
@@ -904,14 +911,15 @@ namespace eval lr_trimComplex {
               puts $pgnOut "  first $nTerPatch"
               puts $pgnOut "  mutate $i $gapMut"
             } else {
-              eval "first $nTerPatch"
-              eval "mutate $i $gapMut"
+#              eval "first $nTerPatch"
+#              eval "mutate $i $gapMut"
               }
           } else {
             if {$pgnWrite} {
               puts $pgnOut "  first $nTerPatch"
             } else {
-              eval "first $nTerPatch"}
+#              eval "first $nTerPatch"
+              }
             }
           logMsg " first patch for segment $seg: $nTerPatch" $ll3
           }
@@ -934,7 +942,7 @@ namespace eval lr_trimComplex {
       if {$pgnWrite} {
         puts $pgnOut "  residue $i $resName $chain"
       } else {
-        eval "residue $i $resName $chain"
+#        eval "residue $i $resName $chain"
         }
       # mutate gap resid?
       switch $resName {
@@ -944,7 +952,7 @@ namespace eval lr_trimComplex {
             if {$pgnWrite} {
               puts $pgnOut "  mutate $i $gapMut"
             } else {
-              eval "  mutate $i $gapMut"
+#              eval "  mutate $i $gapMut"
               }
             }
           }
@@ -954,7 +962,7 @@ namespace eval lr_trimComplex {
             if {$pgnWrite} {
               puts $pgnOut "  mutate $i $gapMut"
             } else {
-              eval "  mutate $i $gapMut"
+#              eval "  mutate $i $gapMut"
               }
             }
           }
@@ -964,7 +972,7 @@ namespace eval lr_trimComplex {
             if {$pgnWrite} {
               puts $pgnOut "  mutate $i $gapMut"
             } else {
-              eval "  mutate $i $gapMut"
+#              eval "  mutate $i $gapMut"
               }
             }
           }
@@ -975,7 +983,7 @@ namespace eval lr_trimComplex {
             if {$pgnWrite} {
               puts $pgnOut "  mutate $i $gapMut"
             } else {
-              eval "  mutate $i $gapMut"
+#              eval "  mutate $i $gapMut"
               }
             }
           }
@@ -999,7 +1007,7 @@ namespace eval lr_trimComplex {
       if {$pgnWrite} {
         puts $pgnOut "  residue $i $resName $chain"
       } else {
-        eval "  residue $i $resName $chain"
+#       eval "  residue $i $resName $chain"
         }
       # mutate tail residue?
       switch $resName {
@@ -1009,7 +1017,7 @@ namespace eval lr_trimComplex {
             if {$pgnWrite} {
               puts $pgnOut "  mutate $i $gapMut"
             } else {
-              eval "  mutate $i $gapMut"}
+#              eval "  mutate $i $gapMut"}
             }
           }
         "PRO" {
@@ -1018,7 +1026,8 @@ namespace eval lr_trimComplex {
             if {$pgnWrite} {
               puts $pgnOut "  mutate $i $gapMut"
             } else {
-              eval "  mutate $i $gapMut"}
+#              eval "  mutate $i $gapMut"
+              }
             }
           }
         "CYS" {
@@ -1027,7 +1036,8 @@ namespace eval lr_trimComplex {
             if {$pgnWrite} {
               puts $pgnOut "  mutate $i $gapMut"
             } else {
-              eval "  mutate $i $gapMut"}
+#              eval "  mutate $i $gapMut"
+              }
             }
           }
         default {
@@ -1036,7 +1046,8 @@ namespace eval lr_trimComplex {
             if {$pgnWrite} {
               puts $pgnOut "  mutate $i $gapMut"
             } else {
-              eval "  mutate $i $gapMut"}
+#              eval "  mutate $i $gapMut"
+              }
             }
           }
         }
@@ -1072,11 +1083,11 @@ namespace eval lr_trimComplex {
           set ligSel [atomselect $idL "index [lindex $l_ligFAtInd $i]"]
           set resLCad [$ligSel get {resid resname chain}]
           logMsg "ligand residue added to seg $segL: $resLCad" $ll2
-          eval "segment $segL \{"
-          eval "  first NONE"
-          eval "  last NONE"
-          eval "  residue $resLCad"
-          eval "  \}"
+#          eval "segment $segL \{"
+#          eval "  first NONE"
+#          eval "  last NONE"
+#          eval "  residue $resLCad"
+#          eval "  \}"
           incr i
           $ligSel delete
           }
@@ -1110,16 +1121,16 @@ namespace eval lr_trimComplex {
       } else {
         # add coordpdb keywords
         foreach seg $l_segR {
-          eval "coordpdb base${suf}.tmp $seg"
+#          eval "coordpdb base${suf}.tmp $seg"
           }
         foreach seg $l_segL {
-          eval "coordpdb base${suf}.tmp $seg"
+#          eval "coordpdb base${suf}.tmp $seg"
           }
         # add last keywords
-        eval "$regenerateCad\n"
-        eval "guesscoord\n"
-        eval "writepsf ${workPath}${prefix}.psf"
-        eval "writepdb ${workPath}${prefix}.pdb\n"
+#        eval "$regenerateCad\n"
+#        eval "guesscoord\n"
+#        eval "writepsf ${workPath}${prefix}.psf"
+#        eval "writepdb ${workPath}${prefix}.pdb\n"
         }
       }   ;# proc pgnWriteTail
 
@@ -1259,7 +1270,7 @@ proc lr_trimComplex {complexType args} {
             if {$pgnWrite} {
               puts $pgnOut "  residue $rid [$seqId get resname] $chain"
             } else {
-              eval "residue $rid [$seqId get resname] $chain"
+#              eval "residue $rid [$seqId get resname] $chain"
               }
             $seqId delete
             lappend l_rid $rid
@@ -1299,8 +1310,8 @@ proc lr_trimComplex {complexType args} {
                 puts $pgnOut "  last $cTerPatch"
                 puts $pgnOut "  \}\n"
               } else {
-                eval "last $cTerPatch"
-                eval "\}\n"
+#                eval "last $cTerPatch"
+#                eval "\}\n"
                 }
               logMsg " resids for complete segment ${seg}: $l_rid" $ll2
               lappend ll_frag_rid $l_rid
@@ -1329,8 +1340,8 @@ proc lr_trimComplex {complexType args} {
             puts $pgnOut "  last $cTerPatch"
             puts $pgnOut "  \}\n"
           } else {
-            eval "last $cTerPatch"
-            eval "\}\n"
+#            eval "last $cTerPatch"
+#            eval "\}\n"
             }
           logMsg " resids for complete segment ${seg}: $l_rid" $ll2
           lappend ll_frag_rid $l_rid
@@ -1347,6 +1358,91 @@ proc lr_trimComplex {complexType args} {
 
   close $pgnOut
   }   ;# proc lr_trimComplex
+
+#|   -proc apply_restrictions {} :
+#|     -will write pdf-format fileis specifying restrictions for namd2 calcs .
+#|     -to be used after psfgen was used to run the script created by
+#|      _ lr_trimComplex .
+#|     -arguments :
+#|       -psf .
+#|       -pdb .
+#|       -l_restrictType :
+#|         -list of restrictions to be applied .
+#|         -acceptable values :
+#|           -"equil" .
+#|           -"QM/MM", "QM-MM", "QMMM" :
+#|             -interacting ligands will be unrestricted .
+#|             -interacting residues will unrestricted .
+#|             -non-interacting ligands will have harmonic restrictions .
+#|             -noninteracting residue's sidechains will have harmonic
+#|              _ armonic restrictions .
+#|             -all backbone atoms will have harmonic restrictions .
+#|             -the QM region will be the interacing ligs and residues ;;
+#|         -default value :-"all" ;;;;
+  proc apply_restrictions {psfFile pdbFile {l_restrictType "all"}} {
+    # namespace variables:
+    variable ll1; variable ll2; variable ll3
+    variable selTxtR; variable selTxtL; variable selTxtL_noInt
+    variable l_ligFAtInd
+    # load files
+    logMsg "\nlr_trim_complex::apply_restrictions:" $ll1
+    logMsg " list of restrictions: $l_restrictType" $ll1
+    logMsg " psf file: $psf"
+    logMsg " pdb file: $pdb"
+    set idC [mol new $psf]
+    mol addfile $pdb
+    # process types of restictions to be applied
+    foreach restrictType $l_restrictType {
+      switch [string tolower $restrictType] {
+        "qm/mm" {
+          # checking whether selTxtL was already processed
+          if {[llength $l_ligFAtInd] >= 1} {
+            set l_selTxtL_prov $selTxtL
+            foreach sTxt ${l_selTxtL_prov} {
+              if {$selTxtL == ""} {set selTxtL "($sTxt)"
+                } else {set selTxtL "$selTxtL or ($sTxt)" }
+              }
+            }
+          # processing list of non-interacting ligands
+          if {${l_selTxt_noInt} != ""} {
+            set noIntLigCad ""
+            foreach sTxt ${l_selTxt_noInt} {
+              if {$noIntLigCad == ""} {set noIntLigCad "($sTxt)"
+                } else {set noIntLigCad "$noIntLigCad or ($sTxt)"}
+              }
+            }
+          # applying restrictions
+          set syst [atomselect $idC "all"]
+          set interactCASel [atomselect $idC "$selTxtR"]
+          set harmRSel [atomselect $idC "(backbone or name HA HA2 HN) or (protein and not (resid [$interactCASel get resid] and sidechain)) or ($selTxtL) or (noIntLigCad)"]
+          infoMsg "selTxt for atoms with harmonic-potential restrictions: [$harmSel text]" $ll2
+          $syst set beta 0
+          $syst set occupancy 0
+          $harmRSel set beta 1
+          $syst writepdb "${workPath}${prefix}_noInt.Bflag"
+          # selecting QM region
+          set qmReg [atomselect $idC "(protein and resid [$interactCASel get resid] and sidechain) or ($selTxtL)"]
+          logMsg " selection text used for QM region: [$qmReg text]" $ll2
+          set mmReg [atomselect $idC "protein and resid [$interactCASel get resid] and name CA CB"]
+          $syst set beta 0
+          $syst set occupancy 0
+          $qmReg set beta 1
+          $mmReg set occupancy 1
+          package require topotools
+          topo guessatom element mass
+          $syst writepdb "${workPath}${prefix}_qmreg.BOflag"
+          # deleting atom selections
+          $interactCASel delete
+          $harmRSel delete
+          $syst delete
+          $qmReg delete
+          $mmReg delete
+          }
+        "all" {}
+        default {}
+        }
+      }
+    }   ;# proc apply_restrictions
 
 #|  -proc lr_trimComplex_help {{opt ""}} :- ;
 proc lr_trimComplex_help {{opt ""}} {
