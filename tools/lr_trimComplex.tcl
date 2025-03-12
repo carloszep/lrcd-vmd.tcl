@@ -6,12 +6,14 @@
 #|  -public repository :-https://github.com/carloszep/lrcd-vmd.tcl ;
 #|  -date :
 #|    -created :-2025-01-13.Mon ;
-#|    -modified :-2025-02-11.Tue ;;
-set lr_trimComplex_version 005
+#|    -modified :-2025-03-11.Tue ;;
+set lr_trimComplex_version 006
 #|  -version :
 #|    -006 :
+#|      -proc apply_restrictions added and tested .
 #|      -routine for loading the created structure (after psfgen) to: :
-#|        -write structures with restrictions for equil, MD sims, and QM/MM ;;
+#|        -write structures with restrictions for equil, MD sims, and QM/MM ;
+#|      -for the moment only functionality for QM/MM ;
 #|    -005 :
 #|      -calling command reported in the header of the pgn script .
 #|      -incorporated selTxtL_noInt argument .
@@ -61,7 +63,7 @@ namespace eval lr_trimComplex {
 
 #|  -export :
 #|    -trimComplex ;
-  namespace export lr_trimComplex 
+  namespace export lr_trimComplex apply_restrictions
 
 #|  -arguments (lr_trimComplex proc) :
 #|    -'complexType' :
@@ -375,6 +377,8 @@ namespace eval lr_trimComplex {
   variable l_segR {}
   variable l_segL {}
   variable l_ligFAtInd {}
+  variable selTxtLCad {}
+  variable selTxtRCad {}
   variable comLine ""
 
 #|  -procedures (namespace lr_trimComplex) :
@@ -577,13 +581,13 @@ namespace eval lr_trimComplex {
               ([info exists selInfo($selId,title)])} {
             # updating default selTxt* values
             if {$selTxtL == "not (protein or nucleic or water)"} {
-              set selTxtL $selInfo($selId,ligSelTxt)
+              set selTxtLCad $selInfo($selId,ligSelTxt)
               }
             if {$selTxtR == "protein or nucleic"} {
-              set selTxtR $selInfo($selId,recSelTxt)
+              set selTxtRCad $selInfo($selId,recSelTxt)
               }
-            logMsg " setting selTxtL: $selTxtL" $ll3
-            logMsg " setting selTxtR: $selTxtR" $ll3
+            logMsg " setting selTxtLCad: $selTxtLCad" $ll3
+            logMsg " setting selTxtRCad: $selTxtRCad" $ll3
             if {[info exists selInfo($selId,frame)]} {
               set frame $selInfo($selId,frame)
               logMsg " setting frame: $frame" $ll3
@@ -635,8 +639,8 @@ namespace eval lr_trimComplex {
     proc atomSel {} {
       variable ll1; variable ll2; variable ll3
       variable singleMol; variable selTxtL_noInt
-      variable selTxtL; variable selTxtR; variable frame; variable resAtm
-      variable cutoff; variable selTxtL; variable selTxtR
+      variable frame; variable resAtm; variable selTxtLCad
+      variable cutoff; variable selTxtL; variable selTxtR; variable selTxtRCad
       variable idL; variable idR; variable l_segL; variable l_ligFAtInd
       if {$singleMol} {
         set ligSel ""; set interactCASel ""   ;# provisional
@@ -644,23 +648,24 @@ namespace eval lr_trimComplex {
           logMsg " using interaction cutoff value: $cutoff" $ll2
           logMsg " using selTxtLs: $selTxtL" $ll2
           logMsg " using selTxtR: $selTxtR" $ll2
-          logMsg " using selTxtL_noInt: $selTxtL" $ll2
+          logMsg " using selTxtL_noInt: $selTxtL_noInt" $ll2
           logMsg " using resAtm: $resAtm" $ll2
           set l_ligFAtInd {}
           set l_segL {}
           set i 1
-          set l_selTxtL_prov $selTxtL
-          set selTxtL ""
-          foreach sTxt ${l_selTxtL_prov} frm $frame {
-            set ligSel [atomselect $idR "$sTxt" frame $frm]
-            if {$selTxtL == ""} {set selTxtL "($sTxt)"
-              } else {set selTxtL "$selTxtL or ($sTxt)" }
+#          set l_selTxtL_prov $selTxtL
+          set selTxtLCad ""
+          foreach sTxt ${selTxtL} {
+            set ligSel [atomselect $idR "$sTxt"]   ;# frame needed?
+            if {$selTxtLCad == ""} {set selTxtLCad "($sTxt)"
+              } else {set selTxtLCad "$selTxtLCad or ($sTxt)" }
             lappend l_segL "L${i}"
             lappend l_ligFAtInd [lindex [$ligSel get index] 0]
             incr i
             $ligSel delete
             }
           logMsg " list of rec-interacting ligands segNames: $l_segL" $ll3
+          logMsg " selTxtLCad: $selTxtLCad"
           foreach sTxt ${selTxtL_noInt} {
             set ligSel [atomselect $idR "$sTxt"]   ;# note: no frm considered
             lappend l_segL "L${i}"
@@ -670,9 +675,9 @@ namespace eval lr_trimComplex {
             }
           if {${selTxtL_noInt} != ""} {
             logMsg " amended list of ligands segNames: $l_segL" $ll3}
-          set selTxtR "(same residue as protein within $cutoff of ($selTxtL)) and ($selTxtR) and ($resAtm)"
-          logMsg " using interactCASel selTxt: $selTxtR" $ll2
-          set interactCASel [atomselect $idR "$selTxtR"]
+          set selTxtRCad "(same residue as protein within $cutoff of ($selTxtLCad)) and ($selTxtR) and ($resAtm)"
+          logMsg " using interactCASel selTxt: $selTxtRCad" $ll2
+          set interactCASel [atomselect $idR "$selTxtRCad"]
         } else {
           logMsg " atom selections previously defined:" $ll2
           logMsg "  lig: [$ligSel text] " $ll2
@@ -695,10 +700,10 @@ namespace eval lr_trimComplex {
       variable ll1; variable ll2; variable ll3
       variable workPath; variable prefix; variable idL; variable idR
       variable pgnOut; variable pgnWrite; variable selTxtL; variable selTxtR
-      variable frame; variable cutoff
+      variable frame; variable cutoff; variable selTxtLCad; variable selTxtRCad
 # 
-      set ligSel [atomselect $idL $selTxtL]
-      set interactCASel [atomselect $idR $selTxtR]
+      set ligSel [atomselect $idL $selTxtLCad]
+      set interactCASel [atomselect $idR $selTxtRCad]
       switch [string tolower $workPath] {
         "" - "." - "./" {
           set workPath "./"
@@ -777,7 +782,8 @@ namespace eval lr_trimComplex {
 #|      -pending to be fixed ;
     proc detectChains {} {
       variable ll1; variable ll2; variable ll3
-      variable singleMol; variable resids; variable selTxtR; variable idR
+      variable singleMol; variable resids
+      variable selTxtR; variable selTxtRCad; variable idR
  
       if {$singleMol} {
 
@@ -831,8 +837,8 @@ namespace eval lr_trimComplex {
         puts $pgnOut "segment ${seg} \{"
         puts $pgnOut "  residue $i $resName $chain"
       } else {
-        eval "segment ${seg} \{"
-        eval "  residue $i $resName $chain"
+#        eval "segment ${seg} \{"
+#        eval "  residue $i $resName $chain"
         }
       # mutate residue?
       switch $resName {
@@ -1059,7 +1065,7 @@ namespace eval lr_trimComplex {
       variable ll1; variable ll2; variable ll3
       variable l_segR; variable pgnWrite; variable pgnOut; variable singleMol
       variable workPath; variable prefix; variable l_segL; variable selTxtL
-      variable idL; variable l_ligFAtInd
+      variable idL; variable l_ligFAtInd; variable selTxtLCad
 
       logMsg " adding ligand segments" $ll3
       if {$singleMol} {set suf "LR"} else {set suf "R"}
@@ -1149,8 +1155,9 @@ proc lr_trimComplex {complexType args} {
 # namespace variables
   variable ll1; variable ll2; variable ll3
   variable procN; variable src; variable selId; variable frame; variable pdbId
-  variable pdbIdL; variable pdbIdR; variable selTxtL; variable selTxtR
-  variable l_topFile; variable topDir; variable comLine
+  variable pdbIdL; variable pdbIdR; variable selTxtL
+  variable selTxtR; variable selTxtRCad
+  variable l_topFile; variable topDir; variable comLine; variable selTxtLCad
   variable l_topExt; variable pdbAliasCad; variable prefix; variable workPath
   variable pgnWrite; variable segPrefix; variable cutoff; variable gapMax
   variable mutateGaps; variable gapMut; variable tail; variable tailN
@@ -1188,7 +1195,7 @@ proc lr_trimComplex {complexType args} {
 
 # detect chain fragments
 
-        set interactCASel [atomselect $idR $selTxtR]
+        set interactCASel [atomselect $idR $selTxtRCad]
         foreach chain [$interactCASel get chain] rid [$interactCASel get resid] {
           if {[info exists resids($chain)]} {
             lappend resids($chain) $rid
@@ -1356,7 +1363,8 @@ proc lr_trimComplex {complexType args} {
   # end pgn file
   pgnWriteTail
 
-  close $pgnOut
+  if {$pgnWrite} {close $pgnOut}
+
   }   ;# proc lr_trimComplex
 
 #|   -proc apply_restrictions {} :
@@ -1379,62 +1387,63 @@ proc lr_trimComplex {complexType args} {
 #|             -all backbone atoms will have harmonic restrictions .
 #|             -the QM region will be the interacing ligs and residues ;;
 #|         -default value :-"all" ;;;;
-  proc apply_restrictions {psfFile pdbFile {l_restrictType "all"}} {
+  proc apply_restrictions {psfFile pdbFile {l_restrictType "QM/MM"}} {
     # namespace variables:
     variable ll1; variable ll2; variable ll3
     variable selTxtR; variable selTxtL; variable selTxtL_noInt
-    variable l_ligFAtInd
+    variable l_ligFAtInd; variable selTxtLCad; variable selTxtRCad
+    variable workPath; variable prefix
     # load files
     logMsg "\nlr_trim_complex::apply_restrictions:" $ll1
     logMsg " list of restrictions: $l_restrictType" $ll1
-    logMsg " psf file: $psf"
-    logMsg " pdb file: $pdb"
-    set idC [mol new $psf]
-    mol addfile $pdb
+    logMsg " psf file: $psfFile"
+    logMsg " pdb file: $pdbFile"
+    set idC [mol new $psfFile]
+    mol addfile $pdbFile
+    set syst [atomselect $idC "all"]
+    logMsg " complex loaded: [$syst num] atoms" $ll2
+    logMsg " total charge: [format "%.3f" [eval vecadd [$syst get charge]]]"
     # process types of restictions to be applied
     foreach restrictType $l_restrictType {
       switch [string tolower $restrictType] {
         "qm/mm" {
-          # checking whether selTxtL was already processed
-          if {[llength $l_ligFAtInd] >= 1} {
-            set l_selTxtL_prov $selTxtL
-            foreach sTxt ${l_selTxtL_prov} {
-              if {$selTxtL == ""} {set selTxtL "($sTxt)"
-                } else {set selTxtL "$selTxtL or ($sTxt)" }
-              }
-            }
           # processing list of non-interacting ligands
-          if {${l_selTxt_noInt} != ""} {
-            set noIntLigCad ""
-            foreach sTxt ${l_selTxt_noInt} {
+          set noIntLigCad ""
+          if {${selTxtL_noInt} != ""} {
+            foreach sTxt ${selTxtL_noInt} {
               if {$noIntLigCad == ""} {set noIntLigCad "($sTxt)"
                 } else {set noIntLigCad "$noIntLigCad or ($sTxt)"}
               }
-            }
+            logMsg "noIntLigCad created: $noIntLigCad" $ll3
+          } else {set noIntLigCad "none"}
           # applying restrictions
-          set syst [atomselect $idC "all"]
-          set interactCASel [atomselect $idC "$selTxtR"]
-          set harmRSel [atomselect $idC "(backbone or name HA HA2 HN) or (protein and not (resid [$interactCASel get resid] and sidechain)) or ($selTxtL) or (noIntLigCad)"]
-          infoMsg "selTxt for atoms with harmonic-potential restrictions: [$harmSel text]" $ll2
+          set interactCASel [atomselect $idC "$selTxtRCad"]
+          set harmRSel [atomselect $idC "(backbone or name HA HA1 HA2 HN) or (protein and not (resid [$interactCASel get resid] and sidechain)) or ($noIntLigCad)"]
+          logMsg " selTxt for atoms with harmonic-potential restrictions: [$harmRSel text]" $ll2
           $syst set beta 0
           $syst set occupancy 0
           $harmRSel set beta 1
           $syst writepdb "${workPath}${prefix}_noInt.Bflag"
+          logMsg " Bflag file for harmonic restrictions written: ${workPath}${prefix}_noInt.Bflag " $ll1
           # selecting QM region
-          set qmReg [atomselect $idC "(protein and resid [$interactCASel get resid] and sidechain) or ($selTxtL)"]
+          $interactCASel delete
+          set interactCASel [atomselect $idC "($selTxtRCad) and not (resname GLY)"]
+          set qmReg [atomselect $idC "(protein and resid [$interactCASel get resid] and sidechain) or ($selTxtLCad)"]
           logMsg " selection text used for QM region: [$qmReg text]" $ll2
-          set mmReg [atomselect $idC "protein and resid [$interactCASel get resid] and name CA CB"]
+          set mmReg [atomselect $idC "(protein and resid [$interactCASel get resid] and name CA CB) or (protein and resid [$interactCASel get resid] and resname PRO and name N CD)"]
+          package require topotools
+          topo guessatom element mass
           $syst set beta 0
           $syst set occupancy 0
           $qmReg set beta 1
           $mmReg set occupancy 1
-          package require topotools
-          topo guessatom element mass
           $syst writepdb "${workPath}${prefix}_qmreg.BOflag"
+          logMsg " BOflag file for QM region written: ${workPath}${prefix}_qmreg.BOflag" $ll1
+          logMsg " the QM region contains [$qmReg num] atoms" $ll2
+          logMsg " the MM region contains [$mmReg num] atoms" $ll2
           # deleting atom selections
           $interactCASel delete
           $harmRSel delete
-          $syst delete
           $qmReg delete
           $mmReg delete
           }
@@ -1442,6 +1451,7 @@ proc lr_trimComplex {complexType args} {
         default {}
         }
       }
+    $syst delete
     }   ;# proc apply_restrictions
 
 #|  -proc lr_trimComplex_help {{opt ""}} :- ;
