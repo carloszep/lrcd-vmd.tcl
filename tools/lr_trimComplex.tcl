@@ -6,9 +6,12 @@
 #|  -public repository :-https://github.com/carloszep/lrcd-vmd.tcl ;
 #|  -date :
 #|    -created :-2025-01-13.Mon ;
-#|    -modified :-2025-03-12.Wed ;;
-set lr_trimComplex_version 007
+#|    -modified :-2025-03-13.Thu ;;
+set lr_trimComplex_version 008
 #|  -version :
+#|    -008 :
+#|      -variable argument 'regenerateCad' replaced by 'userPatchesCad' .
+#|      -no tested yet ;
 #|    -007 :
 #|      -PRO residues (besides GLY) are always excluded from the QM region .
 #|      -all arguments of apply_restrictions have default value .
@@ -213,10 +216,18 @@ namespace eval lr_trimComplex {
 #|      -default value :
 #|        -"pdbalias residue HIS HSD\npdbalias atom ILE CD1 CD\npdbalias
 #|         _ residue HOH TP3M\npdbalias atom TP3M O OH2\n" ;;
+#|    -'userPatchesCad', 'patchCad', 'patchesCad', 'patches', 'userPatches' :
+#|      -string with one or more lines with user-specified patches .
+#|      -see also psfgen user's manual .
+#|      -for some partches will be neccesary to add the line
+#|       _ "regenerate angles dihedrals" to correctly apply the patch(es) .
+#|      -example: "patch ASPP P:209\nregenerate angles dihdrals" ;
+#|      -default value :-"" ;;
   variable l_topFile {}
   variable topDir ""
   variable l_topExt {top rtf str}
   variable pdbAliasCad "pdbalias residue HIS HSD\npdbalias atom ILE CD1 CD\npdbalias residue HOH TP3M\npdbalias atom TP3M O OH2\n"
+  variable userPatchesCad ""
 
 #|    -'prefix', 'outPrefix', 'outputPrefix' :
 #|      -prefix used for all pdb file generated .
@@ -344,19 +355,11 @@ namespace eval lr_trimComplex {
 #|    -'nTerProPatch', 'nTerPatchPro' 'firstPatchPro', 'firstProPatch' :
 #|      -N-terminal patch (PRES) name for Pro (psfgen keyword 'first') .
 #|      -default value :-"ACP" ;;
-#|    -'regenerateCad', 'regCad', 'autoRegCad' :
-#|      -string for the psfgen regenerate weyword .
-#|      -required when applying some patches .
-#|      -acceptable values :
-#|        -"regenerate ANGELS DIHEDRALS" .
-#|        -"" ;
-#|      -default value :-"" ;;;
   variable resAtm "name CA"
   variable nTerPatch "NNEU"
   variable cTerPatch "CNEU"
   variable nTerGlyPatch "NGNE"
   variable nTerProPatch "ACP"
-  variable regenerateCad ""
 
 #|    -'chargeTarget', 'targetCharge', 'mutateChargeTarget' :
 #|      -***incomplete implementation*** .
@@ -442,7 +445,6 @@ namespace eval lr_trimComplex {
     variable cTerPatch
     variable nTerGlyPatch
     variable nTerProPatch
-    variable regenerateCad
     variable chargeTarget
     variable procN
     variable ll3
@@ -470,6 +472,8 @@ namespace eval lr_trimComplex {
           "topdir" - "toppar" - "topologydir" - "topologypath" {set topDir $val}
           "l_topext" - "l_topfileext" {set l_topExt $val}
           "pdbaliascad" {set pdbAliasCad $val}
+          "userpatchescad" - "patchcad" - "patchescad" - "patches" \
+            - "userpatches" {set userPatchesCad $val}
           "prefix" - "outprefix" - "outputprefix" {set prefix $val}
           "workpath" - "workfolder" - "workdir" - "outpath" - "outfolder" \
             - "outdir" {set workPath $val}
@@ -487,7 +491,8 @@ namespace eval lr_trimComplex {
             {set_tails $val}
           "tailn" - "ntail" - "tail-n" - "n-tail" {set tailN $val}
           "tailc" - "ctail" - "tail-c" - "c-tail" {set tailC $val}
-          "internaltails" - "tailsinternal" - "intTails" {set internalTails $val}
+          "internaltails" - "tailsinternal" - "intTails" \
+            {set internalTails $val}
           "keepglycine" - "keepgapgly" - "glygapkeep" {set keepGlycine $val}
           "keepproline" - "keepgappro" - "progapkeep" {set keepProline $val}
           "keepcysteine" - "keepgapcys" - "cysgapkeep" {set keepCysteine $val}
@@ -497,7 +502,6 @@ namespace eval lr_trimComplex {
           "cterpatch" - "lastpatch" {set cTerPatch $val}
           "nterglypatch" - "firstpatchgly" {set nTerGlyPatch $val}
           "nterpropatch" - "firstpatchpro" {set nTerProPatch $val}
-          "regeneratecad" - "regcad" - "autoregcad" {set regenerateCad $val}
           "chargetarget" - "targetcharge" - "mutatechargetarget" {}
           "bll" - "baseloglevel" - "baseloglvl" {set_bll $val}
           default {
@@ -1132,7 +1136,7 @@ namespace eval lr_trimComplex {
       variable ll1; variable ll2; variable ll3
       variable l_segL; variable l_segR; variable pgnWrite; variable pgnOut
       variable singleMol; variable workPath; variable prefix
-      variable regenerateCad; variable pgnOutPath
+      variable userPatchesCad; variable pgnOutPath
 
       if {$singleMol} {set suf "LR"} else {set suf "R"}
       if {$pgnWrite} {
@@ -1144,8 +1148,12 @@ namespace eval lr_trimComplex {
           puts $pgnOut "coordpdb base${suf}.tmp $seg"
           }
         # add last keywords
-        if {$regenerateCad == ""} {puts $pgnOut ""
-          } else {puts $pgnOut "$regenerateCad\n"}
+        if {$userPatchesCad == ""} {
+          puts $pgnOut ""
+        } else {
+          puts $pgnOut "$userPatchesCad\n"
+          logMsg " user patch(es) added to pgnFile:\n$userPatchCad" $ll2
+          }
         puts $pgnOut "guesscoord\n"
         puts $pgnOut "writepsf ${pgnOutPath}${prefix}.psf"
         puts $pgnOut "writepdb ${pgnOutPath}${prefix}.pdb\n"
