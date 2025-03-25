@@ -285,7 +285,7 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
         puts $loSt "  Could not download file ${pdbId}.pdb from rcsb.org."
         }
       }
-    set selTxtLigRec "(protein)"
+    set selTxtLigRec "(protein or nucleic)"
     if {(${l_chain} == "all") || (${l_chain} == {})} {
 # look for available chains
       set l_chain {}
