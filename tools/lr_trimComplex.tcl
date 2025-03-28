@@ -6,11 +6,12 @@
 #|  -public repository :-https://github.com/carloszep/lrcd-vmd.tcl ;
 #|  -date :
 #|    -created :-2025-01-13.Mon ;
-#|    -modified :-2025-03-13.Thu ;;
+#|    -modified :-2025-03-25.Thu ;;
 set lr_trimComplex_version 008
 #|  -version :
 #|    -008 :
 #|      -variable argument 'regenerateCad' replaced by 'userPatchesCad' .
+#|      -bug fixed for argument userPatchesCad ;
 #|      -no tested yet ;
 #|    -007 :
 #|      -PRO residues (besides GLY) are always excluded from the QM region .
@@ -216,12 +217,13 @@ namespace eval lr_trimComplex {
 #|      -default value :
 #|        -"pdbalias residue HIS HSD\npdbalias atom ILE CD1 CD\npdbalias
 #|         _ residue HOH TP3M\npdbalias atom TP3M O OH2\n" ;;
-#|    -'userPatchesCad', 'patchCad', 'patchesCad', 'patches', 'userPatches' :
+#|    -'userPatchesCad', 'usePatchCad', 'patchCad', 'patchesCad', 'patches',
+#|     _ 'userPatches' :
 #|      -string with one or more lines with user-specified patches .
 #|      -see also psfgen user's manual .
 #|      -for some partches will be neccesary to add the line
 #|       _ "regenerate angles dihedrals" to correctly apply the patch(es) .
-#|      -example: "patch ASPP P:209\nregenerate angles dihdrals" ;
+#|      -example: "patch ASPP P:209; regenerate angles dihdrals" ;
 #|      -default value :-"" ;;
   variable l_topFile {}
   variable topDir ""
@@ -425,6 +427,7 @@ namespace eval lr_trimComplex {
     variable topDir
     variable l_topExt
     variable pdbAliasCad
+    variable userPatchesCad
     variable prefix
     variable workPath
     variable pgnWrite
@@ -472,8 +475,8 @@ namespace eval lr_trimComplex {
           "topdir" - "toppar" - "topologydir" - "topologypath" {set topDir $val}
           "l_topext" - "l_topfileext" {set l_topExt $val}
           "pdbaliascad" {set pdbAliasCad $val}
-          "userpatchescad" - "patchcad" - "patchescad" - "patches" \
-            - "userpatches" {set userPatchesCad $val}
+          "userpatchescad" - "userpatchcad" - "patchcad" - "patchescad" \
+            - "patches" - "userpatches" {set userPatchesCad $val}
           "prefix" - "outprefix" - "outputprefix" {set prefix $val}
           "workpath" - "workfolder" - "workdir" - "outpath" - "outfolder" \
             - "outdir" {set workPath $val}
@@ -1150,9 +1153,10 @@ namespace eval lr_trimComplex {
         # add last keywords
         if {$userPatchesCad == ""} {
           puts $pgnOut ""
+          logMsg " user patch(es) string not included" $ll3
         } else {
-          puts $pgnOut "$userPatchesCad\n"
-          logMsg " user patch(es) added to pgnFile:\n$userPatchCad" $ll2
+          puts $pgnOut "\n$userPatchesCad\n"
+          logMsg " user patch(es) added to pgnFile:\n$userPatchesCad" $ll2
           }
         puts $pgnOut "guesscoord\n"
         puts $pgnOut "writepsf ${pgnOutPath}${prefix}.psf"
