@@ -9,6 +9,8 @@
 #|    -modified :-2025-03-25.Thu ;;
 set lr_trimComplex_version 008
 #|  -version :
+#|    -009 :
+#|      -adding argument selTxtL_qm ;
 #|    -008 :
 #|      -variable argument 'regenerateCad' replaced by 'userPatchesCad' .
 #|      -bug fixed for argument userPatchesCad ;
@@ -176,9 +178,15 @@ namespace eval lr_trimComplex {
 #|        -"" :-no non-interacting ligands are added ;
 #|        -a list of valid selection text for the VMD's command 'atomselect' ;
 #|      -default value :-"" ;;
+#|    -'selTxtL_qm', 'qmLig', 'qmLigand', 'selTxtQMLig', 'selTxt_qmLig' :
+#|      -ligand(s) selection text used to detect interacting QM residues .
+#|      -a list of selections is expected .
+#|      -if no selection is specified, 'selTxtL' will be usedi instead .
+#|      -default value :-"" ;;
   variable selTxtL {"not (protein or nucleic or water)"}
   variable selTxtR "protein or nucleic"
   variable selTxtL_noInt ""
+  variable selTxtL_qm ""
 
 #|    -'ligSel', 'atmSelL', 'atomSelLig' :
 #|      -atom selection pregenerated using 'atomselect' VMD's command .
@@ -399,6 +407,7 @@ namespace eval lr_trimComplex {
   variable l_ligFAtInd {}
   variable selTxtLCad {}
   variable selTxtRCad {}
+  variable selTxtLQMCad {}
   variable comLine ""
 
 #|  -procedures (namespace lr_trimComplex) :
@@ -423,6 +432,7 @@ namespace eval lr_trimComplex {
     variable selTxtL
     variable selTxtR
     variable selTxtL_noInt
+    variable selTxt_qm
     variable l_topFile
     variable topDir
     variable l_topExt
@@ -470,6 +480,8 @@ namespace eval lr_trimComplex {
           "seltxtl_noint" - "l_seltxtl_noint" - "seltxtl_noninteract" \
             - "seltxt_noninteractl" - "extralig" - "extraligands" \
             {set selTxtL_noInt $val}
+          "seltxtl_qm" - "qmlig" - "qmligand" - "seltxtqmlig" - "selTxt_qmLig" \
+            {set selTxtL_qm $val}
           "l_topfile" - "l_topfiles" - "topfile" - "topfiles" \
             - "l_topologyfile" - "topologyfiles" {set l_topFile $val}
           "topdir" - "toppar" - "topologydir" - "topologypath" {set topDir $val}
@@ -661,9 +673,9 @@ namespace eval lr_trimComplex {
 #|      -create atom selections ;
     proc atomSel {} {
       variable ll1; variable ll2; variable ll3
-      variable singleMol; variable selTxtL_noInt
-      variable frame; variable resAtm; variable selTxtLCad
-      variable cutoff; variable selTxtL; variable selTxtR; variable selTxtRCad
+      variable singleMol; variable selTxtL_noInt; variable selTxtL_qm
+      variable frame; variable resAtm; variable selTxtLCad; variable selTxtRCad
+      variable selTxtLQMCad; variable cutoff; variable selTxtL; variable selTxtR
       variable idL; variable idR; variable l_segL; variable l_ligFAtInd
       if {$singleMol} {
         set ligSel ""; set interactCASel ""   ;# provisional
@@ -672,6 +684,7 @@ namespace eval lr_trimComplex {
           logMsg " using selTxtLs: $selTxtL" $ll2
           logMsg " using selTxtR: $selTxtR" $ll2
           logMsg " using selTxtL_noInt: $selTxtL_noInt" $ll2
+          logMsg " using selTxtL_qm: $selTxtL_qm" $ll2
           logMsg " using resAtm: $resAtm" $ll2
           set l_ligFAtInd {}
           set l_segL {}
@@ -687,7 +700,7 @@ namespace eval lr_trimComplex {
             incr i
             $ligSel delete
             }
-          logMsg " list of rec-interacting ligands segNames: $l_segL" $ll3
+          logMsg " list of rec-interacting ligands segNames: $l_segL" $ll2
           logMsg " selTxtLCad: $selTxtLCad"
           foreach sTxt ${selTxtL_noInt} {
             set ligSel [atomselect $idR "$sTxt"]   ;# note: no frm considered
