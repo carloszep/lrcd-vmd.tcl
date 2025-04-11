@@ -6,11 +6,13 @@
 #|  -public repository :-https://github.com/carloszep/lrcd-vmd.tcl ;
 #|  -date :
 #|    -created :-2025-01-13.Mon ;
-#|    -modified :-2025-03-25.Thu ;;
-set lr_trimComplex_version 008
+#|    -modified :-2025-04-10.Thu ;;
+set lr_trimComplex_version 009
 #|  -version :
 #|    -009 :
-#|      -adding argument selTxtL_qm ;
+#|      -bug fixed and tested .
+#|      -added arguments selTxtL_qm, cutoff_qm .
+#|      -added selTxtR_def argument ;
 #|    -008 :
 #|      -variable argument 'regenerateCad' replaced by 'userPatchesCad' .
 #|      -bug fixed for argument userPatchesCad ;
@@ -152,6 +154,19 @@ namespace eval lr_trimComplex {
   variable pdbIdL ""
   variable pdbIdR ""
 
+#|    -'selTxtR_def' :
+#|      -default base selection text for the receptor .
+#|      -if changed by the user as command-line argument it might also be
+#|       - necessary to specify args 'selTxtL' and 'selTxtR' after .
+#|      -acceptable values :
+#|        -vmd's atom selection text ;
+#|      -common values :
+#|        -"protein" .
+#|        -"protein or nucleic" :
+#|          -this option does not work properly *** .
+#|          -might be possible to use another variable for 'same' vmd's
+#|           _ atomselect keyword ;;
+#|      -default value :-"protein" ;;
 #|    -'selTxtL', 'l_selTxtL', 'selTxtLs' :
 #|      -specifies a list of VMD's atom selection text for the ligand(s) .
 #|      -each sel text must correspond to a single ligand .
@@ -159,13 +174,13 @@ namespace eval lr_trimComplex {
 #|       _ '{"resname LIG"}' .
 #|      -acceptable values :
 #|        -a list of valid selection text for the VMD's command 'atomselect' ;
-#|      -default value :-{"not (protein or nucleic or water)"} ;;
+#|      -default value :-{"not (${selTxtR_def} or water)"} ;;
 #|    -'selTxtR' :
 #|      -specifies the VMD's atom selection text for the receptor atoms
 #|      -overrides the atom selection text from the 'selInfo' array .
 #|      -acceptable values :
 #|        -valid selection text for the VMD's command 'atomselect' ;
-#|      -default value :-"protein" ;;
+#|      -default value :-the same value as the 'selTxtR_def' arg ;;
 #|    -'selTxtL_noInt', 'l_selTxtL_noInt', 'selTxtL_nonInteract',
 #|     _ 'selTxt_nonInteractL', 'extraLig', 'extraLigands' :
 #|      -list of VMD's atom selection texts for non-interacting ligands .
@@ -181,10 +196,11 @@ namespace eval lr_trimComplex {
 #|    -'selTxtL_qm', 'qmLig', 'qmLigand', 'selTxtQMLig', 'selTxt_qmLig' :
 #|      -ligand(s) selection text used to detect interacting QM residues .
 #|      -a list of selections is expected .
-#|      -if no selection is specified, 'selTxtL' will be usedi instead .
+#|      -if no selection is specified, 'selTxtL' will be used instead .
 #|      -default value :-"" ;;
-  variable selTxtL {"not (protein or nucleic or water)"}
-  variable selTxtR "protein or nucleic"
+  variable selTxtR_def "protein"
+  variable selTxtL {"not ((${selTxtR_def}) or water)"}
+  variable selTxtR ${selTxtR_def}
   variable selTxtL_noInt ""
   variable selTxtL_qm ""
 
@@ -282,9 +298,22 @@ namespace eval lr_trimComplex {
 
 #|    -'cutoff', 'distCutoff', 'distance', 'dist', 'r' :
 #|      -maximum distance between lig and rec atoms to be considered as
-#|       _ interaction .
+#|       _ interacting .
+#|      -acceptable values :
+#|        -real (floating point) value in angstroms (i.e. 4.5) ;
 #|      -default value :-4.5 ;;
+#|    -'cutoff_qm', 'distCutoff_qm', 'distance_qm', 'dist_qm', 'r_qm' :
+#|      -maximum distance between lig and rec atoms to select QM residues
+#|       _ in the apply_restrictions proc .
+#|      -intended to make the QM region smaller than the lig-interacting 
+#|       _ receptor residues selection .
+#|      -acceptable values :
+#|        -real (floating point) value in angstroms (i.e. 4.5) .
+#|        -"", "cutoff" :-the same value as the 'cutoff' arg is used ;
+#|        -0.0 :-no QM region will be considered ;;
+#|      -default value :-"" ;;
   variable cutoff 4.5
+  variable cutoff_qm ""
 
 #|    -'gapMax', 'maxGap', 'resGap', 'gap', 'gaps', 'gapSize', 'gapLen' :
 #|      -max number of consecutive non-lig-interacting rec residues to
@@ -407,7 +436,9 @@ namespace eval lr_trimComplex {
   variable l_ligFAtInd {}
   variable selTxtLCad {}
   variable selTxtRCad {}
-  variable selTxtLQMCad {}
+  variable selTxtLCad_noInt {}
+  variable selTxtLCad_qm {}
+  variable selTxtRCad_qm {}
   variable comLine ""
 
 #|  -procedures (namespace lr_trimComplex) :
@@ -417,6 +448,7 @@ namespace eval lr_trimComplex {
     global lr_trimComplex_version
     set_logName "lr_trimComplex"
     set_logVersion "$lr_trimComplex_version"
+    puts "LRCD tools: [get_logName_version]"
     }   ;# proc init_lr_trimComplex
 
 #|    -proc setCLOptions {args} :
@@ -429,10 +461,11 @@ namespace eval lr_trimComplex {
     variable pdbId
     variable pdbIdL
     variable pdbIdR
+    variable selTxtR_def
     variable selTxtL
     variable selTxtR
     variable selTxtL_noInt
-    variable selTxt_qm
+    variable selTxtL_qm
     variable l_topFile
     variable topDir
     variable l_topExt
@@ -443,6 +476,7 @@ namespace eval lr_trimComplex {
     variable pgnWrite
     variable segPrefix
     variable cutoff
+    variable cutoff_qm
     variable gapMax
     variable mutateGaps
     variable gapMut
@@ -476,6 +510,7 @@ namespace eval lr_trimComplex {
           "pdbidl" - "pdbfilel" - "idl" - "vmdidl" - "molidl" {set pdbIdL $val}
           "pdbidr" - "pdbfiler" - "idr" - "vmdidr" - "molidr" {set pdbIdR $val}
           "seltxtl" - "l_seltxtl" - "seltxtls" {set selTxtL $val}
+          "seltxtr_def" {set selTxtR_def $val}
           "seltxtr" {set selTxtR $val}
           "seltxtl_noint" - "l_seltxtl_noint" - "seltxtl_noninteract" \
             - "seltxt_noninteractl" - "extralig" - "extraligands" \
@@ -497,6 +532,8 @@ namespace eval lr_trimComplex {
           "segprefix" - "segmentprefix" - "segletter" {set segPrefix $val}
           "pgnoutpath" - "pgndirout" - "pgndiroutput" {set pgnOutPath $val}
           "cutoff" - "distcutoff" - "distance" - "dist" - "r" {set cutoff $val}
+          "cutoff_qm" - "distcutoff_qm" - "distance_qm" - "dist_qm" - "r_qm" \
+            {set_cutoff_qm $val}
           "gapmax" - "maxgap" - "resgap" - "gap" - "gaps" - "gapsize" - \
             "gaplen" - "lengap" - "gaplength" - "lengthgap" {set gapMax $val}
           "mutategaps" - "gapsmutate" - "mutate" {set mutateGaps $val}
@@ -537,21 +574,44 @@ namespace eval lr_trimComplex {
 #|      -sets the values for variables ll1, ll2, and ll3 ;
   proc set_bll {val} {
     variable bll; variable ll1; variable ll2; variable ll3
+    logMsg "  user value for the bll (base log level) argument: $val" $ll3
     set bll $val; set ll1 $bll
     set ll2 [expr {$bll + 1}]; set ll3 [expr {$bll + 2}]
     logMsg " using base log level: $bll" $ll2
-    logMsg " ll1, ll2, and ll3 set to: $ll1, $ll2, and $ll3, resp." $ll3
+    logMsg "  ll1, ll2, and ll3 set to: $ll1, $ll2, and $ll3, resp." $ll3
     }   ;# proc setBaseLogLevel
 
 #|    -proc set_tails :
 #|      -sets the values of tails, tailN, and tailC ;
   proc set_tails {val} {
-    variable tails; variable tailN; variable tailC; variable ll3
+    variable tails; variable tailN; variable tailC; variable ll2; variable ll3
+    logMsg "  user value for the tails argument: $val" $ll3
     set tails $val
     set tailN $tails
     set tailC $tails
-    logMsg " tails, tailN, and tailC values set to: $tails" $ll3
+    logMsg " tails, tailN, and tailC values set to: $tails" $ll2
     }   ;# proc set_tails
+
+#|    -proc set_cutoff_qm {val} :
+#|      -sets the value of the cutoff_qm variable ;
+  proc set_cutoff_qm {val} {
+    variable ll1; variable ll2; variable ll3
+    variable cutoff; variable cutoff_qm
+    logMsg "  user value for cutoff_qm argument: $val" $ll3
+    if {($val == "") || ($val == "cutoff")} {
+      logMsg " setting cutoff_qm argument value to: $cutoff" $ll2
+      set cutoff_qm $cutoff
+    } else {
+      if {$val > $cutoff} {
+        logMsg " arg 'cutoff_qm' cannot be greater than 'cutoff'." $ll2
+        logMsg " setting cutoff_qm argument value to: $cutoff" $ll2
+        set cutoff_qm $cutoff
+      } else {
+        logMsg " setting cutoff_qm argument value to: $val" $ll2
+        set cutoff_qm $val
+        }
+      }
+    }   ;# proc set_cutoff_qm
 
 #|    -proc loadMol {} :
 #|      -load required molecules and configures them ;
@@ -615,10 +675,10 @@ namespace eval lr_trimComplex {
               ([info exists selInfo($selId,recSelTxt)]) && \
               ([info exists selInfo($selId,title)])} {
             # updating default selTxt* values
-            if {$selTxtL == "not (protein or nucleic or water)"} {
+            if {$selTxtL == "not ((${selTxtR_def}) or water)"} {
               set selTxtLCad $selInfo($selId,ligSelTxt)
               }
-            if {$selTxtR == "protein or nucleic"} {
+            if {$selTxtR == "${selTxtR_def}"} {
               set selTxtRCad $selInfo($selId,recSelTxt)
               }
             logMsg " setting selTxtLCad: $selTxtLCad" $ll3
@@ -673,15 +733,21 @@ namespace eval lr_trimComplex {
 #|      -create atom selections ;
     proc atomSel {} {
       variable ll1; variable ll2; variable ll3
-      variable singleMol; variable selTxtL_noInt; variable selTxtL_qm
-      variable frame; variable resAtm; variable selTxtLCad; variable selTxtRCad
-      variable selTxtLQMCad; variable cutoff; variable selTxtL; variable selTxtR
+      variable singleMol
+      variable selTxtL; variable selTxtL_noInt; variable selTxtL_qm
+      variable frame; variable resAtm
+      variable selTxtLCad; variable selTxtRCad; variable selTxtLCad_noInt
+      variable selTxtLCad_qm; variable selTxtRCad_qm
+      variable cutoff; variable cutoff_qm
+      variable selTxtR; variable selTxtR_def
       variable idL; variable idR; variable l_segL; variable l_ligFAtInd
+
       if {$singleMol} {
         set ligSel ""; set interactCASel ""   ;# provisional
         if {($ligSel == "") || ($interactCASel == "")} {
           logMsg " using interaction cutoff value: $cutoff" $ll2
-          logMsg " using selTxtLs: $selTxtL" $ll2
+          logMsg " using interaction cutoff_qm value: $cutoff_qm" $ll2
+          logMsg " using selTxtL: $selTxtL" $ll2
           logMsg " using selTxtR: $selTxtR" $ll2
           logMsg " using selTxtL_noInt: $selTxtL_noInt" $ll2
           logMsg " using selTxtL_qm: $selTxtL_qm" $ll2
@@ -690,8 +756,11 @@ namespace eval lr_trimComplex {
           set l_segL {}
           set i 1
 #          set l_selTxtL_prov $selTxtL
+
+          # processing selTxtL list of ligands (receptor-interacting)
           set selTxtLCad ""
           foreach sTxt ${selTxtL} {
+            logMsg "  interacting ligand considered: $sTxt" $ll3
             set ligSel [atomselect $idR "$sTxt"]   ;# frame needed?
             if {$selTxtLCad == ""} {set selTxtLCad "($sTxt)"
               } else {set selTxtLCad "$selTxtLCad or ($sTxt)" }
@@ -701,26 +770,49 @@ namespace eval lr_trimComplex {
             $ligSel delete
             }
           logMsg " list of rec-interacting ligands segNames: $l_segL" $ll2
-          logMsg " selTxtLCad: $selTxtLCad"
-          foreach sTxt ${selTxtL_noInt} {
+          logMsg "  selTxtLCad: $selTxtLCad" $ll3
+
+          # processing selTxtL_noInt list of ligands (non receptor-interacting)
+          set selTxtLCad_noInt ""
+          if {${selTxtL_noInt} != ""} {
+            foreach sTxt ${selTxtL_noInt} {
+              logMsg "  non-Interacting ligand considered: $sTxt" $ll3
+              if {$selTxtLCad_noInt == ""} {set selTxtLCad_noInt "($sTxt)"
+                } else {set selTxtLCad_noInt "$selTxtLCad_noInt or ($sTxt)"}
+              set ligSel [atomselect $idR "$sTxt"]   ;# note: no frm considered
+              lappend l_segL "L${i}"
+              lappend l_ligFAtInd [lindex [$ligSel get index] 0]
+              incr i
+              $ligSel delete
+              }
+            } else {set selTxtLCad_noInt "none"}
+          logMsg " amended list of ligands segNames: $l_segL" $ll2
+          logMsg "  selTxtLCad_noInt created: $selTxtLCad_noInt" $ll3
+
+          # processing selTxtL_qm list of ligands (rec-interacting for QM reg)
+          set selTxtLCad_qm ""
+          foreach sTxt ${selTxtL_qm} {
             set ligSel [atomselect $idR "$sTxt"]   ;# note: no frm considered
-            lappend l_segL "L${i}"
-            lappend l_ligFAtInd [lindex [$ligSel get index] 0]
-            incr i
+            if {$selTxtLCad_qm == ""} {set selTxtLCad_qm "($sTxt)"
+              } else {set selTxtLCad_qm "$selTxtLCad_qm or ($sTxt)" }
             $ligSel delete
             }
-          if {${selTxtL_noInt} != ""} {
-            logMsg " amended list of ligands segNames: $l_segL" $ll3}
-          set selTxtRCad "(same residue as protein within $cutoff of ($selTxtLCad)) and ($selTxtR) and ($resAtm)"
-          logMsg " using interactCASel selTxt: $selTxtRCad" $ll2
+
+          # generating selection text (cad) for interacting and QM rec residues
+          set selTxtRCad "(same residue as $selTxtR_def within $cutoff of ($selTxtLCad)) and ($selTxtR) and ($resAtm)"
+          set selTxtRCad_qm "(same residue as $selTxtR_def within $cutoff_qm of ($selTxtLCad_qm)) and ($selTxtR) and ($resAtm)"
+          logMsg " using selTxtRCad: $selTxtRCad" $ll2
+          logMsg " using selTxtRCad_qm: $selTxtRCad_qm" $ll2
+
           set interactCASel [atomselect $idR "$selTxtRCad"]
+          set interactCASel_qm [atomselect $idR "$selTxtRCad_qm"]
         } else {
           logMsg " atom selections previously defined:" $ll2
           logMsg "  lig: [$ligSel text] " $ll2
           logMsg "  rec: [$interactCASel text]" $ll2  
           }
-        logMsg " rec residues selected: \
-                [$interactCASel get {chain resname resid}]" $ll2
+        logMsg "interacting rec residues selected: [$interactCASel get {chain resname resid}]" $ll1
+        logMsg "interacting rec residues selected (QM region): [$interactCASel_qm get {chain resname resid}]" $ll1
       } else {
         # not implemented yet
         logMsg " lig and rec from different molecules not yet implemeted" $ll1
@@ -728,6 +820,7 @@ namespace eval lr_trimComplex {
         }
 #      $ligSel delete
       $interactCASel delete
+      $interactCASel_qm delete
       }   ;# proc atomSel
 
 #|    -proc outputConfig {} :
@@ -1456,6 +1549,8 @@ proc lr_trimComplex {complexType args} {
     variable selTxtR; variable selTxtL; variable selTxtL_noInt
     variable l_ligFAtInd; variable selTxtLCad; variable selTxtRCad
     variable workPath; variable prefix; variable pgnOutPath
+    variable selTxtLCad_noInt; variable selTxtLCad_qm; variable selTxtR_def
+    variable selTxtRCad_qm
     # load files
     foreach ext {"psf" "pdb"} {
       if {([set ${ext}File] == "auto") || ([set ${ext}File] == "")} {
@@ -1469,29 +1564,20 @@ proc lr_trimComplex {complexType args} {
     logMsg "\nlr_trim_complex::apply_restrictions:" $ll1
     package require topotools
     logMsg " list of restrictions: $l_restrictType" $ll1
-    logMsg " psf file: $psfFile"
-    logMsg " pdb file: $pdbFile"
+    logMsg " psf file: $psfFile" $ll1
+    logMsg " pdb file: $pdbFile" $ll1
     set idC [mol new $psfFile]
     mol addfile $pdbFile
     set syst [atomselect $idC "all"]
     logMsg " complex loaded: [$syst num] atoms" $ll2
-    logMsg " total charge: [format "%.3f" [eval vecadd [$syst get charge]]]"
+    logMsg " total charge: [format "%.3f" [eval vecadd [$syst get charge]]]" $ll1
     # process types of restictions to be applied
     foreach restrictType $l_restrictType {
       switch [string tolower $restrictType] {
         "qm/mm" {
-          # processing list of non-interacting ligands
-          set noIntLigCad ""
-          if {${selTxtL_noInt} != ""} {
-            foreach sTxt ${selTxtL_noInt} {
-              if {$noIntLigCad == ""} {set noIntLigCad "($sTxt)"
-                } else {set noIntLigCad "$noIntLigCad or ($sTxt)"}
-              }
-            logMsg "noIntLigCad created: $noIntLigCad" $ll3
-          } else {set noIntLigCad "none"}
           # applying restrictions
           set interactCASel [atomselect $idC "$selTxtRCad"]
-          set harmRSel [atomselect $idC "(backbone or name HA HA1 HA2 HN) or (protein and not (resid [$interactCASel get resid] and sidechain)) or ($noIntLigCad)"]
+          set harmRSel [atomselect $idC "(backbone or name HA HA1 HA2 HN) or (($selTxtR_def) and not (resid [$interactCASel get resid] and sidechain)) or ($selTxtLCad_noInt)"]
           logMsg " selTxt for atoms with harmonic-potential restrictions: [$harmRSel text]" $ll2
           $syst set beta 0
           $syst set occupancy 0
@@ -1499,22 +1585,22 @@ proc lr_trimComplex {complexType args} {
           $syst writepdb "${pgnOutPath}${prefix}_noInt.Bflag"
           logMsg " Bflag file for harmonic restrictions written: ${pgnOutPath}${prefix}_noInt.Bflag " $ll1
           # selecting QM region
-          $interactCASel delete
-          set interactCASel [atomselect $idC "($selTxtRCad) and not (resname GLY PRO)"]
-          set qmReg [atomselect $idC "(protein and resid [$interactCASel get resid] and sidechain) or ($selTxtLCad)"]
+          set interactCASel_qm [atomselect $idC "($selTxtRCad_qm) and not (resname GLY PRO)"]
+          set qmReg [atomselect $idC "(($selTxtR_def) and resid [$interactCASel_qm get resid] and sidechain) or ($selTxtLCad_qm)"]
           logMsg " selection text used for QM region: [$qmReg text]" $ll2
-          set mmReg [atomselect $idC "(protein and resid [$interactCASel get resid] and name CA CB) or (protein and resid [$interactCASel get resid] and resname PRO and name N CD)"]
+          set mmReg [atomselect $idC "(($selTxtR_def) and resid [$interactCASel_qm get resid] and name CA CB) or (protein and resid [$interactCASel_qm get resid] and resname PRO and name N CD)"]
           topo guessatom element mass
           $syst set beta 0
           $syst set occupancy 0
           $qmReg set beta 1
           $mmReg set occupancy 1
           $syst writepdb "${pgnOutPath}${prefix}_qmreg.BOflag"
-          logMsg " BOflag file for QM region written: ${pgnOutPath}${prefix}_qmreg.BOflag" $ll1
+          logMsg "BOflag file for QM region written: ${pgnOutPath}${prefix}_qmreg.BOflag" $ll1
           logMsg " the QM region contains [$qmReg num] atoms" $ll2
-          logMsg " the MM region contains [$mmReg num] atoms" $ll2
+          logMsg " the MM region contains [expr {[$syst num] - [$qmReg num]}] atoms" $ll2
           # deleting atom selections
           $interactCASel delete
+          $interactCASel_qm delete
           $harmRSel delete
           $qmReg delete
           $mmReg delete
