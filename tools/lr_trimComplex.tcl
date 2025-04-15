@@ -495,6 +495,7 @@ namespace eval lr_trimComplex {
     variable chargeTarget
     variable procN
     variable ll3
+    variable bll
 # internal variables
     set args_last {}
 # read input command-line arguments (excluding logLib arguments)
