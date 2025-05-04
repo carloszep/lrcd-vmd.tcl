@@ -6,10 +6,12 @@
 #|  -public repository :-https://github.com/carloszep/lrcd-vmd.tcl ;
 #|  -date :
 #|    -created :-2025-01-13.Mon ;
-#|    -modified :-2025-04-10.Thu ;;
+#|    -modified :-2025-05-03.Sat ;;
 set lr_trimComplex_version 009
 #|  -version :
 #|    -009 :
+#|      -fixed writing of logFiles (for version 0.1.0 of logLib) .
+#|      -added set_cutoff proc to fix a bug .
 #|      -bug fixed and tested .
 #|      -added arguments selTxtL_qm, cutoff_qm .
 #|      -added selTxtR_def argument ;
@@ -49,6 +51,8 @@ set lr_trimComplex_version 009
 #|      -procedure first defined .
 #|      -original code tested ;
 #|    -to do :
+#|      -to add a optional argument to manage default names of log files .
+#|      -improve the continuated use of several log files .
 #|      -to join segments contiguous or overlapping due to tails .
 #|      -to fix accumulation of string variables on repeated use
 #|       _ (reinitialization) .
@@ -448,6 +452,7 @@ namespace eval lr_trimComplex {
     global lr_trimComplex_version
     set_logName "lr_trimComplex"
     set_logVersion "$lr_trimComplex_version"
+    logAppendOff   ;# rewriting previous log files
     puts "LRCD tools: [get_logName_version]"
     }   ;# proc init_lr_trimComplex
 
@@ -532,7 +537,7 @@ namespace eval lr_trimComplex {
             {set pgnWrite $val}
           "segprefix" - "segmentprefix" - "segletter" {set segPrefix $val}
           "pgnoutpath" - "pgndirout" - "pgndiroutput" {set pgnOutPath $val}
-          "cutoff" - "distcutoff" - "distance" - "dist" - "r" {set cutoff $val}
+          "cutoff" - "distcutoff" - "distance" - "dist" - "r" {set_cutoff $val}
           "cutoff_qm" - "distcutoff_qm" - "distance_qm" - "dist_qm" - "r_qm" \
             {set_cutoff_qm $val}
           "gapmax" - "maxgap" - "resgap" - "gap" - "gaps" - "gapsize" - \
@@ -592,6 +597,19 @@ namespace eval lr_trimComplex {
     set tailC $tails
     logMsg " tails, tailN, and tailC values set to: $tails" $ll2
     }   ;# proc set_tails
+
+#|    -proc set_cutoff {val} :
+#|      -sets the value of the cutoff variable ;
+  proc set_cutoff {val} {
+    variable ll1; variable ll2; variable ll3
+    variable cutoff; variable cutoff_qm
+    logMsg "  user value for cutoff argument: $val" $ll3
+    if {$cutoff_qm == ""} {
+      logMsg "  initializing cutoff_qm value as: $val" $ll3
+      set cutoff_qm $val
+      }
+    set cutoff $val
+    }
 
 #|    -proc set_cutoff_qm {val} :
 #|      -sets the value of the cutoff_qm variable ;
@@ -792,12 +810,14 @@ namespace eval lr_trimComplex {
 
           # processing selTxtL_qm list of ligands (rec-interacting for QM reg)
           set selTxtLCad_qm ""
-          foreach sTxt ${selTxtL_qm} {
-            set ligSel [atomselect $idR "$sTxt"]   ;# note: no frm considered
-            if {$selTxtLCad_qm == ""} {set selTxtLCad_qm "($sTxt)"
-              } else {set selTxtLCad_qm "$selTxtLCad_qm or ($sTxt)" }
-            $ligSel delete
-            }
+          if {${selTxtL_qm} != ""} {
+            foreach sTxt ${selTxtL_qm} {
+              set ligSel [atomselect $idR "$sTxt"]   ;# note: no frm considered
+              if {$selTxtLCad_qm == ""} {set selTxtLCad_qm "($sTxt)"
+                } else {set selTxtLCad_qm "$selTxtLCad_qm or ($sTxt)" }
+              $ligSel delete
+              }
+            } else {set selTxtLCad_qm "none"}
 
           # generating selection text (cad) for interacting and QM rec residues
           set selTxtRCad "(same residue as $selTxtR_def within $cutoff of ($selTxtLCad)) and ($selTxtR) and ($resAtm)"
@@ -1315,7 +1335,7 @@ proc lr_trimComplex {complexType args} {
   set procN [lindex [info level 0] 0]
 
 # interpreting logLib and namespace arguments 
-  set args_rest [eval arg_interpreter $args]
+  set args_rest [eval logLib_argInterp $args]
   logMsg " arg_rest after logLib arg_interp: $args_rest" $ll3
   set args_rest [eval setCLOptions $args_rest]
 
@@ -1507,6 +1527,9 @@ proc lr_trimComplex {complexType args} {
   # end pgn file
   pgnWriteTail
 
+  # flush the log file
+  logFlush
+
   if {$pgnWrite} {close $pgnOut}
 
   }   ;# proc lr_trimComplex
@@ -1558,6 +1581,7 @@ proc lr_trimComplex {complexType args} {
         set ${ext}File "${pgnOutPath}${prefix}.${ext}"
         if {![file exists [set ${ext}File]]} {
           logMsg "File [set ${ext}File] not found." $ll1
+          logFlush
           return
           }
         }
@@ -1611,6 +1635,10 @@ proc lr_trimComplex {complexType args} {
         }
       }
     $syst delete
+
+    # flush the logFile
+    logFlush
+
     }   ;# proc apply_restrictions
 
 #|  -proc lr_trimComplex_help {{opt ""}} :- ;
