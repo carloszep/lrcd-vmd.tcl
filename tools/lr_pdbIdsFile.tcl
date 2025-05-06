@@ -277,7 +277,8 @@ proc lr_pdbIdsFile {l_pdbId {src "download"} args} {
       exec mkdir -p "${workPath}rec/pdb/full/"
       [atomselect $id "all"] writepdb "${workPath}rec/pdb/full/${pdbId}.pdb"
       exec echo "Use genrecpdbqt.sh to populate from ../pdb/*.pdb files." > "${workPath}rec/pdbqt/README.txt"
-      catch {exec wget http://files.rcsb.org/download/${pdbId}.pdb} fid
+#      catch {exec wget http://files.rcsb.org/download/${pdbId}.pdb} fid
+      catch {exec curl -o ${pdbId} "http://files.rcsb.org/view/${pdbId}.pdb"} fid
       if {[file exist ${pdbId}.pdb]} {
         exec mkdir -p "${workPath}rec/pdb/rcsb.org/"
         exec mv "${pdbId}.pdb" "${workPath}rec/pdb/rcsb.org/"
