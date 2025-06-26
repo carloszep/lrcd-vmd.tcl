@@ -146,6 +146,7 @@
 #|        -default value :
 #|          -stdout ;;;;
 #|  -notes :
+#|    -pending to fix adding rec ligads through ll_ligRec i.e. COH in 5kir .
 #|    -if no ligand is found in a chain, a grid is created centered
 #|     _ in the chain's COM .
 #|    -receptor pdb files are duplicated in the rec/pdb and rec/pdb/recs dirs .
