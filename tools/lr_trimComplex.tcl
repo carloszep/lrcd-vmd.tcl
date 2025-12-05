@@ -1630,7 +1630,7 @@ proc lr_trimComplex {complexType args} {
     logMsg " complex loaded: [$syst num] atoms" $ll2
     logMsg " total charge: [format "%.3f" [eval vecadd [$syst get charge]]]" $ll1
     set chfile [open "${pgnOutPath}${prefix}_qmreg.qmcharge" w]
-    puts $chfile [format "%d" [eval vecadd [$syst get charge]]]
+    puts $chfile [format "%0.3f" [eval vecadd [$syst get charge]]]
     close $chfile
 
     # process types of restictions to be applied
