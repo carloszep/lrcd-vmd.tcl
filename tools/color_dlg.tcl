@@ -32,12 +32,14 @@ proc color_lrcd {idl_ligs} {
 
 proc color_deltaG {idl_ligs} {
   global molInfo selInfo
-  set min [lindex $selInfo($molInfo([lindex ${idl_ligs} 0],name),deltaG) 0]
+#  set min [lindex $selInfo($molInfo([lindex ${idl_ligs} 0],name),deltaG) 0]
+  set min [lindex $molInfo([lindex ${idl_ligs} 0],deltaG) 0]
   set max $min
   foreach id ${idl_ligs} {
     set nf [molinfo $id get numframes]
     for {set f 0} {$f < $nf} {incr f} {
-      set delG [lindex $selInfo($molInfo($id,name),deltaG) $f]
+#      set delG [lindex $selInfo($molInfo($id,name),deltaG) $f]
+      set delG [lindex $molInfo($id,deltaG) $f]
       [atomselect $id all frame $f] set user $delG
       if {$delG < $min} {set min $delG}
       if {$delG > $max} {set max $delG}
@@ -66,7 +68,7 @@ proc color_drawRestore {idl_ligs} {
     }
   mol on [lindex ${idl_ligs} 0]
   mol top [lindex ${idl_ligs} 0]
-  display resetview
+#  display resetview
   }
 
 
